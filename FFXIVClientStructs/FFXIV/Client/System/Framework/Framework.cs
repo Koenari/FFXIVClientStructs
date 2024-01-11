@@ -23,6 +23,7 @@ public unsafe partial struct Framework {
     [FieldOffset(0x0570)] public SavedAppearanceManager* SavedAppearanceData;
     [FieldOffset(0x0580)] public byte ClientLanguage;
     [FieldOffset(0x0588)] public Cursor* Cursor;
+    [FieldOffset(0x0590)] public nint CallerWindow;
 
     [FieldOffset(0x0598)] public FileAccessPath ConfigPath;
     [FieldOffset(0x07A8)] public GameWindow* GameWindow;
