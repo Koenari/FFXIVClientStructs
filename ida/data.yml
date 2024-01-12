@@ -3370,6 +3370,7 @@ classes:
         base: Client::Graphics::Singleton
     funcs:
       0x1403757E0: ctor
+      0x1400903B0: SetGamma
   Client::Graphics::Render::Camera:
     vtbls:
       - ea: 0x1419EE460
@@ -11559,7 +11560,7 @@ classes:
       78: UpdateGaugeData
   Client::UI::AddonJobHud::AddonJobHudGaugeData:
     vtbls:
-      - ea: 0x141B1D5D0
+      - ea: 0x141B1D5F8
     vfuncs:
       0: Initialize
       1: Copy

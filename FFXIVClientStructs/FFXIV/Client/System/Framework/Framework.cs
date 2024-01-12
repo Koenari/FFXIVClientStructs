@@ -24,32 +24,41 @@ public unsafe partial struct Framework {
     [FieldOffset(0x0580)] public byte ClientLanguage;
     [FieldOffset(0x0588)] public Cursor* Cursor;
     [FieldOffset(0x0590)] public nint CallerWindow;
-
     [FieldOffset(0x0598)] public FileAccessPath ConfigPath;
     [FieldOffset(0x07A8)] public GameWindow* GameWindow;
-    //584 byte
+    [FieldOffset(0x07B0)] public Unk7B0Obj Unk7B0;
+    //180 byte
+    [FieldOffset(0x09F8)] public Unk9F8Obj Unk9F8;
     [FieldOffset(0x09F8)] public int CursorPosX;
     [FieldOffset(0x09FC)] public int CursorPosY;
-
+    [FieldOffset(0x0A28)] public Unk2A8Obj Unk2A8;
+    [FieldOffset(0x0EBC)] public Unk7B0Obj UnkEBC;
+    //180 byte
+    [FieldOffset(0x1104)] public Unk9F8Obj Unk1104;
     [FieldOffset(0x1104)] public int CursorPosX2;
     [FieldOffset(0x1108)] public int CursorPosY2;
-
+    [FieldOffset(0x1134)] public Unk2A8Obj Unk1134;
+    [FieldOffset(0x15C8)] public Unk15C8Obj Unk15C8;
     [FieldOffset(0x1670)] public NetworkModuleProxy* NetworkModuleProxy;
     [FieldOffset(0x1678)] public bool IsNetworkModuleInitialized;
     [FieldOffset(0x1679)] public bool EnableNetworking;
-    [FieldOffset(0x1680)] public long ServerTime;  // TODO: change to uint
+    [FieldOffset(0x1680)] public long ServerTime; // TODO: change to uint
     [FieldOffset(0x1688)] public long PerformanceCounterInMilliSeconds;
     [FieldOffset(0x1688)] public long PerformanceCounterInMicroSeconds;
     [FieldOffset(0x1698)] public uint TimerResolutionMillis;
     [FieldOffset(0x16A0)] public long PerformanceCounterFrequency;
     [FieldOffset(0x16A8)] public long PerformanceCounterValue;
+
     [FieldOffset(0x16F8)] public TaskManager TaskManager;
     [FieldOffset(0x16B8)] public float FrameDeltaTime;
     [FieldOffset(0x16C8)] public uint FrameCounter;
     [FieldOffset(0x1768)] public ClientTime ClientTime;
-    [FieldOffset(0x1770), Obsolete("Use ClientTime.EorzeaTime")] public long EorzeaTime;
-    [FieldOffset(0x1798), Obsolete("Use ClientTime.EorzeaTimeOverride")] public long EorzeaTimeOverride;
-    [FieldOffset(0x17A0), Obsolete("Use ClientTime.IsEorzeaTimeOverridden")] public bool IsEorzeaTimeOverridden;
+    [FieldOffset(0x1770)] [Obsolete("Use ClientTime.EorzeaTime")]
+    public long EorzeaTime;
+    [FieldOffset(0x1798)] [Obsolete("Use ClientTime.EorzeaTimeOverride")]
+    public long EorzeaTimeOverride;
+    [FieldOffset(0x17A0)] [Obsolete("Use ClientTime.IsEorzeaTimeOverridden")]
+    public bool IsEorzeaTimeOverridden;
     [FieldOffset(0x17C4)] public float FrameRate;
     [FieldOffset(0x17D0)] public bool WindowInactive;
 
@@ -62,6 +71,9 @@ public unsafe partial struct Framework {
     [FieldOffset(0x2B50)] public BGCollisionModule* BGCollisionModule;
     [FieldOffset(0x2B60)] public UIModule* UIModule;
     [FieldOffset(0x2B68)] public UIClipboard* UIClipboard;
+    [FieldOffset(0x2B78)] public EnvironmentManager* EnvironmentManager;
+    [FieldOffset(0x2B80)] public SoundManager* SoundManager;
+    [FieldOffset(0x2B98)] public Unk2B98Obj Unk2B98;
     [FieldOffset(0x2BC8)] public LuaState LuaState;
 
     [FieldOffset(0x2BF0)] public GameVersion GameVersion;
@@ -125,5 +137,37 @@ public unsafe partial struct Framework {
             fixed (char* p = userPath)
                 return new string(p);
         }
+    }
+
+    //ctor -Unsiggable-
+    [StructLayout(LayoutKind.Explicit, Size = 0x28)]
+    public struct Unk2B98Obj {
+
+    }
+
+    // ctor E8 ?? ?? ?? ?? 48 8D 8E ?? ?? ?? ?? 48 89 AE ?? ?? ?? ?? 66 C7 86 
+    [StructLayout(LayoutKind.Explicit, Size = 0xA8)]
+    public struct Unk15C8Obj {
+        //Some derived class 
+        [FieldOffset(0x00)] public Threading.Thread Thread;
+        [FieldOffset(0x38)] public Task Task;
+    }
+
+    // ctor C6 01 ?? 48 8D 81 
+    [StructLayout(LayoutKind.Explicit, Size = 0x494)]
+    public struct Unk2A8Obj {
+
+    }
+
+    //ctor 33 D2 C6 41 ?? ?? 48 89 51 ?? 8B C2 
+    [StructLayout(LayoutKind.Explicit, Size = 0x30)]
+    public struct Unk9F8Obj {
+        [FieldOffset(0x00)] public int CursorPosX;
+        [FieldOffset(0x04)] public int CursorPosY;
+    }
+
+    // ctor E8 ?? ?? ?? ?? 33 C0 45 89 BE 
+    [StructLayout(LayoutKind.Explicit, Size = 0x194)]
+    public struct Unk7B0Obj {
     }
 }
