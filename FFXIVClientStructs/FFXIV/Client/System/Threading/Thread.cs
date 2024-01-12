@@ -8,4 +8,5 @@ public unsafe struct Thread {
     [FieldOffset(0x10)] public nint ThreadHandle;
     [FieldOffset(0x18)] public int ThreadId;
     [FieldOffset(0x1C)] public int AffinityMask;
+    [FieldOffset(0x20)] public bool StopRequested;
 }

@@ -3,6 +3,7 @@ using FFXIVClientStructs.FFXIV.Client.Network;
 using FFXIVClientStructs.FFXIV.Client.System.Configuration;
 using FFXIVClientStructs.FFXIV.Client.System.File;
 using FFXIVClientStructs.FFXIV.Client.System.Input;
+using FFXIVClientStructs.FFXIV.Client.System.Threading;
 using FFXIVClientStructs.FFXIV.Client.System.Timer;
 using FFXIVClientStructs.FFXIV.Client.UI;
 using FFXIVClientStructs.FFXIV.Common.Component.BGCollision;
@@ -22,6 +23,7 @@ public unsafe partial struct Framework {
     [FieldOffset(0x0460)] public DevConfig DevConfig;
     [FieldOffset(0x0570)] public SavedAppearanceManager* SavedAppearanceData;
     [FieldOffset(0x0580)] public byte ClientLanguage;
+    [FieldOffset(0x0581)] public char Region;
     [FieldOffset(0x0588)] public Cursor* Cursor;
     [FieldOffset(0x0590)] public nint CallerWindow;
     [FieldOffset(0x0598)] public FileAccessPath ConfigPath;
@@ -77,6 +79,9 @@ public unsafe partial struct Framework {
     [FieldOffset(0x2BC8)] public LuaState LuaState;
 
     [FieldOffset(0x2BF0)] public GameVersion GameVersion;
+    //8 byte
+    [FieldOffset(0x34F8)] public WatchDogThread* WatchDogThread;
+    [FieldOffset(0x3500)] public bool UseWatchDogThread;
 
     /// <summary>
     /// Set if <c>IsSteam</c> was set for this instance as part of <c>SetupSteamApi</c>. Set even if loading the Steam API
