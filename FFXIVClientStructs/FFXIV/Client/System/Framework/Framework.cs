@@ -80,6 +80,7 @@ public unsafe partial struct Framework {
     [FieldOffset(0x2B68)] public UIClipboard* UIClipboard;
     [FieldOffset(0x2B78)] public EnvironmentManager* EnvironmentManager;
     [FieldOffset(0x2B80)] public SoundManager* SoundManager;
+    [FieldOffset(0x2B90)] public InputThread.InputThread* InputThread;
     [FieldOffset(0x2B98)] public Unk2B98Obj Unk2B98;
     [FieldOffset(0x2BC8)] public LuaState LuaState;
 
