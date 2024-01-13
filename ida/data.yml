@@ -3468,6 +3468,8 @@ classes:
         base: Client::Graphics::Singleton
     funcs:
       0x1403757E0: ctor
+      0x140090370: SetGlare
+      0x1400903F0: SetTranslucentQuality
       0x1400903B0: SetGamma
   Client::Graphics::Render::Camera:
     vtbls:
