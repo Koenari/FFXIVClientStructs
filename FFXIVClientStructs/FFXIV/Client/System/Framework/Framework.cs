@@ -1,8 +1,10 @@
 using FFXIVClientStructs.FFXIV.Client.Game;
 using FFXIVClientStructs.FFXIV.Client.Network;
+using FFXIVClientStructs.FFXIV.Client.Sound;
 using FFXIVClientStructs.FFXIV.Client.System.Configuration;
 using FFXIVClientStructs.FFXIV.Client.System.File;
 using FFXIVClientStructs.FFXIV.Client.System.Input;
+using FFXIVClientStructs.FFXIV.Client.System.String;
 using FFXIVClientStructs.FFXIV.Client.System.Threading;
 using FFXIVClientStructs.FFXIV.Client.System.Timer;
 using FFXIVClientStructs.FFXIV.Client.UI;
@@ -22,6 +24,7 @@ public unsafe partial struct Framework {
     [FieldOffset(0x0010)] public SystemConfig SystemConfig;
     [FieldOffset(0x0460)] public DevConfig DevConfig;
     [FieldOffset(0x0570)] public SavedAppearanceManager* SavedAppearanceData;
+    [FieldOffset(0x0578)] public Unk578Obj* Unk578;
     [FieldOffset(0x0580)] public byte ClientLanguage;
     [FieldOffset(0x0581)] public char Region;
     [FieldOffset(0x0588)] public Cursor* Cursor;
@@ -70,6 +73,8 @@ public unsafe partial struct Framework {
 
     [FieldOffset(0x2B30)] public ExcelModuleInterface* ExcelModuleInterface;
     [FieldOffset(0x2B38)] public ExdModule* ExdModule;
+    [FieldOffset(0x2B40)] public void* VulgarWordFilter;
+    [FieldOffset(0x2B48)] public void* VulgarWordFilterParty;
     [FieldOffset(0x2B50)] public BGCollisionModule* BGCollisionModule;
     [FieldOffset(0x2B60)] public UIModule* UIModule;
     [FieldOffset(0x2B68)] public UIClipboard* UIClipboard;
@@ -142,6 +147,14 @@ public unsafe partial struct Framework {
             fixed (char* p = userPath)
                 return new string(p);
         }
+    }
+
+    [StructLayout(LayoutKind.Explicit, Size = 0x220)]
+    public struct Unk578Obj {
+        [FieldOffset(0x048)] public Utf8String Unk048;
+        [FieldOffset(0x0B0)] public Utf8String Unk0B0;
+        [FieldOffset(0x118)] public Utf8String Unk118;
+        [FieldOffset(0x180)] public Utf8String Unk180;
     }
 
     //ctor -Unsiggable-
