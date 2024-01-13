@@ -9,11 +9,7 @@ globals:
   0x142171848: g_Client::Game::Control::InputManager_MouseButtonHoldState
   0x142187be0: g_StackCookie
   0x142187be8: g_InverseStackCookie
-  0x1421A3470: g_GameWindow # not a pointer
   0x1421A54A0: g_OSVersion
-  0x1421AC230: g_ThreadManager
-  0x1421AC240: g_FileManager
-  0x1421AC308: g_SoundManager
   0x1421AC368: g_CurrentCharaSelectCharacter # Client::Game::Character::Character*
   0x1421AC540: g_CharaSelectCharacterList # see Client::UI::Agent::AgentLobby::CharaSelectCharacterList
   0x1421BE480: g_RenderSkeletonLinkedListStart
@@ -50,6 +46,9 @@ globals:
   0x142212F72: g_Client::Game::UI::UnlockedCompanionsMask  # not a pointer
   0x142212F4E: g_Client::Game::UI::UnlockedHowToBitmask  # not a pointer
   0x142212FB2: g_Client::Game::UI::ChocoboTaxiStandsBitmask  # not a pointer
+  0x142212FBE: g_Client::Game::UI::CutsceneSeenBitmask  # not a pointer
+  0x14221305D: g_Client::Game::UI::UnlockedTripleTriadCardsBitmask  # not a pointer
+  0x142213090: g_Client::Game::UI::UnlockedTripleTriadCardsCount  # not a pointer
   0x1421FBFB8: g_Client::Game::UI::Chain.RemainingTime # not a pointer
   0x1421FBFBC: g_Client::Game::UI::Chain.MaxTime # not a pointer
   0x1422152D0: g_Conditions # bool array, size is Condition sheet row count
@@ -270,7 +269,6 @@ functions:
   0x1400AAAC0: GetPartyMemberClassJobByContentId
   0x140748FF0: ObjectIdToPlayerObjectId # returns invalid id if objectid is not a player
   0x14076A8E0: ProcessActorControlPacket
-  0x14071C480: CreateDummyItemSlot
   0x140B1E780: IsInMordionGaol # if this returns true, i'm sorry for you
   0x140B71F50: WorldToScreenPoint
   0x14144B630: GetBannerConditionUnlockState
@@ -350,6 +348,15 @@ classes:
       0x1409312D0: IsInPvPInstance
       0x140931390: IsInPvPArea
       0x1400A85D0: IsInSanctuary # static, more likely Client::UI::IsInSanctuary but it fits here just fine
+  Client::Game::BGMSystem:
+    instances:
+      - ea: 0x1421DFB10
+        pointer: False
+    funcs:
+      0x140700A20: Initialize
+      0x140700A70: dtor
+      0x140700AB0: Update
+      0x1407127E0: ctor
   Client::Game::Control::InputManager:
     instances:
       - ea: 0x142171820
@@ -440,6 +447,7 @@ classes:
       - ea: 0x1421F6480
         pointer: False
     funcs:
+      0x1408BD170: ReadPacket
       0x1408BC7F0: Initialize
       0x1408BCB20: GetUsedAllowances
       0x1408BCB70: GetResetTimestamp
@@ -468,6 +476,7 @@ classes:
       - ea: 0x1421A6FA0
     funcs:
       0x14019AD70: ctor # static
+      0x140093980: GetInstance
   Client::System::Resource::Handle::ResourceHandleFactory:
   Client::UI::Agent::AgentMap::MapMarkerStructSearch:
   Client::UI::Atk2DMap:
@@ -762,6 +771,32 @@ classes:
       0x140735E80: GetGoldSaucerCoin
       0x14144D020: GetSpecialItemId #static
       0x140735B80: GetLimitedTomestoneWeeklyLimit #static
+  Client::Game::InventoryItem:
+    funcs:
+      0x140181950: GetItemId
+      0x140181A80: GetCondition
+      0x140181C70: GetGlamourId
+      0x140181CB0: GetSpiritbond
+      0x140181D10: GetStain
+      0x14032EF00: GetSpiritbond2
+      0x14032EF50: GetMateriaId
+      0x1406E0A20: GetMateriaGrade
+      0x14071C480: ctor
+      0x14071C4C0: Copy
+      0x14071C680: Equals
+      0x14071C710: Clear
+      0x14071C750: SetItemId
+      0x14071C810: GetLinkedItem
+      0x14071CC00: GetQuantity
+      0x14071CCB0: SetQuantity
+      0x14071CCE0: GetSpiritbond3
+      0x14071CD40: GetConditionPercentage
+      0x14071CD80: GetMateriaCount
+      0x14073B490: GetEquipErrorLogMessageId # (this, race, sex, level, classJob, grandCompany, pvpRank, itemRow)
+      0x1407482D0: GetCrafterContentId
+  Client::Game::InventoryContainer:
+    funcs:
+      0x14071D640: GetInventorySlot  # (this, slotIndex)
   Client::Game::MonsterNoteManager:
     instances:
       - ea: 0x1421FB050
@@ -820,9 +855,16 @@ classes:
   Client::Game::Housing::WorkshopTerritory:
     vtbls:
       - ea: 0x141A75590
-  InventoryContainer:
+  Client::Game::HWDManager: # Diadem
+    instances:
+      - ea: 0x142215510
+        pointer: True
+    vtbls:
+      - ea: 0x141A82B08
     funcs:
-      0x14071D640: GetInventorySlot  # (this, slotIndex)
+      0x140B84940: Initialize
+      0x140B849D0: Destroy
+      0x140B84A00: GetInstance
   Client::Game::MJI::MJIManager: # Island Sanctuary
     instances:
       - ea: 0x142215520
@@ -1072,6 +1114,7 @@ classes:
       - ea: 0x1421FBFD8
         pointer: False
     funcs:
+      0x140937E80: ReadPacket
       0x140938E50: SetCharacterName
       0x140939DB0: GetGrandCompanyRank
       0x14093A710: GetBeastTribeRank
@@ -1123,6 +1166,7 @@ classes:
         pointer: False
     funcs:
       0x140974EC0: ctor
+      0x140975630: ReadPacket
   Client::Game::UI::Buddy.CompanionStats:
     instances:
       - ea: 0x1421FEBD0
@@ -1134,6 +1178,7 @@ classes:
       - ea: 0x1421FEC54
         pointer: False
     funcs:
+      0x140976D80: ReadPacket
       0x1409770E0: GetRank
       0x140976FE0: GetCurrentRankExperience
       0x140977050: GetCurrentRankNeededExperience
@@ -1171,11 +1216,13 @@ classes:
     vtbls:
       - ea: 0x141A6D238
     funcs:
+      0x14097F350: ReadPacket
       0x14097F720: IsCategoryUnlocked
   Client::Game::UI::RelicNote:
     vtbls:
       - ea: 0x141A6D240
     funcs:
+      0x14097FDF0: ReadPacket
       0x14097FFA0: GetRelicID
       0x14097FFB0: GetRelicNoteID
       0x14097FFC0: GetMonsterProgress
@@ -1200,6 +1247,7 @@ classes:
       - ea: 0x14220DF20
         pointer: False
     funcs:
+      0x14098AF00: ReadPacket
       0x14098B680: GetKillCount
       0x14098B5C0: GetObtainedMobHuntOrderRowId
       0x14098B550: GetAvailableMobHuntOrderRowId
@@ -1428,7 +1476,23 @@ classes:
         base: Common::Configuration::ConfigBase
     funcs:
       0x1400800E0: ctor
+  Client::System::Framework::EnvironmentManager:
+    vtbls:
+      - ea: 0x1419B1220
+        base: Client::System::Framework::Task
+      - ea: 0x1419B1238
+        base: Common::Configuration::ConfigBase::ChangeEventInterface
+    funcs:
+      0x14008CEB0: ctor
+      0x14008E2F0: GetWindowRectFromConfig
+      0x14008E420: OpenGameWindow
+      0x14008E670: GetVirtualScreenResolution
+      0x14008E6C0: SetFramerateCapByConfigOption
+      0x14008EBA0: SetMasterVolume #(this, volume(0-100), saveToConfig)
+      0x14008EE00: SetMicPosition
   Client::Sound::SoundManager: #base: Client::System::Common::NonCopyable
+    instances:
+      - ea: 0x1421AC308
     vtbls:
       - ea: 0x1419DB500
         base: Client::System::Resource::ResourceEventListener
@@ -1458,21 +1522,10 @@ classes:
       0x140212D20: SetPerformAlways
       0x140212DB0: SetMicPosition
       0x1402138A0: SetVolume #(this, type, float: volume
-  Client::System::Framework::EnvironmentManager:
-    vtbls:
-      - ea: 0x1419B1220
-        base: Client::System::Framework::Task
-      - ea: 0x1419B1238
-        base: Common::Configuration::ConfigBase::ChangeEventInterface
-    funcs:
-      0x14008CEB0: ctor
-      0x14008E2F0: GetWindowRectFromConfig
-      0x14008E420: OpenGameWindow
-      0x14008E670: GetVirtualScreenResolution
-      0x14008E6C0: SetFramerateCapByConfigOption
-      0x14008EBA0: SetMasterVolume #(this, volume(0-100), saveToConfig)
-      0x14008EE00: SetMicPosition
   Client::System::Framework::GameWindow:
+    instances:
+      - ea: 0x1421A3470
+        pointer: false
     funcs:
       0x1400655D0: SetWindowRect
       0x1400659A0: SetWindowSize
@@ -1541,6 +1594,7 @@ classes:
       0x140093B20: GetNetworkModuleProxy
       0x140093B40: GetUIModule
       0x140093B60: GetUIClipboard
+      0x140093B70: GetUIInputData
       0x140094620: InitNetworking
       0x140094A20: TaskBegin
       0x140094B60: TaskDraw2DBegin
@@ -2452,6 +2506,8 @@ classes:
     vtbls:
       - ea: 0x1419BDCF8
         base: Component::GUI::AtkModuleInterface::AtkHistoryInterface
+    funcs:
+      0x1400EB900: ctor
   Client::UI::Info::InfoProxyCommonlist:
     vtbls:
       - ea: 0x1419BDE38
@@ -2756,6 +2812,8 @@ classes:
       0x1401C0570: HasFinished
       0x1401C05B0: SetAffinity
   Client::System::Threading::ThreadManager:
+    instances: 
+      - ea: 0x1421AC230
     vtbls:
       - ea: 0x1419D2888
         base: Client::System::Common::NonCopyable
@@ -2775,6 +2833,8 @@ classes:
     funcs:
       0x1401C5EF0: ctor 
   Client::System::File::FileManager:
+    instances:
+      - ea: 0x1421AC240
     vtbls:
       - ea: 0x1419D2C20
         base: Client::System::Framework::Task
@@ -4934,7 +4994,9 @@ classes:
       21: GetLetterDataModule
       22: GetRetainerTaskDataModule
       23: GetFlagStatusModule
+      24: GetRecipeFavoriteModule
       26: GetRaptureUiDataModule
+      29: GetGoldSaucerModule
       30: GetRaptureTeleportHistory
       32: GetRecommendEquipModule
       34: GetInfoModule
@@ -5294,6 +5356,22 @@ classes:
       0x1406A7250: ctor
       0x1406A7410: Finalize
       0x1406A9260: SearchForItem
+  Client::UI::Misc::GoldSaucerModule:
+    vtbls:
+      - ea: 0x141A1C560
+        base: Client::UI::Misc::UserFileManager::UserFileEvent
+    funcs:
+      0x1406B3110: ctor
+      0x1406B3B00: SetDeckName
+      0x1406B3B70: SetDeckCard
+      0x1406B3BA0: GetDeck
+      0x1406B3BC0: SetHotbarMinion
+      0x1406B3C10: GetHotbarMinion
+      0x1406B3C60: GetHotbarMinionArray # no xrefs
+      0x1406B3C70: AddUnseenCard
+      0x1406B3D50: RemoveUnseenCard
+      0x1406B3E20: IsUnseenCard
+      0x1406B3E50: GetUnseenCardsArray
   Client::UI::Misc::ItemOrderModule:
     vtbls:
       - ea: 0x141A1C5C8
@@ -5309,6 +5387,16 @@ classes:
     vtbls:
       - ea: 0x141A1C698
         base: Client::UI::Misc::UserFileManager::UserFileEvent
+  Client::UI::Misc::RecipeFavoriteModule:
+    vtbls:
+      - ea: 0x141A1C4D8
+        base: Client::UI::Misc::UserFileManager::UserFileEvent
+    funcs:
+      0x1406B1A40: ctor
+      0x1406B1C50: IsFavorited
+      0x1406B1CB0: GetEntry
+      0x1406B1EA0: RemoveFromFavorites
+      0x1406B1F50: AddToFavorites
   Client::UI::Misc::RaptureTeleportHistory:
     vtbls:
       - ea: 0x141A1C700
@@ -5318,8 +5406,12 @@ classes:
       0x1406BDE90: AddHistoryEntry
   Client::UI::Misc::RecommendEquipModule:
     funcs:
+      0x1406BEC20: Setup # (this, race, sex, level, classJob, grandCompany, pvpRank)
       0x1406BEF20: ctor
-      0x1406BF340: SetupRecommendationList
+      0x1406BEFC0: Update
+      0x1406BF340: SetupFromPlayerState
+      0x1406BF3F0: SetupForClassJob
+      0x1406BF480: Clear
       0x1406BF4E0: EquipRecommended
   Client::UI::Misc::RetainerCommentModule:
     vtbls:
@@ -5348,7 +5440,9 @@ classes:
       0x1406DFCF0: DeleteBanner
   Client::UI::Misc::BannerModuleEntry:
     funcs:
+      0x14066B720: j_ctor
       0x14066B740: ctor
+      0x14066B800: Equals
       0x14096C7C0: GenerateChecksum # static
   Client::UI::Misc::CharaView:
     vtbls:
@@ -7695,6 +7789,12 @@ classes:
         base: Client::UI::Agent::AgentInterface
     funcs:
       0x140ACA500: ctor
+  Client::UI::Agent::AgentHwdGathererInspection:
+    vtbls:
+      - ea: 0x141A739E8
+        base: Client::UI::Agent::AgentInterface
+    funcs:
+      0x140ACA920: ctor
   Client::UI::Agent::AgentHwdScore:
     vtbls:
       - ea: 0x141A73A70
