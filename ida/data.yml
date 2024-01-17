@@ -2375,6 +2375,10 @@ classes:
       9: GetUseSoftwareCursor
       14: IsCursorVisible
       21: IsMouseNotCaptured
+      22: UnloadSoftwareCursor
+      23: LoadCursor #(this, type, name)
+    funcs:
+      #fail 0x140086F90: SetHardwareCursorSize
   Component::Shell::ShellCommandModule:
     vtbls:
       - ea: 0x1419B3878
@@ -2798,6 +2802,7 @@ classes:
       - ea: 0x1419D3DB8
         base: Client::System::Common::NonCopyable
     vfuncs:
+      1: RequestStop
       5: Run
     funcs:
       0x1401C01D0: ctor
@@ -3462,6 +3467,9 @@ classes:
         base: Client::Graphics::Singleton
     funcs:
       0x1403756A0: ctor
+      #fail 0x140090370: SetGlare
+      #fail 0x1400903F0: SetTranslucentQuality
+      #fail 0x1400903B0: SetGamma
   Client::Graphics::Render::Camera:
     vtbls:
       - ea: 0x1419EFD90
