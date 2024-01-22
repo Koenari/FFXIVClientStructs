@@ -9,6 +9,7 @@ globals:
   0x142169868: g_Client::Game::Control::InputManager_MouseButtonHoldState
   0x14217FC30: g_StackCookie
   0x14217FC38: g_InverseStackCookie
+  0x14219D370: g_ThreadLocalPerformanceFrequency
   0x14219D4A0: g_OSVersion
   0x1421A4360: g_CurrentCharaSelectCharacter # Client::Game::Character::Character*
   0x1421A4570: g_CharaSelectCharacterList # see Client::UI::Agent::AgentLobby::CharaSelectCharacterList
@@ -61,6 +62,7 @@ globals:
   0x142180E78: g_OodleNew
   0x142180E80: g_OodleDelete
   0x142180E90: g_OodlePrintf
+  0x1423441F8: g_MainThreadCriticalSection
   0x1426507F0: ?hkaSkeletonMapperClass@@3VhkClass@@B
   0x142650870: ?hkaAnimationContainerClass@@3VhkClass@@B
   0x142651820: ?hkReferencedObjectClass@@3VhkClass@@B
@@ -3426,6 +3428,7 @@ classes:
       0x140355230: Initialize
       0x140355FA0: CreateTexture2D
       0x140356AB0: CreateConstantBuffer
+      0x140356F10: PreTick
       0x140357180: PostTick
   Client::Graphics::Kernel::Context:
     funcs:
@@ -5110,6 +5113,7 @@ classes:
       0x140629B80: Finalize
       0x14062A2B0: Update
       0x14062A730: HandleInputUpdate
+      0x14062A800: ShouldLimitFps
   Client::UI::Misc::PvpSetModule:
     vtbls:
       - ea: 0x141A1E990
@@ -5330,6 +5334,7 @@ classes:
       0x140667680: ctor
       0x140667A40: SetValueByIndex
       0x140667C10: GetValueByIndex
+      0x140669140: Update
   Client::UI::Misc::FieldMarkerModule:
     vtbls:
       - ea: 0x141A1ED50
@@ -5383,6 +5388,7 @@ classes:
       0x140676E10: FormatAddonText3
       0x140677470: FormatAddonText4
       0x140679B20: FormatTimeSpan
+      0x14067B150: Update
       0x14067BA60: FormatAddonTextApply
   Client::UI::Misc::RaptureLogModule:
     vtbls:
@@ -5390,6 +5396,7 @@ classes:
         base: Component::Log::LogModule
     funcs:
       0x14067F7D0: ctor
+      0x14067FF60: Update
       0x14067FA90: Finalize
       0x140681090: PrintMessage
       0x1406840B0: PrintString  # (this, stringPtr)
@@ -5525,6 +5532,7 @@ classes:
         base: Client::UI::Misc::UserFileManager::UserFileEvent
     funcs:
       0x1406A1B20: ctor
+      0x1406A1D00: Update
       0x1406A1D50: GetGearset
       0x1406A1D70: IsValidGearset
       0x1406A1EF0: EquipGearset
@@ -5548,6 +5556,7 @@ classes:
     funcs:
       0x1406A7110: ctor
       0x1406A72D0: Finalize
+      0x1406A8D30: Update
       0x1406A9120: SearchForItem
   Client::UI::Misc::GoldSaucerModule:
     vtbls:

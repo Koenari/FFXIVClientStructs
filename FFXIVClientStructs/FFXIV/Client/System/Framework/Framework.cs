@@ -21,6 +21,9 @@ namespace FFXIVClientStructs.FFXIV.Client.System.Framework;
 // ctor E8 ?? ?? ?? ?? 48 8B C8 48 89 05 ?? ?? ?? ?? EB 0A 48 8B CE 
 [StructLayout(LayoutKind.Explicit, Size = 0x35C8)]
 public unsafe partial struct Framework {
+    [FieldOffset(0x0008)] public byte Unk8;
+    [FieldOffset(0x0009)] public bool Unk9;
+    [FieldOffset(0x000C)] public int UnkC;
     [FieldOffset(0x0010)] public SystemConfig SystemConfig;
     [FieldOffset(0x0460)] public DevConfig DevConfig;
     [FieldOffset(0x0570)] public SavedAppearanceManager* SavedAppearanceData;
@@ -56,6 +59,8 @@ public unsafe partial struct Framework {
 
     [FieldOffset(0x16F8)] public TaskManager TaskManager;
     [FieldOffset(0x16B8)] public float FrameDeltaTime;
+    [FieldOffset(0x16BC)] public int Unk16BC;
+    [FieldOffset(0x16C0)] public float FrameDeltaTimeOverride;
     [FieldOffset(0x16C8)] public uint FrameCounter;
     [FieldOffset(0x1768)] public ClientTime ClientTime;
     [FieldOffset(0x1770)] [Obsolete("Use ClientTime.EorzeaTime")]
