@@ -3170,6 +3170,7 @@ classes:
       0x14021AE90: Initialize
       0x14021B610: Finalize
       0x14021B6B0: IsWinSockInitialized
+      0x14021BF40: GetCurrentDeviceTime
       0x14021BF90: GetCurrentDeviceTimeInMillis
       0x14021C010: GetLobbyCount 
       0x14021C940: IsInCrossWorldDuty

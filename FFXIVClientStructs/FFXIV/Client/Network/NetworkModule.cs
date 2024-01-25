@@ -6,6 +6,10 @@ namespace FFXIVClientStructs.FFXIV.Client.Network;
 
 [StructLayout(LayoutKind.Explicit, Size = 0xB60)]
 public unsafe partial struct NetworkModule {
+
+    [FieldOffset(0x008)] public nint* UnkArr;
+    [FieldOffset(0x010)] public uint UnkCount;
+
     [FieldOffset(0x028)] public byte LobbyCount;
     [FieldOffset(0x02C)] public fixed uint LobbyPorts[12];
     [FixedSizeArray<Utf8String>(12)]
@@ -35,11 +39,11 @@ public unsafe partial struct NetworkModule {
     [FieldOffset(0x990)] public byte Unk990;
     [FieldOffset(0x994)] public int Unk994;
     //This region seems to generally hold references to other objects
-    [FieldOffset(0x998)] public Unk930Obj* Unk998; //seen in getting FC info
-    [FieldOffset(0x9A0)] public Unk938Obj* Unk9A0; //Struct is similar to 930Obj
-    [FieldOffset(0x9A8)] public Unk940Obj* Unk9A8;
+    [FieldOffset(0x998)] public Unk998Obj* Unk998; //seen in getting FC info
+    [FieldOffset(0x9A0)] public Unk9A0Obj* Unk9A0; //Struct is similar to 930Obj
+    [FieldOffset(0x9A8)] public Unk9A8Obj* Unk9A8;
     [FieldOffset(0x9B0)] public void* Unk9B0;
-    [FieldOffset(0x9B8)] public void* Unk9B8;
+    [FieldOffset(0x9B8)] public Unk9B8Obj* Unk9B8;
     [FieldOffset(0x9C0)] public Unk9C0Struct* Unk9C0; //Has vtbl
     [FieldOffset(0x9C8)] public byte Unk9C8; //Related to 940
     [FieldOffset(0x9C9)] public bool WinSockInitialized;
@@ -87,10 +91,10 @@ public unsafe partial struct NetworkModule {
     [FieldOffset(0xB34)] public int KeepAliveIntervalZone;
     [FieldOffset(0xB38)] public int KeepAliveChat;
     [FieldOffset(0xB3C)] public int KeepAliveIntervalChat;
-
+    [FieldOffset(0xB40)] public TimeStruct UnkB40;
     [FieldOffset(0xB58)] public bool IsInCrossWorldDuty;
 
-        //FUN_14021c0b0
+    //FUN_14021c0b0
     [MemberFunction("E8 ?? ?? ?? ?? 4C 8B B3 ?? ?? ?? ?? 48 89 BB")]
     public partial void GetChracterData(void* p2, void* p3);
 
@@ -117,7 +121,7 @@ public unsafe partial struct NetworkModule {
     }
 
     [StructLayout(LayoutKind.Explicit, Size = 0xA0)]
-    public partial struct Unk930Obj {
+    public partial struct Unk998Obj {
         [FieldOffset(0x00)] public Utf8String ServerIp;
 
         [FieldOffset(0x68)] public short Unk68;
@@ -196,7 +200,7 @@ public unsafe partial struct NetworkModule {
     }
 
     [StructLayout(LayoutKind.Explicit)]
-    public partial struct Unk938Obj {
+    public partial struct Unk9A0Obj {
         [FieldOffset(0x00)] public Utf8String Unk00;
         //0x10 byte
         [FieldOffset(0x78)] public StdVector<ulong> Unk78; //ulong is a placeholder
@@ -205,11 +209,14 @@ public unsafe partial struct NetworkModule {
         [StructLayout(LayoutKind.Explicit)]
         public partial struct UnkA0Obj {
             [FieldOffset(0x00)] public void** vtbl;
+
+            [FieldOffset(0x108)] public uint Unk108;
+            [FieldOffset(0x110)] public uint Unk110;
         }
     }
 
     [StructLayout(LayoutKind.Explicit, Size = 0x7C8)]
-    public struct Unk940Obj {
+    public struct Unk9A8Obj {
         //ctor FUN_141586030
         [FieldOffset(0x28)] public int Unk028;
         [FieldOffset(0x2C)] public short Unk02C;
@@ -298,5 +305,10 @@ public unsafe partial struct NetworkModule {
         }
 
 
+    }
+
+    [StructLayout(LayoutKind.Explicit, Size = 0x38)]
+    public struct Unk9B8Obj {
+        [FieldOffset(0x34)] public uint LobbyPing;
     }
 }
