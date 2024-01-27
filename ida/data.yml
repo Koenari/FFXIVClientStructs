@@ -6,9 +6,12 @@ globals:
   0x1419BE6C0: g_UIColorTable
   0x141A076B8: g_HUDScaleTable
   0x141FDD380: g_ClientInstanceLimit
+  0x141FE1D48: g_LangCharArr # byte[] no pointer
   0x142169868: g_Client::Game::Control::InputManager_MouseButtonHoldState
   0x14217FC30: g_StackCookie
   0x14217FC38: g_InverseStackCookie
+  0x14219B8E8: stdout
+  0x14219D370: g_ThreadLocalPerformanceFrequency
   0x14219D4A0: g_OSVersion
   0x1421A4360: g_CurrentCharaSelectCharacter # Client::Game::Character::Character*
   0x1421A4570: g_CharaSelectCharacterList # see Client::UI::Agent::AgentLobby::CharaSelectCharacterList
@@ -56,6 +59,7 @@ globals:
   0x142180E78: g_OodleNew
   0x142180E80: g_OodleDelete
   0x142180E90: g_OodlePrintf
+  0x1423441F8: g_MainThreadCriticalSection
   0x1426507F0: ?hkaSkeletonMapperClass@@3VhkClass@@B
   0x142650870: ?hkaAnimationContainerClass@@3VhkClass@@B
   0x142651820: ?hkReferencedObjectClass@@3VhkClass@@B
@@ -68,26 +72,34 @@ globals:
   0x142660840: ?s_instance@?$hkSingleton@VhkVtableClassRegistry@@@@2PEAVhkVtableClassRegistry@@EA
 
 functions:
+  
   0x140058500: WinMain
   0x1400581B0: std:string::ctor_FromSubStr #(other, idx, len)
   0x1400582F0: std:string::ctor_FromCharArr #(arr, len)
+  0x140059700: GetStdOut
+  0x140059710: vsprintf_s
+  0x140059770: vswprintf_s
   0x1400654E0: IsMacClient
   0x1400951B0: CheckOsTypeAndVersion
   0x140067500: GetMyDocumntsFolder #as UTF8String
+  0x140096470: GetPerformanceFrequency
   0x1400976D0: CreateDirectoryRecursive
   0x1400A6BD0: GetCurrentUnixTimestamp # in seconds
   0x1400A6D00: Client::UI::PlaySoundEffect # this is a static function in the UI namespace, arg1 is the SE
   0x1400A8990: Client::UI::GetUIColor # (idx, &color, &edgeColor)
   0x1400A89D0: Client::UI::GetNumberAsBoxedChar # (uint) accepts numbers 0-30
   0x1400A8A80: Client::UI::GetNumberAsDigitChars # (uint) accepts numbers 0-999
+  0x140181DF0: GetTime
   0x1401C03B0: j_SleepEx
   0x1401C03C0: j_Sleep
+  0x14021ADB0: GetCharForLanguage
   0x1402ECEC0: CountdownPointer
   0x1403189C0: CleanupCharaSelectCharacters
   0x140335520: std::vector_SetSize
   0x140655670: GetGameObjectByIndex
   0x1404998B0: PrepareColorSet
   0x140499B80: ReadStainingTemplate
+  0x1404BDD70: StartSpursJobEntityWorkerThread
   0x1404E9260: GetAvailablePoses
   0x14050FD30: RemoveFromList # (AtkEvent**, AtkEvent*) Finds and removes param2 from the param1 list
   0x1405396D0: GetScaleListEntryFromScale
@@ -303,6 +315,9 @@ functions:
   0x1415FF240: ReadSqpkChunk
 
 classes:
+  Common::AccurateTime:
+    funcs:
+      0x1400965f0: GetNow
   MemoryManager:
     funcs:
       0x1400609F0: AllocDefaultSpace
@@ -367,6 +382,17 @@ classes:
       0x1415EBC50: Initialize
       0x1415EB430: GetCharacterData
       0x1415EC490: dtor
+  Application:Network::LobbyConnection:
+    vtbls:
+      - ea: 0x141c85608
+    vfuns:
+      0: Dispose
+    funcs:
+      0x1415F3C10: ctor
+      0x1415F3D20: dtor
+      0x14161C8A0: ctor_helper
+      0x14161D940: dtor_base
+      0x14161ED00: IsOffset8NotNull
   Application::Network::LobbyClient::LobbyRequestCallback:
     vtbls:
       - ea: 0x141C900F8
@@ -1775,6 +1801,8 @@ classes:
       0x140095A60: TeardownSteamApi
       0x140095AC0: IsSteamApiInitialized
       0x140095F20: Finalize
+      0x140097020: InitGamePath
+      0x140097250: InitSqPackPath
       0x140097390: GetSavePath
   Component::Excel::ExcelModuleInterface:
     vtbls:
@@ -2530,6 +2558,8 @@ classes:
       9: GetUseSoftwareCursor
       14: IsCursorVisible
       21: IsMouseNotCaptured
+      22: UnloadSoftwareCursor
+      23: LoadCursor #(this, type, name)
     funcs:
       0x140086790: ctor
   Component::Shell::ShellCommandModule:
@@ -2955,6 +2985,7 @@ classes:
       - ea: 0x1419D3DB8
         base: Client::System::Common::NonCopyable
     vfuncs:
+      1: RequestStop
       5: Run
     funcs:
       0x1401C01D0: ctor
@@ -2992,6 +3023,7 @@ classes:
     funcs:
       0x1401C7750: GetInstance
       0x1401C77D0: ctor
+      0x1401C8590: CreateFileThread
   Client::System::File::FileAccessPath:
     funcs:
       0x140066360: ctor
@@ -3328,6 +3360,7 @@ classes:
       0x14021AE90: Initialize
       0x14021B610: Finalize
       0x14021B6B0: IsWinSockInitialized
+      0x14021BF40: GetCurrentDeviceTime
       0x14021BF90: GetCurrentDeviceTimeInMillis
       0x14021C010: GetLobbyCount
       0x14021C940: IsInCrossWorldDuty
@@ -3580,6 +3613,7 @@ classes:
       0x140355230: Initialize
       0x140355FA0: CreateTexture2D
       0x140356AB0: CreateConstantBuffer
+      0x140356F10: PreTick
       0x140357180: PostTick
   Client::Graphics::Kernel::Context:
     funcs:
@@ -3621,6 +3655,9 @@ classes:
         base: Client::Graphics::Singleton
     funcs:
       0x1403756A0: ctor
+      #fail 0x140090370: SetGlare
+      #fail 0x1400903F0: SetTranslucentQuality
+      #fail 0x1400903B0: SetGamma
   Client::Graphics::Render::Camera:
     vtbls:
       - ea: 0x1419EFD90
@@ -4086,9 +4123,13 @@ classes:
       0x1404B73A0: nullsub_1
       0x1404B73D0: LoadDataFiles
   Client::System::Task::SpursJobEntityWorkerThread:
+    instances:
+      - ea: 0x1421B9AC0
     vtbls:
       - ea: 0x141A02758
         base: Client::System::Threading::Thread
+    funcs:
+      0x1404bdb10: ctor
   Common::Lua::LuaState:
     vtbls:
       - ea: 0x141A030E8
@@ -5273,6 +5314,7 @@ classes:
       0x140629B80: Finalize
       0x14062A2B0: Update
       0x14062A730: HandleInputUpdate
+      0x14062A800: ShouldLimitFps
   Client::UI::Misc::PvpSetModule:
     vtbls:
       - ea: 0x141A1E990
@@ -5493,6 +5535,7 @@ classes:
       0x140667680: ctor
       0x140667A40: SetValueByIndex
       0x140667C10: GetValueByIndex
+      0x140669140: Update
   Client::UI::Misc::FieldMarkerModule:
     vtbls:
       - ea: 0x141A1ED50
@@ -5546,6 +5589,7 @@ classes:
       0x140676E10: FormatAddonText3
       0x140677470: FormatAddonText4
       0x140679B20: FormatTimeSpan
+      0x14067B150: Update
       0x14067BA60: FormatAddonTextApply
   Client::UI::Misc::RaptureLogModule:
     vtbls:
@@ -5553,6 +5597,7 @@ classes:
         base: Component::Log::LogModule
     funcs:
       0x14067F7D0: ctor
+      0x14067FF60: Update
       0x14067FA90: Finalize
       0x140681090: PrintMessage
       0x1406840B0: PrintString  # (this, stringPtr)
@@ -5688,6 +5733,7 @@ classes:
         base: Client::UI::Misc::UserFileManager::UserFileEvent
     funcs:
       0x1406A1B20: ctor
+      0x1406A1D00: Update
       0x1406A1D50: GetGearset
       0x1406A1D70: IsValidGearset
       0x1406A1EF0: EquipGearset
@@ -5711,6 +5757,7 @@ classes:
     funcs:
       0x1406A7110: ctor
       0x1406A72D0: Finalize
+      0x1406A8D30: Update
       0x1406A9120: SearchForItem
   Client::UI::Misc::GoldSaucerModule:
     vtbls:
