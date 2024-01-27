@@ -8,6 +8,7 @@ using FFXIVClientStructs.FFXIV.Client.System.String;
 using FFXIVClientStructs.FFXIV.Client.System.Threading;
 using FFXIVClientStructs.FFXIV.Client.System.Timer;
 using FFXIVClientStructs.FFXIV.Client.UI;
+using FFXIVClientStructs.FFXIV.Common;
 using FFXIVClientStructs.FFXIV.Common.Component.BGCollision;
 using FFXIVClientStructs.FFXIV.Common.Lua;
 using FFXIVClientStructs.FFXIV.Component.Excel;
@@ -51,9 +52,13 @@ public unsafe partial struct Framework {
     [FieldOffset(0x1670)] public NetworkModuleProxy* NetworkModuleProxy;
     [FieldOffset(0x1678)] public bool IsNetworkModuleInitialized;
     [FieldOffset(0x1679)] public bool EnableNetworking;
-    [FieldOffset(0x1680)] public long ServerTime; // TODO: change to uint
-    [FieldOffset(0x1688)] public long PerformanceCounterInMilliSeconds;
-    [FieldOffset(0x1688)] public long PerformanceCounterInMicroSeconds;
+    [FieldOffset(0x1680)] public AccurateTime UtcTime;
+    [Obsolete("Use UtcTiem.Timestamp")] [FieldOffset(0x1680)]
+    public long ServerTime; // TODO: change to uint
+    [Obsolete("Use UtcTiem.CpuMilliSeconds")] [FieldOffset(0x1688)]
+    public long PerformanceCounterInMilliSeconds;
+    [Obsolete("Use UtcTime.CpuNanoSeconds")] [FieldOffset(0x1690)]
+    public long PerformanceCounterInMicroSeconds;
     [FieldOffset(0x1698)] public uint TimerResolutionMillis;
     [FieldOffset(0x16A0)] public long PerformanceCounterFrequency;
     [FieldOffset(0x16A8)] public long PerformanceCounterValue;

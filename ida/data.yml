@@ -329,6 +329,9 @@ functions:
   0x14192F860: CollisionFree
 
 classes:
+  Common::AccurateTime:
+    funcs:
+      0x1400965f0: GetNow
   Client::Game::UI::RecipeNote:
     instances:
       - ea: 0x1421F7F00
@@ -394,6 +397,17 @@ classes:
       0x1415EBC50: Initialize
       0x1415EB430: GetCharacterData
       0x1415EC490: dtor
+  Application:Network::LobbyConnection:
+    vtbls:
+      - ea: 0x141c85608
+    vfuns:
+      0: Dispose
+    funcs:
+      0x1415F3C10: ctor
+      0x1415F3D20: dtor
+      0x14161C8A0: ctor_helper
+      0x14161D940: dtor_base
+      0x14161ED00: IsOffset8NotNull
   Application::Network::LobbyClient::LobbyRequestCallback:
     vtbls:
       - ea: 0x141C900F8
@@ -3190,6 +3204,7 @@ classes:
       0x14021AE90: Initialize
       0x14021B610: Finalize
       0x14021B6B0: IsWinSockInitialized
+      0x14021BF40: GetCurrentDeviceTime
       0x14021BF90: GetCurrentDeviceTimeInMillis
       0x14021C010: GetLobbyCount 
       0x14021C940: IsInCrossWorldDuty
