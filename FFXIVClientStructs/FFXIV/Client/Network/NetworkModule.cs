@@ -1,5 +1,6 @@
 using FFXIVClientStructs.FFXIV.Application.Network;
 using FFXIVClientStructs.FFXIV.Client.System.String;
+using FFXIVClientStructs.FFXIV.Common;
 using Unknown = nint;
 
 namespace FFXIVClientStructs.FFXIV.Client.Network;
@@ -41,8 +42,8 @@ public unsafe partial struct NetworkModule {
     //This region seems to generally hold references to other objects
     [FieldOffset(0x998)] public Unk998Obj* Unk998; //seen in getting FC info
     [FieldOffset(0x9A0)] public Unk9A0Obj* Unk9A0; //Struct is similar to 930Obj
-    [FieldOffset(0x9A8)] public Unk9A8Obj* Unk9A8;
-    [FieldOffset(0x9B0)] public void* Unk9B0;
+    [FieldOffset(0x9A8)] public LobbyConnection* Unk9A8;
+    [FieldOffset(0x9B0)] public Unk9B0Obj* Unk9B0;
     [FieldOffset(0x9B8)] public Unk9B8Obj* Unk9B8;
     [FieldOffset(0x9C0)] public Unk9C0Struct* Unk9C0; //Has vtbl
     [FieldOffset(0x9C8)] public byte Unk9C8; //Related to 940
@@ -59,29 +60,29 @@ public unsafe partial struct NetworkModule {
 
     //TODO: Offsets (+0x68)
 
-    [FieldOffset(0x9F8)] public TimeStruct Unk9F8;
+    [FieldOffset(0x9F8)] public AccurateTime Unk9F8;
     [FieldOffset(0xA10)] public int UnkA10;
 
     [FieldOffset(0xA40)] public int UnkA40; //Init = 30 (0x1e)
     [FieldOffset(0xA44)] public int UnkA44;
-    [FieldOffset(0xA48)] public TimeStruct UnkA48;
+    [FieldOffset(0xA48)] public AccurateTime UnkA48;
     [FieldOffset(0xA60)] public int UnkA60; //Init = 60 (0x3C)
     [FieldOffset(0xA68)] public void* UnkA68;
     [FieldOffset(0xA70)] public int UnkA70;
     [FieldOffset(0xA74)] public int CurrentDeviceTime; //Timestamp
     [FieldOffset(0xA78)] public int CurrentDeviceTimeMillis; //Milliseconds for A74
     [FieldOffset(0xA80)] public void* UnkA80;
-    [FieldOffset(0xA88)] public TimeStruct UnkA88;
+    [FieldOffset(0xA88)] public AccurateTime UnkA88;
     [FieldOffset(0xAA0)] public byte UnkAA0;
-    [FieldOffset(0xAA8)] public TimeStruct UnkAA8;
+    [FieldOffset(0xAA8)] public AccurateTime UnkAA8;
 
     [FieldOffset(0xAC0)] public uint UnkAC0; //related to 998
     [FieldOffset(0xAC4)] public uint UnkAC4;
     [FieldOffset(0xAC8)] public void* UnkAC8; //related to 9A0
-    [FieldOffset(0xAD0)] public TimeStruct UnkAD0;
+    [FieldOffset(0xAD0)] public AccurateTime UnkAD0;
     [FieldOffset(0xAE8)] public void* UnkAE8; //init 0xbb8 (3000)
-    [FieldOffset(0xAF0)] public TimeStruct UnkAF0;
-    [FieldOffset(0xB08)] public TimeStruct UnkB08;
+    [FieldOffset(0xAF0)] public AccurateTime UnkAF0;
+    [FieldOffset(0xB08)] public AccurateTime UnkB08;
     [FieldOffset(0xB20)] public int UnkB20; //Init 0x42c80000
     [FieldOffset(0xB24)] public byte UnkB24; //Init 0
     [FieldOffset(0xB26)] public short CurrentInstance;
@@ -91,7 +92,7 @@ public unsafe partial struct NetworkModule {
     [FieldOffset(0xB34)] public int KeepAliveIntervalZone;
     [FieldOffset(0xB38)] public int KeepAliveChat;
     [FieldOffset(0xB3C)] public int KeepAliveIntervalChat;
-    [FieldOffset(0xB40)] public TimeStruct UnkB40;
+    [FieldOffset(0xB40)] public AccurateTime UnkB40;
     [FieldOffset(0xB58)] public bool IsInCrossWorldDuty;
 
     //FUN_14021c0b0
@@ -113,12 +114,6 @@ public unsafe partial struct NetworkModule {
         [FieldOffset(0x0)] public LobbyClient.LobbyRequestCallback LobbyRequestCallback;
     }
 
-    [StructLayout(LayoutKind.Explicit, Size = 0x18)]
-    public struct TimeStruct {
-        [FieldOffset(0x00)] public int TimeStamp;
-        [FieldOffset(0x08)] public ulong CpuMilliSeconds;
-        [FieldOffset(0x10)] public ulong CpuNanoSeconds;
-    }
 
     [StructLayout(LayoutKind.Explicit, Size = 0xA0)]
     public partial struct Unk998Obj {
@@ -215,15 +210,18 @@ public unsafe partial struct NetworkModule {
         }
     }
 
+    // ctor "E8 ?? ?? ?? ?? 48 8B D8 48 8B 85"
+    // ctor(host, port, ticket)
     [StructLayout(LayoutKind.Explicit, Size = 0x7C8)]
-    public struct Unk9A8Obj {
+    public struct LobbyConnection {
         //ctor FUN_141586030
         [FieldOffset(0x28)] public int Unk028;
         [FieldOffset(0x2C)] public short Unk02C;
         [FieldOffset(0x30)] public int Unk030;
-        [FieldOffset(0x038)] public TimeStruct Unk038;
+        [FieldOffset(0x038)] public AccurateTime Unk038;
         [FieldOffset(0x050)] public int Unk050;
-        [FieldOffset(0x070)] public Unk070Obj Unk070;
+        [FieldOffset(0x070)] public Utf8String Unk070;
+        [FieldOffset(0x0D8)] public uint Unk0D8;
         [FieldOffset(0x0E0)] public short Unk0E0;
         [FieldOffset(0x0E8)] public Utf8String Unk0E8;
         [FieldOffset(0x150)] public Utf8String Unk150;
@@ -263,10 +261,11 @@ public unsafe partial struct NetworkModule {
         [FieldOffset(0x4B0)] public Unknown Unk4B0;
         [FieldOffset(0x4B8)] public Unknown Unk4B8;
         [FieldOffset(0x4C0)] public Unknown Unk4C0;
-        [FieldOffset(0x4C8)] public Unk070Obj Unk4C8; //Ip copied from param_2; short copied from param_3
+        [FieldOffset(0x4C8)] public Utf8String Host;
+        [FieldOffset(0x530)] public int Port;
         [FieldOffset(0x538)] public Unk538Obj* Unk538;
         [FieldOffset(0x540)] public int Unk540;
-        [FieldOffset(0x548)] public Utf8String Unk548; //Copied from param_4
+        [FieldOffset(0x548)] public Utf8String Ticket;
         [FieldOffset(0x5B0)] public Utf8String Unk5B0;
         [FieldOffset(0x618)] public Utf8String Unk618;
         [FieldOffset(0x680)] public Utf8String Unk680;
@@ -274,12 +273,6 @@ public unsafe partial struct NetworkModule {
         [FieldOffset(0x6EC)] public Unknown Unk6EC;
         [FieldOffset(0x6F8)] public Utf8String Unk6F8;
         [FieldOffset(0x760)] public Utf8String Unk760;
-
-        [StructLayout(LayoutKind.Explicit, Size = 0x70)]
-        public struct Unk070Obj {
-            [FieldOffset(0x00)] public Utf8String Unk00;
-            [FieldOffset(0x68)] public short Unk068; //Init to 54999
-        }
 
         [StructLayout(LayoutKind.Explicit, Size = 0x130)]
         public struct Unk538Obj {
@@ -310,5 +303,10 @@ public unsafe partial struct NetworkModule {
     [StructLayout(LayoutKind.Explicit, Size = 0x38)]
     public struct Unk9B8Obj {
         [FieldOffset(0x34)] public uint LobbyPing;
+    }
+
+    [StructLayout(LayoutKind.Explicit)]
+    public struct Unk9B0Obj {
+        [FieldOffset(0x80)] public LobbyConnection* Unk80;
     }
 }
