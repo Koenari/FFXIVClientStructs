@@ -10,6 +10,7 @@ globals:
   0x142169868: g_Client::Game::Control::InputManager_MouseButtonHoldState
   0x14217FC30: g_StackCookie
   0x14217FC38: g_InverseStackCookie
+  0x14219B8E8: stdout
   0x14219D370: g_ThreadLocalPerformanceFrequency
   0x14219D4A0: g_OSVersion
   0x1421A4360: g_CurrentCharaSelectCharacter # Client::Game::Character::Character*
@@ -75,10 +76,14 @@ globals:
   0x142660760: ?s_instance@?$hkSingleton@VhkSerializeDeprecated@@@@2PEAVhkSerializeDeprecated@@EA
   0x142660840: ?s_instance@?$hkSingleton@VhkVtableClassRegistry@@@@2PEAVhkVtableClassRegistry@@EA
 
-functions: 
+functions:
+  
   0x140058500: WinMain
   0x1400581B0: std:string::ctor_FromSubStr #(other, idx, len)
   0x1400582F0: std:string::ctor_FromCharArr #(arr, len)
+  0x140059700: GetStdOut
+  0x140059710: vsprintf_s
+  0x140059770: vswprintf_s
   0x1400609F0: MemoryManager_AllocDefaultSpace
   0x140060A80: MemoryManager_Alloc
   0x140062190: MemoryManager_GetDefaultSpace
@@ -92,6 +97,7 @@ functions:
   0x1400654E0: IsMacClient
   0x1400951B0: CheckOsTypeAndVersion
   0x140067500: GetMyDocumntsFolder #as UTF8String
+  0x140096470: GetPerformanceFrequency
   0x1400976D0: CreateDirectoryRecursive
   0x1400A6BD0: GetCurrentUnixTimestamp # in seconds
   0x1400A6D00: Client::UI::PlaySoundEffect # this is a static function in the UI namespace, arg1 is the SE
@@ -108,6 +114,7 @@ functions:
   0x140655670: GetGameObjectByIndex
   0x1404998B0: PrepareColorSet
   0x140499B80: ReadStainingTemplate
+  0x1404BDD70: StartSpursJobEntityWorkerThread
   0x1404E9260: GetAvailablePoses
   0x14050FD30: RemoveFromList # (AtkEvent**, AtkEvent*) Finds and removes param2 from the param1 list
   0x1405396D0: GetScaleListEntryFromScale
@@ -1626,6 +1633,8 @@ classes:
       0x140095A60: TeardownSteamApi
       0x140095AC0: IsSteamApiInitialized
       0x140095F20: Finalize
+      0x140097020: InitGamePath
+      0x140097250: InitSqPackPath
       0x140097390: GetSavePath
   Component::Excel::ExcelModuleInterface:
     vtbls:
@@ -2845,6 +2854,7 @@ classes:
     funcs:
       0x1401C7750: GetInstance
       0x1401C77D0: ctor
+      0x1401C8590: CreateFileThread
   Client::System::File::FileAccessPath:
     funcs:
       0x140066360: ctor
@@ -3941,9 +3951,13 @@ classes:
       0x1404B73A0: nullsub_1
       0x1404B73D0: LoadDataFiles
   Client::System::Task::SpursJobEntityWorkerThread:
+    instances:
+      - ea: 0x1421B9AC0
     vtbls:
       - ea: 0x141A02758
         base: Client::System::Threading::Thread
+    funcs:
+      0x1404bdb10: ctor
   Common::Lua::LuaState:
     vtbls:
       - ea: 0x141A030E8
