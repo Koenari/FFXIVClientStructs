@@ -16,7 +16,7 @@ public unsafe partial struct NetworkModule {
     [FixedSizeArray<Utf8String>(12)]
     [FieldOffset(0x060)] public fixed byte LobbyHosts[12 * 0x68];
     [FieldOffset(0x540)] public Utf8String Unk540;
-    [FieldOffset(0x5A8)] public int Unk5A8; //Set by FUN_14021be20, OS related
+    [FieldOffset(0x5A8)] public int Unk5A8; //OS related Win: 4944 Mac: 4985
     [FieldOffset(0x5AC)] public int OperatingSystemTypeAndVersion; //Most likely this is an enum
     [FieldOffset(0x5B0)] public uint SaveDataBankPort;
     [FieldOffset(0x5B8)] public Utf8String SaveDataBankHost; //Config Saves
@@ -55,7 +55,7 @@ public unsafe partial struct NetworkModule {
     [FieldOffset(0x9E8)] public int Unk9E8; //Compared to 4, most likely state
 
     //OVERLAP!!
-    [FieldOffset(0x9EC)] public int Unk9EC; //State related to Unk940
+    [FieldOffset(0x9EC)] public int Unk9EC; //State related to LobbyConnection 9A8 1=failure
     [FieldOffset(0x9F0)] public byte Unk9F0; //guessing bool
 
     //TODO: Offsets (+0x68)
@@ -87,7 +87,7 @@ public unsafe partial struct NetworkModule {
     [FieldOffset(0xB24)] public byte UnkB24; //Init 0
     [FieldOffset(0xB26)] public short CurrentInstance;
     [FieldOffset(0xB28)] public byte UnkB28; //Init 0
-    [FieldOffset(0xB2C)] public int UnkB2C; //Init 0xffffffff
+    [FieldOffset(0xB2C)] public int CLientLanguage; //Init 0xffffffff
     [FieldOffset(0xB30)] public int KeepAliveZone;
     [FieldOffset(0xB34)] public int KeepAliveIntervalZone;
     [FieldOffset(0xB38)] public int KeepAliveChat;
@@ -266,8 +266,8 @@ public unsafe partial struct NetworkModule {
         [FieldOffset(0x538)] public Unk538Obj* Unk538;
         [FieldOffset(0x540)] public int Unk540;
         [FieldOffset(0x548)] public Utf8String Ticket;
-        [FieldOffset(0x5B0)] public Utf8String Unk5B0;
-        [FieldOffset(0x618)] public Utf8String Unk618;
+        [FieldOffset(0x5B0)] public Utf8String World;
+        [FieldOffset(0x618)] public Utf8String Zone;
         [FieldOffset(0x680)] public Utf8String Unk680;
         [FieldOffset(0x6E8)] public short Unk6E8;
         [FieldOffset(0x6EC)] public Unknown Unk6EC;
@@ -276,6 +276,42 @@ public unsafe partial struct NetworkModule {
 
         [StructLayout(LayoutKind.Explicit, Size = 0x130)]
         public struct Unk538Obj {
+            [FieldOffset(0x010)] public Unk010Obj* Unk010;
+            [FieldOffset(0x118)] public AccurateTime Time;
+
+
+            //ctor "E8 ?? ?? ?? ?? 48 8B F0 48 8B CE 48 89"
+            //vtable 0x141c8ff08 (base 0x141c8fdc8)
+            [StructLayout(LayoutKind.Explicit, Size = 0x1B8)]
+            public struct Unk010Obj {
+                [FieldOffset(0x080)] public nint CriticalSection080;
+                [FieldOffset(0x0A8)] public nint CriticalSection0A8;
+                [FieldOffset(0x0D8)] public Unk0D8Obj* Unk0D8;
+                [FieldOffset(0x110)] public void* Unbk110; //freed in dtor
+                [FieldOffset(0x120)] public Utf8String Host;
+                [FieldOffset(0x190)] public Unk190Obj* Unk190;
+                [FieldOffset(0x198)] public AccurateTime Time198;
+
+                //vtable 0x141c8fe40 (base 0x141c8fdf8)
+                [StructLayout(LayoutKind.Explicit, Size = 0x1048)]
+                public struct Unk0D8Obj {
+                    [FieldOffset(0x0)] public void* vtbl;
+                    [FieldOffset(0x38)] public Unk38Obj* Unk38;
+
+                    //ctor "E8 ?? ?? ?? ?? 49 83 FD ?? 0F 84"
+                    [StructLayout(LayoutKind.Explicit, Size = 0x1048)]
+                    public struct Unk38Obj {
+
+                    }
+                }
+
+                //ctor "E8 ?? ?? ?? ?? EB ?? 49 8B C6 48 8B 5C 24"
+                //vtable 0x141c8fec8 (base 0x141c8fe88)
+                [StructLayout(LayoutKind.Explicit, Size = 0x9168)]
+                public struct Unk190Obj {
+
+                }
+            }
         }
 
         [StructLayout(LayoutKind.Explicit, Size = 0x18)]
@@ -300,6 +336,7 @@ public unsafe partial struct NetworkModule {
 
     }
 
+    //ctor "33 C0 41 B8 ?? ?? ?? ?? 48 89 01"
     [StructLayout(LayoutKind.Explicit, Size = 0x38)]
     public struct Unk9B8Obj {
         [FieldOffset(0x34)] public uint LobbyPing;

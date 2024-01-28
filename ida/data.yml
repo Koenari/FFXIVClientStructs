@@ -72,7 +72,6 @@ globals:
   0x142660840: ?s_instance@?$hkSingleton@VhkVtableClassRegistry@@@@2PEAVhkVtableClassRegistry@@EA
 
 functions:
-  
   0x140058500: WinMain
   0x1400581B0: std:string::ctor_FromSubStr #(other, idx, len)
   0x1400582F0: std:string::ctor_FromCharArr #(arr, len)
@@ -81,6 +80,7 @@ functions:
   0x140059770: vswprintf_s
   0x1400654E0: IsMacClient
   0x1400951B0: CheckOsTypeAndVersion
+  0x140067100: CopyUInt
   0x140067500: GetMyDocumntsFolder #as UTF8String
   0x140096470: GetPerformanceFrequency
   0x1400976D0: CreateDirectoryRecursive
@@ -255,6 +255,7 @@ functions:
   0x1416897BC: _set_purecall_handler
   0x141689810: MemCpy
   0x141689E50: MemSet
+  0x140060760: StaticMalloc #uses MemoryManegr if avail, but fail saves malloc
   0x1400609E0: MemAlloc
   0x140209830: MatrixMultiply
   0x1402065B0: MatrixMultiply2
@@ -318,6 +319,7 @@ classes:
   Common::AccurateTime:
     funcs:
       0x1400965f0: GetNow
+      0x1404BD370: ctor
   MemoryManager:
     funcs:
       0x1400609F0: AllocDefaultSpace
@@ -382,6 +384,7 @@ classes:
       0x1415EBC50: Initialize
       0x1415EB430: GetCharacterData
       0x1415EC490: dtor
+      0x1415ED920: SetLanguage
   Application:Network::LobbyConnection:
     vtbls:
       - ea: 0x141c85608
@@ -390,6 +393,8 @@ classes:
     funcs:
       0x1415F3C10: ctor
       0x1415F3D20: dtor
+      0x1415f50F0: SetWorld
+      0x1415f51B0: SetZone
       0x14161C8A0: ctor_helper
       0x14161D940: dtor_base
       0x14161ED00: IsOffset8NotNull
@@ -3382,10 +3387,13 @@ classes:
       0x14021AE90: Initialize
       0x14021B610: Finalize
       0x14021B6B0: IsWinSockInitialized
+      0x14021B810: SetLanguage
       0x14021BF40: GetCurrentDeviceTime
       0x14021BF90: GetCurrentDeviceTimeInMillis
+      0x14021BFF0: SetOsTypeAndVersion
       0x14021C010: GetLobbyCount
       0x14021C940: IsInCrossWorldDuty
+      0x14021C9A0: SetCurrentInstance
       0x14021C9C0: GetCurrentInstance
   Application::Network::PacketReceiverCallbackInterface:
     vtbls:

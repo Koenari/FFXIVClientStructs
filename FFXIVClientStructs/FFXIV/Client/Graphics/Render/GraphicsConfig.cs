@@ -25,7 +25,7 @@ public struct GraphicsConfig {
     [FieldOffset(0x26)] public byte AntiAliasing; //LoadFlag 0xA
     [FieldOffset(0x27)] public byte TextureFilterQuality; //LoadFlag 0x4
     [FieldOffset(0x28)] public byte TextureAnisotropicQuality; //LoadFlag 0x4
-    [FieldOffset(0x29)] public ushort Unk29; //LoadFlag 0x8
+    [FieldOffset(0x29)] public byte Unk29; //LoadFlag 0x8
     [FieldOffset(0x2A)] public byte TranslucentQuality; //LoadFlag 0x8
     [FieldOffset(0x2B)] public byte ShadowVisibiltyFlags; //LoadFlag 0x20
 

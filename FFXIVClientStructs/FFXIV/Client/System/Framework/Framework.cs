@@ -38,14 +38,14 @@ public unsafe partial struct Framework {
     [FieldOffset(0x07B0)] public Unk7B0Obj Unk7B0;
     //180 byte
     [FieldOffset(0x09F8)] public Unk9F8Obj Unk9F8;
-    [FieldOffset(0x09F8)] public int CursorPosX;
-    [FieldOffset(0x09FC)] public int CursorPosY;
+    [Obsolete] [FieldOffset(0x09F8)] public int CursorPosX;
+    [Obsolete] [FieldOffset(0x09FC)] public int CursorPosY;
     [FieldOffset(0x0A28)] public Unk2A8Obj Unk2A8;
     [FieldOffset(0x0EBC)] public Unk7B0Obj UnkEBC;
     //180 byte
     [FieldOffset(0x1104)] public Unk9F8Obj Unk1104;
-    [FieldOffset(0x1104)] public int CursorPosX2;
-    [FieldOffset(0x1108)] public int CursorPosY2;
+    [Obsolete] [FieldOffset(0x1104)] public int CursorPosX2;
+    [Obsolete] [FieldOffset(0x1108)] public int CursorPosY2;
     [FieldOffset(0x1134)] public Unk2A8Obj Unk1134;
     [FieldOffset(0x15C8)] public Unk15C8Obj Unk15C8;
     [FieldOffset(0x1670)] public NetworkModuleProxy* NetworkModuleProxy;
@@ -66,7 +66,7 @@ public unsafe partial struct Framework {
     [FieldOffset(0x16BC)] public int Unk16BC;
     [FieldOffset(0x16C0)] public float FrameDeltaTimeOverride;
     [FieldOffset(0x16C8)] public uint FrameCounter;
-    [FieldOffset(0x16F0)] public SpursManager Unk16F0;
+    [FieldOffset(0x16F0)] public SpursManager* Unk16F0;
     [FieldOffset(0x16F8)] public TaskManager TaskManager;
     [FieldOffset(0x1768)] public ClientTime ClientTime;
     [FieldOffset(0x1770)] [Obsolete("Use ClientTime.EorzeaTime")]
@@ -99,6 +99,8 @@ public unsafe partial struct Framework {
     //8 byte
     [FieldOffset(0x34F8)] public WatchDogThread* WatchDogThread;
     [FieldOffset(0x3500)] public bool UseWatchDogThread;
+
+    [FieldOffset(0x3570)] public AccurateTime Time3570;
 
     /// <summary>
     /// Set if <c>IsSteam</c> was set for this instance as part of <c>SetupSteamApi</c>. Set even if loading the Steam API
