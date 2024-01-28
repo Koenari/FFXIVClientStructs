@@ -12,5 +12,5 @@ public struct EnvironmentManager {
     [FieldOffset(0x068)] public float Unk068; //0.5
     [FieldOffset(0x06C)] public int Unk06C; //1
 
-    [FieldOffset(0x084)] public int CutsceneMovieVoice;
+    [FieldOffset(0x084)] public int CutsceneMovieVoice; //Cutscene Audio Language (-1 = ClientLang) 
 }

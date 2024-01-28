@@ -1635,6 +1635,8 @@ classes:
       0x140069200: ctor
       0x140069550: GetConfigOption
       0x140069500: SetConfigOption
+      0x140069970: RegisterChangeEvent
+      0x1400699E0: UnRegisterChangeEvent
   Common::Configuration::UIConfig:
     vtbls:
       - ea: 0x1419B13D8
@@ -1664,12 +1666,29 @@ classes:
         base: Common::Configuration::ConfigBase::ChangeEventInterface
     funcs:
       0x14008CEB0: ctor
+      0x14008CFD0: Destroy
+      0x14008D530: Initialize
+      0x14008D630: SetLanguage
+      0x14008D6A0: GetCutsceneLanguage
+      0x14008D780: SetCutsceneLanguage
+      0x14008D790: GetClientLanguage #static
+      0x14008D910: GetWindowMode #static
       0x14008E2F0: GetWindowRectFromConfig
       0x14008E420: OpenGameWindow
       0x14008E670: GetVirtualScreenResolution
-      0x14008E6C0: SetFramerateCapByConfigOption
+      0x14008E6C0: SetFpsCap
+      0x14008E710: GetFpsCap #static
+      0x14008E940: SetWindowSize
       0x14008EBA0: SetMasterVolume #(this, volume(0-100), saveToConfig)
+      0x14008EC70: GetMasterVolume #static
+      0x14008ECA0: SetVolume #(type 6=all, volume, saveToConfig)
+      0x14008EDD0: GetVolume
       0x14008EE00: SetMicPosition
+      0x14008EEA0: GetMicPosition #static
+      0x14008EED0: InitSoundManagerConfig #static
+      0x14008F110: InitEqualizerType #static
+      0x14008F1E0: InitSpatialAudio #static
+      0x14008f270: InitCursor #static
   Client::Sound::SoundManager: #base: Client::System::Common::NonCopyable
     instances:
       - ea: 0x1421A4318
@@ -1748,7 +1767,6 @@ classes:
       - ea: 0x1419B2C78
         base: Common::Configuration::SystemConfig
     funcs:
-      0x140069970: RegisterChangeEvent
       0x14007A3F0: BuildConfigList
   Client::System::Configuration::DevConfig:
     vtbls:
@@ -2556,6 +2574,10 @@ classes:
       5: SetCursorVisibility
       8: SetUseSoftwareCursor
       9: GetUseSoftwareCursor
+      10: SetUseOsHardwareCursor
+      11: GetUseOsHardwareCursor
+      12: SetSoftwareCursorScale
+      13: SetSoftwareCursorTrajectory
       14: IsCursorVisible
       21: IsMouseNotCaptured
       22: UnloadSoftwareCursor
