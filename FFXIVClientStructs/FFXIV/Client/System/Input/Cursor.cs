@@ -21,5 +21,8 @@ public unsafe partial struct Cursor {
     [Obsolete("Use HardwareCursorSize")] [FieldOffset(0x2C0)]
     public int HardwarCursorSize;
     [FieldOffset(0x2C8)] public TextureResourceHandle* SoftwareCursorTexture;
+
+    [FieldOffset(0x368)] public bool ShowSoftwareCursorTrajectory;
+
     [FieldOffset(0x370)] public bool UseOsCursor;
 }
