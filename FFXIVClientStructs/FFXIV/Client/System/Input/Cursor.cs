@@ -16,6 +16,8 @@ public unsafe partial struct Cursor {
 
     [FieldOffset(0x010)] public uint ActiveCursorType; //Hand,Cursor, Cross, etc
 
+    //[FieldOffset(0x098)] public bool SystemMouseOperationTrajectory;
+
     [FieldOffset(0x1B0)] public fixed ulong CursorHandles[16]; //HCURSOR (winuser.h)
 
     [FixedSizeArray<Pointer<byte>>(16)]

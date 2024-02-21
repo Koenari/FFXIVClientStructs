@@ -10,6 +10,7 @@ globals:
   0x142168868: g_Client::Game::Control::InputManager_MouseButtonHoldState
   0x14217EC50: g_StackCookie
   0x14217EC58: g_InverseStackCookie
+  #fail   0x14219B8E8: stdout
   0x14219C3F0: g_ThreadLocalPerformanceFrequency
   0x14219C520: g_OSVersion
   0x1421A33E0: g_CurrentCharaSelectCharacter # Client::Game::Character::Character*
@@ -59,6 +60,7 @@ globals:
   0x14217FEA0: g_OodleDelete
   0x14217FEB0: g_OodlePrintf
   0x1421B8AE8: g_MacroTime
+  #fail 0x1423441F8: g_MainThreadCriticalSection
   0x14264F870: ?hkaSkeletonMapperClass@@3VhkClass@@B
   0x14264F8F0: ?hkaAnimationContainerClass@@3VhkClass@@B
   0x142651CA0: ?hkReferencedObjectClass@@3VhkClass@@B
@@ -74,10 +76,14 @@ functions:
   0x140058500: WinMain
   0x1400581B0: std:string::ctor_FromSubStr #(other, idx, len)
   0x1400582F0: std:string::ctor_FromCharArr #(arr, len)
+  #0x140059700: GetStdOut
+  #0x140059710: vsprintf_s
+  #0x140059770: vswprintf_s
   0x1400654E0: IsMacClient
   0x1400951B0: CheckOsTypeAndVersion
+  #0x140067100: CopyUInt
   0x140067500: GetMyDocumntsFolder #as UTF8String
-  0x140096470: GetPerformanceFrequency
+  #0x140096470: GetPerformanceFrequency
   0x1400976D0: CreateDirectoryRecursive
   0x1400A6BD0: GetCurrentUnixTimestamp # in seconds
   0x1400A6D00: Client::UI::PlaySoundEffect # this is a static function in the UI namespace, arg1 is the SE
@@ -99,6 +105,7 @@ functions:
   0x140655200: GetGameObjectByIndex
   0x1404998E0: PrepareColorSet
   0x140499BB0: ReadStainingTemplate
+  #0x1404BDD70: StartSpursJobEntityWorkerThread
   0x1404E9290: GetAvailablePoses
   0x14050FD70: RemoveFromList # (AtkEvent**, AtkEvent*) Finds and removes param2 from the param1 list
   0x140539710: GetScaleListEntryFromScale
@@ -257,6 +264,7 @@ functions:
   0x14168942C: _set_purecall_handler
   0x141689480: MemCpy
   0x141689AC0: MemSet
+  #0x140060760: StaticMalloc #uses MemoryManegr if avail, but fail saves malloc
   0x1400609E0: MemAlloc
   0x140209830: MatrixMultiply
   0x1402065B0: MatrixMultiply2
@@ -317,6 +325,10 @@ functions:
   0x1415FEEA0: ReadSqpkChunk
 
 classes:
+  Common::AccurateTime:
+    funcs:
+      #0x1400965f0: GetNow
+      #0x1404BD370: ctor
   MemoryManager:
     funcs:
       0x1400609F0: AllocDefaultSpace
@@ -381,6 +393,20 @@ classes:
       0x1415EB8F0: Initialize
       0x1415EB0D0: GetCharacterData
       0x1415EC130: dtor
+      #0x1415ED920: SetLanguage
+  Application:Network::LobbyConnection:
+    vtbls:
+      #- ea: 0x141c85608
+    vfuns:
+      0: Dispose
+    funcs:
+      #0x1415F3C10: ctor
+      #0x1415F3D20: dtor
+      #0x1415f50F0: SetWorld
+      #0x1415f51B0: SetZone
+      #0x14161C8A0: ctor_helper
+      #0x14161D940: dtor_base
+      #0x14161ED00: IsOffset8NotNull
   Application::Network::LobbyClient::LobbyRequestCallback:
     vtbls:
       - ea: 0x141C8E798
@@ -1655,6 +1681,8 @@ classes:
       0x140069200: ctor
       0x140069550: GetConfigOption
       0x140069500: SetConfigOption
+      0x140069970: RegisterChangeEvent
+      0x1400699E0: UnRegisterChangeEvent
   Common::Configuration::UIConfig:
     vtbls:
       - ea: 0x1419B13D8
@@ -3029,6 +3057,7 @@ classes:
       - ea: 0x1419D39A8
         base: Client::System::Common::NonCopyable
     vfuncs:
+      1: RequestStop
       5: Run
     funcs:
       0x1401C01D0: ctor
@@ -3066,6 +3095,7 @@ classes:
     funcs:
       0x1401C7750: GetInstance
       0x1401C77D0: ctor
+      0x1401C8590: CreateFileThread
   Client::System::File::FileAccessPath:
     funcs:
       0x140066360: ctor
@@ -3402,9 +3432,13 @@ classes:
       0x14021AE90: Initialize
       0x14021B610: Finalize
       0x14021B6B0: IsWinSockInitialized
+      0x14021B810: SetLanguage
+      0x14021BF40: GetCurrentDeviceTime
       0x14021BF90: GetCurrentDeviceTimeInMillis
+      0x14021BFF0: SetOsTypeAndVersion
       0x14021C010: GetLobbyCount
       0x14021C940: IsInCrossWorldDuty
+      0x14021C9A0: SetCurrentInstance
       0x14021C9C0: GetCurrentInstance
   Application::Network::PacketReceiverCallbackInterface:
     vtbls:
@@ -3702,6 +3736,9 @@ classes:
         base: Client::Graphics::Singleton
     funcs:
       0x1403756D0: ctor
+      #fail 0x140090370: SetGlare
+      #fail 0x1400903F0: SetTranslucentQuality
+      #fail 0x1400903B0: SetGamma
   Client::Graphics::Render::Camera:
     vtbls:
       - ea: 0x1419EF6D0
