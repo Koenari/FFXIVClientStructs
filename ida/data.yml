@@ -76,14 +76,14 @@ functions:
   0x140058500: WinMain
   0x1400581B0: std:string::ctor_FromSubStr #(other, idx, len)
   0x1400582F0: std:string::ctor_FromCharArr #(arr, len)
-  #0x140059700: GetStdOut
-  #0x140059710: vsprintf_s
-  #0x140059770: vswprintf_s
+  0x140059700: GetStdOut
+  0x140059710: vsprintf_s
+  0x140059770: vswprintf_s
   0x1400654E0: IsMacClient
   0x1400951B0: CheckOsTypeAndVersion
-  #0x140067100: CopyUInt
-  0x140067500: GetMyDocumntsFolder #as UTF8String
-  #0x140096470: GetPerformanceFrequency
+  0x140067100: CopyUInt
+  0x140067500: GetMyDocumentsFolder #as UTF8String
+  0x140096470: GetPerformanceFrequency
   0x1400976D0: CreateDirectoryRecursive
   0x1400A6BD0: GetCurrentUnixTimestamp # in seconds
   0x1400A6D00: Client::UI::PlaySoundEffect # this is a static function in the UI namespace, arg1 is the SE
@@ -264,7 +264,7 @@ functions:
   0x14168942C: _set_purecall_handler
   0x141689480: MemCpy
   0x141689AC0: MemSet
-  #0x140060760: StaticMalloc #uses MemoryManegr if avail, but fail saves malloc
+  0x140060760: StaticMalloc #uses MemoryManegr if avail, but fail saves malloc
   0x1400609E0: MemAlloc
   0x140209830: MatrixMultiply
   0x1402065B0: MatrixMultiply2
@@ -327,7 +327,7 @@ functions:
 classes:
   Common::AccurateTime:
     funcs:
-      #0x1400965f0: GetNow
+      0x1400965f0: GetNow
       #0x1404BD370: ctor
   MemoryManager:
     funcs:
@@ -395,7 +395,7 @@ classes:
       0x1415EC130: dtor
       #0x1415ED920: SetLanguage
   Application:Network::LobbyConnection:
-    vtbls:
+    #vtbls:
       #- ea: 0x141c85608
     vfuns:
       0: Dispose

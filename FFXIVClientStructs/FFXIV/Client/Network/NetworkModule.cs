@@ -97,7 +97,7 @@ public unsafe partial struct NetworkModule {
 
     //FUN_14021c0b0
     [MemberFunction("E8 ?? ?? ?? ?? 4C 8B B3 ?? ?? ?? ?? 48 89 BB")]
-    public partial void GetChracterData(void* p2, void* p3);
+    public partial void GetCharacterData(void* p2, void* p3);
 
     public enum OSTypeVersion : short {
         Windows7 = 4, //0000000000000100
