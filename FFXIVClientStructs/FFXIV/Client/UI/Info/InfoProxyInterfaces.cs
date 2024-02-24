@@ -7,11 +7,17 @@ public unsafe partial struct InfoProxyInterface {
     //For Proxies with a fixed count this is apparently 0
     [FieldOffset(0x10)] public uint EntryCount;
 
+    [VirtualFunction(2)]
+    public partial void RemoveData(void* dataAddress);
+
     [VirtualFunction(6)]
     public partial void EndRequest();
 
     [VirtualFunction(7)]
     public partial uint GetEntryCount();
+
+    [VirtualFunction(11)]
+    public partial void VF11(void* p2, long ContentID);
 }
 
 [StructLayout(LayoutKind.Explicit, Size = 0x28)]

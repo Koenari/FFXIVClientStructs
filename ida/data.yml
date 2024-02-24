@@ -86,6 +86,7 @@ functions:
   0x140096470: GetPerformanceFrequency
   0x1400976D0: CreateDirectoryRecursive
   0x1400A6BD0: GetCurrentUnixTimestamp # in seconds
+  #fail   0x1401154e0: Client::UI:GetPartyMemberCount #0 if Solo
   0x1400A6D00: Client::UI::PlaySoundEffect # this is a static function in the UI namespace, arg1 is the SE
   0x1400A8990: Client::UI::GetUIColor # (idx, &color, &edgeColor)
   0x1400A89D0: Client::UI::GetNumberAsBoxedChar # (uint) accepts numbers 0-30
@@ -2780,6 +2781,7 @@ classes:
     funcs:
       0x1400ECF80: ctor
       0x1400ED0A0: Finalize
+      #fail 0x1400EC000: ClearData
       0x1400EDEC0: GetContentIDForEntry
       0x1400EDEE0: SearchEntryByName
       0x1400EDFE0: GetEntry
@@ -4485,6 +4487,7 @@ classes:
       0x1405078B0: SetValueForced
       0x1405078F0: SetValueForcedUtf8
       0x140507970: SetValueAndUpdate # calls SetValue with silent = false
+      #fail 0x1404F8130: SetValueAndUpdateUtf8
   Component::GUI::ExtendArrayData:
     vtbls:
       - ea: 0x141A06F58
