@@ -80,12 +80,14 @@ functions:
   0x140059710: vsprintf_s
   0x140059770: vswprintf_s
   0x1400654E0: IsMacClient
+  0x140065F50: SpecialFreeMemory
   0x1400951B0: CheckOsTypeAndVersion
   0x140067100: CopyUInt
   0x140067500: GetMyDocumentsFolder #as UTF8String
   0x140096470: GetPerformanceFrequency
   0x1400976D0: CreateDirectoryRecursive
   0x1400A6BD0: GetCurrentUnixTimestamp # in seconds
+  0x1400A6C20: GetDeviceTimeMillis
   #fail   0x1401154e0: Client::UI:GetPartyMemberCount #0 if Solo
   0x1400A6D00: Client::UI::PlaySoundEffect # this is a static function in the UI namespace, arg1 is the SE
   0x1400A8990: Client::UI::GetUIColor # (idx, &color, &edgeColor)
@@ -106,7 +108,7 @@ functions:
   0x140655200: GetGameObjectByIndex
   0x1404998E0: PrepareColorSet
   0x140499BB0: ReadStainingTemplate
-  #0x1404BDD70: StartSpursJobEntityWorkerThread
+  0x1404BDDA0: StartSpursJobEntityWorkerThread
   0x1404E9290: GetAvailablePoses
   0x14050FD70: RemoveFromList # (AtkEvent**, AtkEvent*) Finds and removes param2 from the param1 list
   0x140539710: GetScaleListEntryFromScale
@@ -396,19 +398,32 @@ classes:
       0x1415EB0D0: GetCharacterData
       0x1415EC130: dtorHelper
       #0x1415ED920: SetLanguage
-  Application:Network::LobbyConnection:
-    #vtbls:
-      #- ea: 0x141c85608
-    vfuns:
+  Application:Network::MainConnection: #998
+    funcs:
+      0x1415F2DD0: dtor
+      0x1415F3130: SendRequest
+  Application:Network::SecondConnection: #9a0
+    funcs:
+      0x1415F3440: dtor
+  Application:Network::LobbyConnectionBase:
+    vtbls:
+      - ea: 0x141c8F490
+    vfuncs:
       0: Dispose
     funcs:
-      #0x1415F3C10: ctor
-      #0x1415F3D20: dtor
-      #0x1415f50F0: SetWorld
-      #0x1415f51B0: SetZone
-      #0x14161C8A0: ctor_helper
-      #0x14161D940: dtor_base
-      #0x14161ED00: IsOffset8NotNull
+      0x14161C500: ctor
+      0x14161d5a0: dtor
+  Application:Network::LobbyConnection:
+    vtbls:
+      - ea: 0x141C83CA8
+        base: Application:Network::LobbyConnectionBase
+    
+    funcs:
+      0x1415F3870: ctor
+      0x1415F3980: dtor
+      0x1415F4D50: SetWorld
+      0x1415F4E10: SetZone
+      0x14161E960: IsOffset8NotNull
   Application::Network::LobbyClient::LobbyRequestCallback:
     vtbls:
       - ea: 0x141C8E798
@@ -3443,6 +3458,7 @@ classes:
       0x14021B610: Finalize
       0x14021B6B0: IsWinSockInitialized
       0x14021B810: SetLanguage
+      0x14021BE90: FetchPlayTime
       0x14021BF40: GetCurrentDeviceTime
       0x14021BF90: GetCurrentDeviceTimeInMillis
       0x14021BFF0: SetOsTypeAndVersion
