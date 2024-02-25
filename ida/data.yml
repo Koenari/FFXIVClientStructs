@@ -5432,6 +5432,7 @@ classes:
     funcs:
       0x140628D00: ctor
       0x140629700: Finalize
+      0x140629BD0: Initialize
       0x140629E30: Update
       0x14062A2B0: HandleInputUpdate
       0x14062A380: ShouldLimitFps
@@ -5658,6 +5659,7 @@ classes:
         base: Client::UI::Misc::UserFileManager::UserFileEvent
     funcs:
       0x14069BA00: ctor
+      0x14069bb80: Initialize
   Client::UI::Misc::ConfigModule:
     vtbls:
       - ea: 0x141A1D060
