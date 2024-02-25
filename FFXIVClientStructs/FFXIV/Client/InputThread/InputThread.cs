@@ -1,4 +1,7 @@
+using Thread = FFXIVClientStructs.FFXIV.Client.System.Threading.Thread;
+
 namespace FFXIVClientStructs.FFXIV.Client.InputThread;
+
 
 [StructLayout(LayoutKind.Explicit, Size = 0x100)]
 public struct InputThread {
