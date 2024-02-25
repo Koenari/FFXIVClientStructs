@@ -52,9 +52,9 @@ public unsafe partial struct Framework {
     [FieldOffset(0x1678)] public bool IsNetworkModuleInitialized;
     [FieldOffset(0x1679)] public bool EnableNetworking;
     [FieldOffset(0x1680)] public AccurateTime UtcTime;
-    [Obsolete("Use UtcTiem.Timestamp")] [FieldOffset(0x1680)]
+    [Obsolete("Use UtcTime.Timestamp")] [FieldOffset(0x1680)]
     public long ServerTime; // TODO: change to uint
-    [Obsolete("Use UtcTiem.CpuMilliSeconds")] [FieldOffset(0x1688)]
+    [Obsolete("Use UtcTime.CpuMilliSeconds")] [FieldOffset(0x1688)]
     public long PerformanceCounterInMilliSeconds;
     [Obsolete("Use UtcTime.CpuNanoSeconds")] [FieldOffset(0x1690)]
     public long PerformanceCounterInMicroSeconds;

@@ -40,8 +40,8 @@ public unsafe partial struct NetworkModule {
     [FieldOffset(0x990)] public byte Unk990;
     [FieldOffset(0x994)] public int Unk994;
     //This region seems to generally hold references to other objects
-    [FieldOffset(0x998)] public MainConnection* Unk998; //seen in getting FC info
-    [FieldOffset(0x9A0)] public SecondConnection* Unk9A0; //Struct is similar to 930Obj
+    [FieldOffset(0x998)] public ZoneConnection* Unk998; //seen in getting FC info
+    [FieldOffset(0x9A0)] public ChatConnection* Unk9A0; //Struct is similar to 930Obj
     [FieldOffset(0x9A8)] public LobbyConnection* Unk9A8;
     [FieldOffset(0x9B0)] public Unk9B0Obj* Unk9B0;
     [FieldOffset(0x9B8)] public Unk9B8Obj* Unk9B8;
@@ -116,7 +116,7 @@ public unsafe partial struct NetworkModule {
 
 
     [StructLayout(LayoutKind.Explicit, Size = 0xA0)]
-    public partial struct MainConnection {
+    public partial struct ZoneConnection {
         [FieldOffset(0x00)] public Utf8String ServerIp;
 
         [FieldOffset(0x68)] public short Unk68;
@@ -195,7 +195,7 @@ public unsafe partial struct NetworkModule {
     }
 
     [StructLayout(LayoutKind.Explicit)]
-    public partial struct SecondConnection {
+    public partial struct ChatConnection {
         [FieldOffset(0x00)] public Utf8String Unk00;
         //0x10 byte
         [FieldOffset(0x78)] public StdVector<ulong> Unk78; //ulong is a placeholder

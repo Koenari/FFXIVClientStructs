@@ -398,11 +398,11 @@ classes:
       0x1415EB0D0: GetCharacterData
       0x1415EC130: dtorHelper
       #0x1415ED920: SetLanguage
-  Application:Network::MainConnection: #998
+  Application:Network::ZoneConnection:
     funcs:
       0x1415F2DD0: dtor
       0x1415F3130: SendRequest
-  Application:Network::SecondConnection: #9a0
+  Application:Network::ChatConnection:
     funcs:
       0x1415F3440: dtor
   Application:Network::LobbyConnectionBase:
@@ -1326,6 +1326,8 @@ classes:
     instances:
       - ea: 0x1421F3830
         pointer: False
+    funcs:
+      0x14096C770: HandleExaminePacket
   Client::Game::UI::Telepo:
     instances:
       - ea: 0x1421F3AA8
@@ -4378,6 +4380,7 @@ classes:
       0x1404CDF90: GetRowBySheetIndexAndRowId  # (ExdModule* this, int nSheetIndex, int nRowId) -> ExcelRow*
       0x1404CDE70: GetRowBySheetIndexAndRowIdAndSubRowId  # (ExdModule* this, int nSheetIndex, int nRowId, short nSubRowId, ExcelSheet **ppOutSheet, IExcelRowWrapper **ppOutRowContainer) -> ExcelRow*
       0x1404CE150: GetRowBySheetIndexAndRowIndex  # (ExdModule* this, int nSheetIndex, int nRowIndex) -> ExcelRow*
+      0x1406f1250: GetClassJobByRowIndexStatic #(int nRowIndex) -> ExcelRow*
       0x1404CDD20: GetRowBySheetNameAndRowId  # (ExdModule* this, char* pcszSheetName, int nRowId, ExcelSheet **ppOutSheet, IExcelRowWrapper **ppOutRowContainer) -> ExcelRow*
       0x1404CDDA0: GetRowBySheetNameAndRowIdAndSubRowId  # (ExdModule* this, char* pcszSheetName, int nRowId, short nSubRowId, ExcelSheet **ppOutSheet, IExcelRowWrapper **ppOutRowContainer) -> ExcelRow*
       0x1404CDFF0: GetRowBySheetNameAndRowIndex  # (ExdModule* this, char* pcszSheetName, int nRowIndex, ExcelSheet **ppOutSheet, IExcelRowWrapper **ppOutRowContainer) -> ExcelRow*
