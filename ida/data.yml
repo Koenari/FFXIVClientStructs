@@ -5313,7 +5313,7 @@ classes:
       22: GetRetainerTaskDataModule
       23: GetFlagStatusModule
       24: GetRecipeFavoriteModule
-      24: GetCraftModule
+      25: GetCraftModule
       26: GetRaptureUiDataModule
       27: GetAfterAgentsPtr # points to the field right after the last Agent in AgentModule
       29: GetGoldSaucerModule
