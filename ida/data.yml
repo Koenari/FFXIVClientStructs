@@ -10,7 +10,8 @@ globals:
   0x142168868: g_Client::Game::Control::InputManager_MouseButtonHoldState
   0x14217EC50: g_StackCookie
   0x14217EC58: g_InverseStackCookie
-  #fail   0x14219B8E8: stdout
+  0x14219A968: g_stdout
+  0x14219A400: g_ffxiv_dx11_module
   0x14219C3F0: g_ThreadLocalPerformanceFrequency
   0x14219C520: g_OSVersion
   0x1421A33E0: g_CurrentCharaSelectCharacter # Client::Game::Character::Character*
@@ -263,13 +264,15 @@ functions:
   0x1415F2830: std::vector.dtor
   0x1415FFF10: crc
   0x14165ABD4: ThrowException
+  0x1416CB394: rand
+  0x1416CB3C0: srand
   0x141681494: FreeMemory
   0x1400557E0: FreeMemory_2 # nullsub, gets called together with some AllocatorManager vfunc
   0x1416893F0: _purecall # Ghidra does not have a notation for pure virtual calls
   0x14168942C: _set_purecall_handler
   0x141689480: MemCpy
   0x141689AC0: MemSet
-  0x140060760: StaticMalloc #uses MemoryManegr if avail, but fail saves malloc
+  0x140060760: StaticMalloc #uses MemoryManager if avail, but fail saves malloc
   0x1400609E0: MemAlloc
   0x140209830: MatrixMultiply
   0x1402065B0: MatrixMultiply2
@@ -1880,6 +1883,7 @@ classes:
     funcs:
       0x140095D70: ctor
       0x14019C2F0: AddTask
+      0x14019C360: ExecuteAllTasks
   Common::Game::Time::GameTime:
     vtbls:
       - ea: 0x1419B2B00
@@ -2691,10 +2695,13 @@ classes:
       3: SetCopyStagingText
       4: ApplyCopyStagingText
   Client::System::Input::Cursor:
+    instances:
+      - ea: 0x14219A780
     vtbls:
       - ea: 0x1419B1778
     vfuncs:
       0: dtor
+      2: Update
       4: SetCursorType
       5: SetCursorVisibility
       8: SetUseSoftwareCursor
@@ -4491,7 +4498,8 @@ classes:
       0x1404EF0C0: ctor
       0x1404F5220: ProcessMouseState
       0x1404F77C0: InteractWithObject
-      0x1404FB420: OpenObjectInteraction
+      0x1404F7DA0: IsObjectOnScreen
+      0x1404F82D0: Update
       0x1404F90A0: GetHardTargetObjectId
       0x1404F90C0: GetHardTargetId
       0x1404F90E0: GetHardTarget
@@ -4512,9 +4520,9 @@ classes:
       0x1404FA050: IsObjectInViewRange
       0x1404FA1A0: GetMouseOverObject
       0x1404FB390: HandleRightClick
+      0x1404FB420: OpenObjectInteraction
       0x1404FB5A0: HandleLeftClick
       0x1404FB8E0: RemoveObjectFromTargets
-      0x1404F7DA0: IsObjectOnScreen
   Client::Game::Control::Control:
     instances:
       - ea: 0x1421BD670
