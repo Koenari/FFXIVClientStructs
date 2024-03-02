@@ -350,10 +350,13 @@ classes:
       - ea: 0x1421B9578
         pointer: False
     funcs:
+      0x140047C70: ctorStatic
+      0x1419A06C0: dtorStatic
       0x1404DAA00: Initialize
       0x1404DAD80: Terminate
       0x1404DB0D0: Update
       0x1404DD630: ctor
+      0x1404DD700: dtor
       0x1404DBA10: QueueActiveFestivals
       0x1404DCCD0: IsInGPose  # (probably) static
       0x1404DCD10: IsInIdleCam  # static
@@ -363,6 +366,52 @@ classes:
       0x140930DE0: IsInPvPInstance
       0x140930EA0: IsInPvPArea
       0x1400A85D0: IsInSanctuary # static, more likely Client::UI::IsInSanctuary but it fits here just fine
+  Client::Game::GameMainUnk58ObjBaseBase:
+    vtbls:
+      - ea: 0x141D71428
+    vfuncs:
+      0: Dispose    
+    funcs:
+      0x14193CD30: ctor
+      0x14193D0A0: dtor
+  Client::Game::GameMainUnk58ObjBase:
+    vtbls:
+      - ea: 0x141A044F0
+        base: Client::Game::GameMainUnk58ObjBaseBase
+    vfuncs:
+      2: GetSheetIndex
+      5: GetEntry
+      6: GetEntry2
+    funcs:
+      0x14193CD60: dtor
+      0x140701A70: Initialize
+      0x140701B40: Update
+  Client::Game::GameMainUnk58Obj:
+    vtbls:
+      - ea: 0x141A1F380
+        base: Client::Game::GameMainUnk58ObjBase
+    funcs:
+      0x140701FF0: ctor
+  Client::Game::GameMainUnk210Obj:
+    vtbls:
+      - ea: 0x141A1F3E0
+        base: Client::Game::GameMainUnk58ObjBase
+    funcs:
+      0x140702540: ctor
+  Client::Game::GameMainUnk948Obj:
+    vtbls:
+      - ea: 0x141A1F428
+        base: Client::Game::GameMainUnk58ObjBaseBase
+    funcs:
+      0x140702A50: ctor
+      0x1407029C0: Initialize
+      0x140702A30: Update
+  Client::Game::GameMainUnkA80Obj:
+    vtbls:
+      - ea: 0x141a1f418
+        base: Client::Game::GameMainUnk58ObjBaseBase
+    funcs:
+      0x140702690: ctor
   Client::Game::BGMSystem:
     instances:
       - ea: 0x1421D6B98

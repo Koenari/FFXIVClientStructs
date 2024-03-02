@@ -9,6 +9,12 @@ public unsafe partial struct GameMain {
 
     [FieldOffset(0x40)] public fixed uint QueuedFestivals[4]; // TODO: add FixedSizeArray with a struct that splits it into two ushorts, Id and Phase
 
+    [FieldOffset(0x0058)] public GameMainUnk58Obj Unk58;
+    
+    [FieldOffset(0x0210)] public GameMainUnk210Obj Unk210;
+
+    [FieldOffset(0x948)] public GameMainUnk948Obj Unk948;
+    
     [FieldOffset(0xAD8)] public JobGaugeManager JobGaugeManager;
     [FieldOffset(0x407E)] public bool IsConnectedToZone;
     [FieldOffset(0x4080)] public uint TerritoryLoadState; // 1 = loading, 2 = loaded, 3 = unloading/shutting down
@@ -20,7 +26,8 @@ public unsafe partial struct GameMain {
 
     [FieldOffset(0x40A0)] public uint CurrentMapId;
 
-    [FieldOffset(0x40B0)] public float MilisecondCounter;
+    [FieldOffset(0x40B0)] public float MillisecondCounter;
+    [Obsolete("Use MillisecondCounter")][FieldOffset(0x40B0)] public float MilisecondCounter;
     [FieldOffset(0x40B4)] public uint RuntimeSeconds;
     [FieldOffset(0x40B8)] public bool RuntimeSecondsChanged;
     [FieldOffset(0x40BC)] public float Runtime;
