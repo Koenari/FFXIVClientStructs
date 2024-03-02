@@ -2920,7 +2920,7 @@ classes:
     funcs:
       0x1400F3C60: ctor
       0x14017C8B0: Finalize
-  Client::UI::Info::InfoProxy20:
+  Client::UI::Info::InfoProxyMentor:
     vtbls:
       - ea: 0x1419BF9C0
         base: Client::UI::Info::InfoProxyInterface
@@ -3064,7 +3064,7 @@ classes:
     vtbls:
       - ea: 0x1419C1370
         base: Client::UI::Info::InfoProxyInterface
-  Client::UI::Info::InfoProxy28:
+  Client::UI::Info::InfoProxyPvPTeam:
     vtbls:
       - ea: 0x1419C13D8
         base: Client::UI::Info::InfoProxyInterface
@@ -8152,6 +8152,8 @@ classes:
     vtbls:
       - ea: 0x141A685C0
         base: Client::UI::Agent::AgentInterface
+    funcs:
+      0x140A9BC10: ctor
   Client::UI::Agent::AgentFashion:
     vtbls:
       - ea: 0x141A7A0D0
@@ -8282,6 +8284,8 @@ classes:
     vtbls:
       - ea: 0x141A64020
         base: Client::UI::Agent::AgentInterface
+    funcs:
+      0x1409DF560: ctor
   Client::UI::Agent::AgentDawn:
     vtbls:
       - ea: 0x141A692B0
