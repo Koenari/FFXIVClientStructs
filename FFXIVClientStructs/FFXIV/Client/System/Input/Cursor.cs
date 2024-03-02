@@ -11,7 +11,7 @@ public unsafe partial struct Cursor {
     [FieldOffset(0x009)] public bool UseSoftwareCursor;
     [FieldOffset(0x00A)] public byte SoftwareCursorScale;
     [FieldOffset(0x00B)] public bool IsCursorVisible;
-    [FieldOffset(0x00C)] public bool MouseNotCpatured;
+    [FieldOffset(0x00C)] public bool MouseNotCaptured;
     [FieldOffset(0x00D)] public bool IsCursorOutsideViewPort;
 
     [FieldOffset(0x010)] public uint ActiveCursorType; //Hand,Cursor, Cross, etc
