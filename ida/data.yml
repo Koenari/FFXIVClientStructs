@@ -6,6 +6,7 @@ globals:
   0x1419BE410: g_UIColorTable
   0x141A06EC8: g_HUDScaleTable
   0x141FDC380: g_ClientInstanceLimit
+  0x141FDD498: g_FPS
   0x141FE0D38: g_LanguageCharArr # byte[] no pointer
   0x142168868: g_Client::Game::Control::InputManager_MouseButtonHoldState
   0x14217EC50: g_StackCookie
@@ -13,6 +14,8 @@ globals:
   0x14219A968: g_stdout
   0x14219A400: g_ffxiv_dx11_module
   0x14219C3F0: g_ThreadLocalPerformanceFrequency
+  0x14219C408: g_FrameCountAccum # accumulates over a second to calc FPS
+  0x14219C40c: g_FrameTimeAccum # accumulates over a second to calc FPS
   0x14219C520: g_OSVersion
   0x1421A33E0: g_CurrentCharaSelectCharacter # Client::Game::Character::Character*
   0x1421A35F0: g_CharaSelectCharacterList # see Client::UI::Agent::AgentLobby::CharaSelectCharacterList
@@ -20,6 +23,8 @@ globals:
   0x1421B5508: g_RenderSkeletonLinkedListEnd
   0x1421B5560: g_RenderModelLinkedListStart
   0x1421B5568: g_RenderModelLinkedListEnd
+  0x1421B5C08: g_animationFactorRemainder
+  0x1421B5C0C: g_animationFactor #percentage of a 30fps frame rendered thsi frame
   0x1421B8AE0: g_PerformanceFrequency
   0x1421C3158: g_LocalPlayerObjectID
   0x1421C3160: g_LocalPlayer
@@ -107,7 +112,7 @@ functions:
   0x1403189F0: CleanupCharaSelectCharacters
   0x1403292A0: GetGlobalTextParameter
   0x140335550: std::vector_SetSize
-  0x140655200: GetGameObjectByIndex
+  0x140419710: UpdateAnimFactor
   0x1404998E0: PrepareColorSet
   0x140499BB0: ReadStainingTemplate
   0x1404BDDA0: StartSpursJobEntityWorkerThread
@@ -118,6 +123,7 @@ functions:
   0x140597810: Component::GUI::TextModuleInterface::GetTextLabelByID
   0x14064B940: GetLocalTextParameter
   0x14064FF20: FormatNumber
+  0x140655200: GetGameObjectByIndex
   0x14067E890: ConvertLogMessageIdToCharaLogKind
   0x140765910: ExecuteCommand
   0x1400A8360: InDeepDungeon
