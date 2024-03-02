@@ -51,12 +51,12 @@ public unsafe partial struct Framework {
     [FieldOffset(0x1670)] public NetworkModuleProxy* NetworkModuleProxy;
     [FieldOffset(0x1678)] public bool IsNetworkModuleInitialized;
     [FieldOffset(0x1679)] public bool EnableNetworking;
-    [FieldOffset(0x1680)] public AccurateTime UtcTime;
+    [FieldOffset(0x1680)] public TimePoint UtcTime;
     [Obsolete("Use UtcTime.Timestamp")] [FieldOffset(0x1680)]
     public long ServerTime; // TODO: change to uint
     [Obsolete("Use UtcTime.CpuMilliSeconds")] [FieldOffset(0x1688)]
     public long PerformanceCounterInMilliSeconds;
-    [Obsolete("Use UtcTime.CpuNanoSeconds")] [FieldOffset(0x1690)]
+    [Obsolete("Use UtcTime.CpuMicroSeconds")] [FieldOffset(0x1690)]
     public long PerformanceCounterInMicroSeconds;
     [FieldOffset(0x1698)] public uint TimerResolutionMillis;
     [FieldOffset(0x16A0)] public long PerformanceCounterFrequency;
@@ -104,6 +104,8 @@ public unsafe partial struct Framework {
     [FieldOffset(0x3500)] public bool UseWatchDogThread;
 
     [FieldOffset(0x3570)] public AccurateTime Time3570;
+    
+    [FieldOffset(0x3570)] public TimePoint Time3570;
 
     /// <summary>
     /// Set if <c>IsSteam</c> was set for this instance as part of <c>SetupSteamApi</c>. Set even if loading the Steam API

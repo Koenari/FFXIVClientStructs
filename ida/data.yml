@@ -19,6 +19,7 @@ globals:
   0x1421B5508: g_RenderSkeletonLinkedListEnd
   0x1421B5560: g_RenderModelLinkedListStart
   0x1421B5568: g_RenderModelLinkedListEnd
+  0x1421B8AE0: g_PerformanceFrequency
   0x1421C3158: g_LocalPlayerObjectID
   0x1421C3160: g_LocalPlayer
   0x1421E93C0: g_LastTextCommand
@@ -329,9 +330,9 @@ functions:
   0x1415FEEA0: ReadSqpkChunk
 
 classes:
-  Common::AccurateTime:
+  Common::TimePoint:
     funcs:
-      0x1400965F0: GetNow
+      0x1400965F0: Now
       0x1404BD3A0: ctor
   MemoryManager:
     funcs:

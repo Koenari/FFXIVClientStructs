@@ -60,29 +60,29 @@ public unsafe partial struct NetworkModule {
 
     //TODO: Offsets (+0x68)
 
-    [FieldOffset(0x9F8)] public AccurateTime Unk9F8;
+    [FieldOffset(0x9F8)] public TimePoint Unk9F8;
     [FieldOffset(0xA10)] public int UnkA10;
 
     [FieldOffset(0xA40)] public int UnkA40; //Init = 30 (0x1e)
     [FieldOffset(0xA44)] public int UnkA44;
-    [FieldOffset(0xA48)] public AccurateTime UnkA48;
+    [FieldOffset(0xA48)] public TimePoint UnkA48;
     [FieldOffset(0xA60)] public int UnkA60; //Init = 60 (0x3C)
     [FieldOffset(0xA68)] public void* UnkA68;
     [FieldOffset(0xA70)] public int UnkA70; // Struct spanning at lest 0x30
     [FieldOffset(0xA74)] public int CurrentDeviceTime; //Timestamp
     [FieldOffset(0xA78)] public int CurrentDeviceTimeMillis; //Milliseconds for A74
     [FieldOffset(0xA80)] public void* UnkA80;
-    [FieldOffset(0xA88)] public AccurateTime UnkA88;
+    [FieldOffset(0xA88)] public TimePoint UnkA88;
     [FieldOffset(0xAA0)] public byte UnkAA0;
-    [FieldOffset(0xAA8)] public AccurateTime UnkAA8;
+    [FieldOffset(0xAA8)] public TimePoint UnkAA8;
 
     [FieldOffset(0xAC0)] public uint ZoneConnectionState; //related to 998
     [FieldOffset(0xAC4)] public uint UnkAC4;
     [FieldOffset(0xAC8)] public uint ChatConnectionState; //related to 9A0
-    [FieldOffset(0xAD0)] public AccurateTime LastKeepAliveTime;
+    [FieldOffset(0xAD0)] public TimePoint LastKeepAliveTimePoint;
     [FieldOffset(0xAE8)] public uint KeepAliveInterval; //init 0xbb8 (3000)
-    [FieldOffset(0xAF0)] public AccurateTime UnkAF0;
-    [FieldOffset(0xB08)] public AccurateTime UnkB08;
+    [FieldOffset(0xAF0)] public TimePoint UnkAF0;
+    [FieldOffset(0xB08)] public TimePoint UnkB08;
     [FieldOffset(0xB20)] public float UnkB20; //Init to 100
     [FieldOffset(0xB24)] public byte UnkB24; //Init 0
     [FieldOffset(0xB26)] public short CurrentInstance;
@@ -92,7 +92,7 @@ public unsafe partial struct NetworkModule {
     [FieldOffset(0xB34)] public int KeepAliveIntervalZone;
     [FieldOffset(0xB38)] public int KeepAliveChat;
     [FieldOffset(0xB3C)] public int KeepAliveIntervalChat;
-    [FieldOffset(0xB40)] public AccurateTime UnkB40;
+    [FieldOffset(0xB40)] public TimePoint UnkB40;
     [FieldOffset(0xB58)] public bool IsInCrossWorldDuty;
 
     //FUN_14021c0b0

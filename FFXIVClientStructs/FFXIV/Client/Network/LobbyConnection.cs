@@ -11,7 +11,7 @@ public unsafe struct LobbyConnection {
     [FieldOffset(0x28)] public int Unk028;
     [FieldOffset(0x2C)] public short Unk02C;
     [FieldOffset(0x30)] public int Unk030;
-    [FieldOffset(0x038)] public AccurateTime Unk038;
+    [FieldOffset(0x038)] public TimePoint Unk038;
     [FieldOffset(0x050)] public int Unk050;
     [FieldOffset(0x070)] public Utf8String Unk070;
     [FieldOffset(0x0D8)] public uint Unk0D8;
@@ -70,7 +70,7 @@ public unsafe struct LobbyConnection {
     [StructLayout(LayoutKind.Explicit, Size = 0x130)]
     public struct Unk538Obj {
         [FieldOffset(0x010)] public Unk010Obj* Unk010;
-        [FieldOffset(0x118)] public AccurateTime Time;
+        [FieldOffset(0x118)] public TimePoint TimePoint;
         
         
         //ctor "E8 ?? ?? ?? ?? 48 8B F0 48 8B CE 48 89"
@@ -83,7 +83,7 @@ public unsafe struct LobbyConnection {
             [FieldOffset(0x110)] public void* Unbk110; //freed in dtor
             [FieldOffset(0x120)] public Utf8String Host;
             [FieldOffset(0x190)] public Unk190Obj* Unk190;
-            [FieldOffset(0x198)] public AccurateTime Time198;
+            [FieldOffset(0x198)] public TimePoint Time198;
 
             //vtable 0x141c8fe40 (base 0x141c8fdf8)
             [StructLayout(LayoutKind.Explicit, Size = 0x1048)]
