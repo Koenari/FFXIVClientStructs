@@ -134,6 +134,7 @@ functions:
   0x141306EC0: Client::Graphics::Kernel::CreateShader # static function
   0x141311E60: FilterCustomizeData # ensures NPC specific faces etc aren't on players
   0x1413123B0: NormalizeCustomizeData
+  0x1413A7BC0: InitWinsockDLL
   0x1413B7B30: lua_close
   0x1413B7BB0: lua_newstate
   0x1413B7EB0: lua_index2addr
@@ -330,8 +331,8 @@ functions:
 classes:
   Common::AccurateTime:
     funcs:
-      0x1400965f0: GetNow
-      #0x1404BD370: ctor
+      0x1400965F0: GetNow
+      0x1404BD3A0: ctor
   MemoryManager:
     funcs:
       0x1400609F0: AllocDefaultSpace
@@ -390,22 +391,23 @@ classes:
       0x1414220C0: ExecuteEmote # (emoteId, targetInfo)
       0x1414226B0: CanExecuteEmote # (emoteId)
       0x141422DF0: Update
-  Application::Network::NetworkModule:
+  Client::Network::NetworkModule:
     funcs:
       0x1415EA3B0: ctor
       0x1415EADE0: dtor
       0x1415EB8F0: Initialize
       0x1415EB0D0: GetCharacterData
       0x1415EC130: dtorHelper
+      0x1415F14F0: Update
       #0x1415ED920: SetLanguage
-  Application:Network::ZoneConnection:
+  Client:Network::ZoneConnection:
     funcs:
       0x1415F2DD0: dtor
       0x1415F3130: SendRequest
-  Application:Network::ChatConnection:
+  Client:Network::ChatConnection:
     funcs:
       0x1415F3440: dtor
-  Application:Network::LobbyConnectionBase:
+  Client:Network::LobbyConnectionBase:
     vtbls:
       - ea: 0x141c8F490
     vfuncs:
@@ -413,18 +415,17 @@ classes:
     funcs:
       0x14161C500: ctor
       0x14161d5a0: dtor
-  Application:Network::LobbyConnection:
+  Client:Network::LobbyConnection:
     vtbls:
       - ea: 0x141C83CA8
-        base: Application:Network::LobbyConnectionBase
-    
+        base: Client:Network::LobbyConnectionBase
     funcs:
       0x1415F3870: ctor
       0x1415F3980: dtor
       0x1415F4D50: SetWorld
       0x1415F4E10: SetZone
       0x14161E960: IsOffset8NotNull
-  Application::Network::LobbyClient::LobbyRequestCallback:
+  Client::Network::LobbyClient::LobbyRequestCallback:
     vtbls:
       - ea: 0x141C8E798
     vfuncs:
@@ -1867,7 +1868,7 @@ classes:
       0x140093B40: GetUIModule
       0x140093B60: GetUIClipboard
       0x140093B70: GetUIInputData
-      0x140094620: InitNetworking
+      0x140094620: UpdateNetwork
       0x140094A20: TaskBegin
       0x140094B60: TaskDraw2DBegin
       0x140094BA0: TaskUpdateInputDevice
@@ -2794,11 +2795,14 @@ classes:
       - ea: 0x1419BF0D0
         base: Client::UI::Info::InfoProxyPageInterface
     vfuncs:
+      8: ClearListData
+      15: GetCurrentLocationName
+      26: Compare #By IsOnline
       29: CompareHomeworld
     funcs:
       0x1400ECF80: ctor
       0x1400ED0A0: Finalize
-      #fail 0x1400EC000: ClearData
+      0x1400ED750: ClearListDataImpl
       0x1400EDEC0: GetContentIDForEntry
       0x1400EDEE0: SearchEntryByName
       0x1400EDFE0: GetEntry
@@ -3457,6 +3461,7 @@ classes:
     funcs:
       0x14021AE40: ctor
       0x14021AE90: Initialize
+      0x14021B600: Update
       0x14021B610: Finalize
       0x14021B6B0: IsWinSockInitialized
       0x14021B810: SetLanguage
@@ -3468,6 +3473,7 @@ classes:
       0x14021C940: IsInCrossWorldDuty
       0x14021C9A0: SetCurrentInstance
       0x14021C9C0: GetCurrentInstance
+      0x14021B690: HasZoneConnection
   Application::Network::PacketReceiverCallbackInterface:
     vtbls:
       - ea: 0x1419DD1B8
@@ -3509,6 +3515,8 @@ classes:
         base: Client::Network::PacketDispatcher #Client::Network::Protocol::Zone::PacketReceiverCallbackInterface
       - ea: 0x1419DD1F8
         base: Client::Network::Protocol::Chat::PacketReceiverCallbackInterface
+    funcs:
+      0x14021CAD0: ctor
   Client::UI::Agent::AgentInterface:
     vtbls:
       - ea: 0x1419DE450

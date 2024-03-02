@@ -10,7 +10,7 @@ public unsafe partial struct GameMain {
     [FieldOffset(0x40)] public fixed uint QueuedFestivals[4]; // TODO: add FixedSizeArray with a struct that splits it into two ushorts, Id and Phase
 
     [FieldOffset(0xAD8)] public JobGaugeManager JobGaugeManager;
-
+    [FieldOffset(0x407E)] public bool IsConnectedToZone;
     [FieldOffset(0x4080)] public uint TerritoryLoadState; // 1 = loading, 2 = loaded, 3 = unloading/shutting down
     [FieldOffset(0x4084)] public uint NextTerritoryTypeId;
     [FieldOffset(0x4088)] public uint CurrentTerritoryTypeId; // can be 0 during loading screens
