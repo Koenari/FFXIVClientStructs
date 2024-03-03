@@ -3,16 +3,16 @@ using Unknown = nint;
 
 namespace FFXIVClientStructs.FFXIV.Client.Network;
 
+// ctor "E8 ?? ?? ?? ?? EB ?? 49 8B C6 48 89 86"
 [StructLayout(LayoutKind.Explicit, Size = 0xA0)]
 public unsafe partial struct ZoneConnection {
     [FieldOffset(0x00)] public Utf8String ServerIp;
-
-    [FieldOffset(0x68)] public short Unk68;
+    [FieldOffset(0x68)] public short RemotePort;
     [FieldOffset(0x6C)] public int Unk6C;
     [FieldOffset(0x70)] public short Unk70;
     [FieldOffset(0x72)] public short Unk72;
 
-    //Stays the same for eacch character
+    //Stays the same for each character
     //Neither ContentID nor LodestoneID
     [FieldOffset(0x78)] public StdVector<byte> Unk78;
     [FieldOffset(0x90)] public int Unk90;
@@ -25,13 +25,13 @@ public unsafe partial struct ZoneConnection {
         [FieldOffset(0x00)] public void** vtbl; //vfunc 0: Dispose
         [FieldOffset(0x008)] public Unk008Obj* Unk008; //Some struct
         [FieldOffset(0x010)] public Unk010Obj* Unk010;
-        [FieldOffset(0x040)] public Unknown* Unk040; //Looks like a self referenceing empty vector
+        [FieldOffset(0x040)] public Unknown* Unk040; //Looks like a self referencing empty vector
         [FieldOffset(0x048)] public Unknown* Unk048;
         [FieldOffset(0x088)] public void* Unk088;
-        [FieldOffset(0x090)] public void* Unk090; //Maybe a fucntion pointer
+        [FieldOffset(0x090)] public void* Unk090; //Maybe a function pointer
 
         //vtbl at 141c161e8
-        [FieldOffset(0x098)] public void* Unk098; //Maybe a fucntion pointer
+        [FieldOffset(0x098)] public void* Unk098; //Maybe a function pointer
 
         //vtbl at 141c16280
         [FieldOffset(0x0C8)] public void* Unk0C8;
@@ -58,7 +58,7 @@ public unsafe partial struct ZoneConnection {
             [FieldOffset(0x040)] public ulong Unk040; //Timestamp in ms
 
             [FieldOffset(0x048)]
-            public ulong Unk048; //Seen values between 140 and 200 (changes each tick) (maybe ns since last ...)
+            public ulong Unk048; //Seen values between 140 and 200 (changes each tick) (maybe time since last ...)
 
             [FieldOffset(0x050)] public ulong Unk050; //Timestamp in ms
             [FieldOffset(0x080)] public void* Unk080; //CriticalSection

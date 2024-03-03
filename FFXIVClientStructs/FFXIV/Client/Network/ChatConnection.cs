@@ -4,7 +4,8 @@ namespace FFXIVClientStructs.FFXIV.Client.Network;
 
 [StructLayout(LayoutKind.Explicit)]
 public unsafe partial struct ChatConnection {
-    [FieldOffset(0x00)] public Utf8String Unk00;
+    [FieldOffset(0x00)] public Utf8String ServerIp;
+    [FieldOffset(0x68)] public short ServerPort;
     //0x10 byte
     [FieldOffset(0x78)] public StdVector<ulong> Unk78; //ulong is a placeholder
     [FieldOffset(0xA0)] public UnkA0Obj* UnkA0;

@@ -5,6 +5,7 @@ using FFXIVClientStructs.FFXIV.Client.System.Configuration;
 using FFXIVClientStructs.FFXIV.Client.System.File;
 using FFXIVClientStructs.FFXIV.Client.System.Input;
 using FFXIVClientStructs.FFXIV.Client.System.String;
+using FFXIVClientStructs.FFXIV.Client.System.Task;
 using FFXIVClientStructs.FFXIV.Client.System.Threading;
 using FFXIVClientStructs.FFXIV.Client.System.Timer;
 using FFXIVClientStructs.FFXIV.Client.UI;
@@ -79,7 +80,8 @@ public unsafe partial struct Framework {
     /// </summary>
     [FieldOffset(0x16C4)] public float FrameDeltaFactor;
     [FieldOffset(0x16C8)] public uint FrameCounter;
-    [FieldOffset(0x16F0)] public SpursManager* Unk16F0;
+    
+    [FieldOffset(0x16F0)] public SpursManager* SpursManager;
     [FieldOffset(0x16F8)] public TaskManager TaskManager;
     [FieldOffset(0x1768)] public ClientTime ClientTime;
     [FieldOffset(0x1770)]
@@ -101,6 +103,8 @@ public unsafe partial struct Framework {
     /// </summary>
     [FieldOffset(0x17CC)] public float FrameDeltaTimeOverride2;
     [FieldOffset(0x17D0)] public bool WindowInactive;
+
+    [FieldOffset(0x17E0)] public int DataPathType;
 
     [FieldOffset(0x19EC)] private fixed char gamePath[260]; // WideChar Array
     [FieldOffset(0x1DFC)] private fixed char sqPackPath[260]; // WideChar Array
@@ -228,36 +232,5 @@ public unsafe partial struct Framework {
     // ctor E8 ?? ?? ?? ?? 33 C0 45 89 BE 
     [StructLayout(LayoutKind.Explicit, Size = 0x194)]
     public struct Unk7B0Obj {
-    }
-
-    //ctor "40 53 56 57 41 56 41 57 48 81 EC ?? ?? ?? ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 84 24 ?? ?? ?? ?? 48 8D 05"
-    //dtor "48 89 5C 24 ?? 48 89 74 24 ?? 48 89 7C 24 ?? 41 56 48 83 EC ?? 48 8D 05 ?? ?? ?? ?? 4C 8B F1 48 89 01 48 8D 99 ?? ?? ?? ?? BE"
-    [StructLayout(LayoutKind.Explicit, Size = 0x318)]
-    public struct SpursManager {
-        [FieldOffset(0x008)] public SpecialThread Unk008;
-        [FieldOffset(0x038)] public GameWindow* GameWindow;
-
-
-        [FieldOffset(0x138)] public UnkownThread Unk138;
-        [FieldOffset(0x1D8)] public UnkownThread Unk1D8;
-        [FieldOffset(0x278)] public UnkownThread Unk278;
-
-
-        //ctor "E8 ?? ?? ?? ?? 49 89 5E ?? 49 8D BE"
-        [StructLayout(LayoutKind.Explicit, Size = 0x30)]
-        public struct SpecialThread {
-            [FieldOffset(0x00)] public Thread Base;
-            [FieldOffset(0x28)] public uint Unk28;
-            [FieldOffset(0x2C)] public uint Unk2C;
-        }
-
-        //ctor "E8 ?? ?? ?? ?? 48 81 C7 ?? ?? ?? ?? 48 83 EB ?? 75 ?? 33 FF"
-        //dtor "E8 ?? ?? ?? ?? 48 83 EB ?? 75 ?? 49 8D 4E"
-        [StructLayout(LayoutKind.Explicit, Size = 0xA0)]
-        public struct UnkownThread {
-            [FieldOffset(0x00)] public Thread Base;
-
-
-        }
     }
 }

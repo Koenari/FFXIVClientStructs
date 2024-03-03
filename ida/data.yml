@@ -1,6 +1,8 @@
 version: 2024.02.05.0000.0000
 
 globals:
+  0x1416954E0: _invalid_parameter_noinfo_noreturn
+  0x1416954c0: _invalid_parameter_noinfo
   0x1419B28FC: g_PathSeparator
   0x1419B29A0: g_ConfigFileName
   0x1419BE410: g_UIColorTable
@@ -455,8 +457,9 @@ classes:
     funcs:
       0x1415EA3B0: ctor
       0x1415EADE0: dtor
-      0x1415EB8F0: Initialize
       0x1415EB0D0: GetCharacterData
+      0x1415EB8F0: Initialize
+      0x1415EB950: InitializeLobbyConnection
       0x1415EC130: dtorHelper
       0x1415F14F0: Update
       #0x1415ED920: SetLanguage
@@ -1881,6 +1884,7 @@ classes:
       0x1400965B0: TaskRunner_arg1 # these are used to run static tasks, vfuncs are for Task subclasses
       0x1400965C0: TaskRunner_arg2
       0x1400965D0: TaskRunner_arg3
+      0x14019B340: dtor
   Client::System::Framework::TaskManager::RootTask:
     vtbls:
       - ea: 0x1419B2AE0
@@ -1890,8 +1894,11 @@ classes:
       - ea: 0x14219E040
     vtbls:
       - ea: 0x1419B2AF8
+    vfuncs:
+      0: Dispose
     funcs:
       0x140095D70: ctor
+      0x14019C230: dtor
       0x14019C2F0: AddTask
       0x14019C360: ExecuteAllTasks
   Common::Game::Time::GameTime:
@@ -1961,6 +1968,8 @@ classes:
       0x140097020: InitGamePath
       0x140097250: InitSqPackPath
       0x140097390: GetSavePath
+      0x140097670: SetDataPathType
+      0x1400976B0: GetProgramName
   Component::Excel::ExcelModuleInterface:
     vtbls:
       - ea: 0x1419B2B78
@@ -4310,6 +4319,14 @@ classes:
       0x1404B73A0: ctor
       0x1404B73D0: nullsub_1
       0x1404B7400: LoadDataFiles
+  Client::System::Task::SpursManager:
+    vtbls:
+      - ea: 0x141A01BA8
+    vfuncs:
+      0: Dispose
+    funcs:
+      0x1404BE280: ctor
+      0x1404Be380: dtor
   Client::System::Task::SpursJobEntityWorkerThread:
     instances:
       - ea: 0x1421B8B40
@@ -4453,8 +4470,12 @@ classes:
   Component::Exd::ExdModule:
     vtbls:
       - ea: 0x141A02E58
+    vfuncs:
+      0: Dispose
     funcs:
       0x1404CDAE0: ctor
+      0x1404CDB70: dtor
+      0x1404CDC00: Load
       0x1404CDC50: ChangeLanguage
       0x1404CDF40: GetRowBySheetAndRowId  # (ExdModule* this, ExcelSheet* pSheet, int nRowId) -> ExcelRow*
       0x1404CE0D0: GetRowBySheetAndRowIndex  # (ExdModule* this, ExcelSheet* pSheet, int nRowIndex) -> ExcelRow*

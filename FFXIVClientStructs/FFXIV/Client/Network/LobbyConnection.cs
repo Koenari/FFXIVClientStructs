@@ -70,6 +70,7 @@ public unsafe struct LobbyConnection {
     [StructLayout(LayoutKind.Explicit, Size = 0x130)]
     public struct Unk538Obj {
         [FieldOffset(0x010)] public Unk010Obj* Unk010;
+        
         [FieldOffset(0x118)] public TimePoint TimePoint;
         
         

@@ -53,9 +53,7 @@ public unsafe partial struct NetworkModule {
     [FieldOffset(0x9E0)] public void* Unk9E0;
 
     [FieldOffset(0x9E8)] public int Unk9E8; //Compared to 4, most likely state
-
-    //OVERLAP!!
-    [FieldOffset(0x9EC)] public int Unk9EC; //State related to LobbyConnection 9A8 1=failure
+    [FieldOffset(0x9EC)] public int LobbyConnectionState; // 1=failure
     [FieldOffset(0x9F0)] public byte Unk9F0; //guessing bool
 
     //TODO: Offsets (+0x68)
