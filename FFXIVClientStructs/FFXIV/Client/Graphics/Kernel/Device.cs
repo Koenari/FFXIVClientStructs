@@ -1,3 +1,5 @@
+using FFXIVClientStructs.FFXIV.Client.System.Framework;
+
 namespace FFXIVClientStructs.FFXIV.Client.Graphics.Kernel;
 
 // Client::Graphics::Kernel::Device
@@ -28,7 +30,10 @@ public unsafe partial struct Device {
     [FieldOffset(0x240)] public void* D3D11DeviceContext; // ID3D11DeviceContext5
     [FieldOffset(0x250)] public void* ImmediateContext; // Client::Graphics::Kernel::Device::ImmediateContext
 
-    [StaticAddress("48 8B 0D ?? ?? ?? ?? 48 8D 54 24 ?? F3 0F 10 44 24", 3, isPointer: true)]
+    [FieldOffset(0x1E8)] public UnkObj* Unk1E8;
+    [FieldOffset(0x1F0)] public UnkObj* Unk1F0;
+
+    [StaticAddress("48 8B 0D ?? ?? ?? ?? 48 8D 54 24 ?? F3 0F 10 44 24", 3, true)]
     public static partial Device* Instance();
 
     [MemberFunction("E8 ?? ?? ?? ?? 48 89 06 8B C3")]
@@ -36,4 +41,20 @@ public unsafe partial struct Device {
 
     [MemberFunction("E8 ?? ?? ?? ?? 8B 0F 48 8D 54 24")]
     public partial Texture* CreateTexture2D(int* size, byte mipLevel, uint textureFormat, uint flags, uint unk);
+
+    [StructLayout(LayoutKind.Explicit)]
+    public struct UnkObj {
+
+        [FieldOffset(0x08)] public nint LPCRITICAL_SECTION;
+        [FieldOffset(0x30)] public Unk30Obj* Data;
+        [FieldOffset(0x38)] public uint Capacity;
+        [FieldOffset(0x3C)] public uint Count;
+
+        [StructLayout(LayoutKind.Explicit)]
+        public struct Unk30Obj {
+            [FieldOffset(0x0)] public void* FunctionPointer;
+            [FieldOffset(0x8)] public void* Param;
+        }
+    }
+
 }

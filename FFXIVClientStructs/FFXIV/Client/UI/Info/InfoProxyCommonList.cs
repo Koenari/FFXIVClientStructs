@@ -7,8 +7,8 @@ namespace FFXIVClientStructs.FFXIV.Client.UI.Info;
 public unsafe partial struct InfoProxyCommonList {
     [FieldOffset(0x0)] public InfoProxyPageInterface InfoProxyPageInterface;
     [FieldOffset(0x20)] public Utf8String Unk20;
-    [FieldOffset(0x88)] public byte Unk88; //Corresponding ATkModule NumberArrrayIndex
-    [FieldOffset(0x89)] public byte Unk89; //Corresponding ATkModule StringArrrayIndex
+    [FieldOffset(0x88)] public byte AtkNumberArrrayIndex; //Corresponding ATkModule NumberArrrayIndex
+    [FieldOffset(0x89)] public byte AtkStringArrrayIndex; //Corresponding ATkModule StringArrrayIndex
     [FieldOffset(0x8A)] public ushort DataSize;
     [FieldOffset(0x8C)] public ushort DictSize;
     [FieldOffset(0x8E)] public ushort Unk8E; //10 * DataSize
@@ -34,7 +34,9 @@ public unsafe partial struct InfoProxyCommonList {
     public struct CharacterData {
         [FieldOffset(0x00)] public ulong ContentId;
         [FieldOffset(0x08)] public OnlineStatus State;
-        //12 bytes
+
+        [FieldOffset(0x13)] public byte Unk13; //Some sort of Status info
+        [FieldOffset(0x14)] public byte DictIndex;
         /// <summary>
         /// Extra flags for status:
         /// 0x10 = ? always set when accepted friend request

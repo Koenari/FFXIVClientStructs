@@ -375,6 +375,52 @@ classes:
       0x140930E50: IsInPvPInstance
       0x140930F10: IsInPvPArea
       0x1400A8570: IsInSanctuary # static, more likely Client::UI::IsInSanctuary but it fits here just fine
+  Client::Game::GameMainUnk58ObjBaseBase:
+    vtbls:
+      - ea: 0x141D71428
+    vfuncs:
+      0: Dispose
+    funcs:
+      0x14193CD30: ctor
+      0x14193D0A0: dtor
+  Client::Game::GameMainUnk58ObjBase:
+    vtbls:
+      - ea: 0x141A044F0
+        base: Client::Game::GameMainUnk58ObjBaseBase
+    vfuncs:
+      2: GetSheetIndex
+      5: GetEntry
+      6: GetEntry2
+    funcs:
+      0x14193CD60: dtor
+      0x140701A70: Initialize
+      0x140701B40: Update
+  Client::Game::GameMainUnk58Obj:
+    vtbls:
+      - ea: 0x141A1F380
+        base: Client::Game::GameMainUnk58ObjBase
+    funcs:
+      0x140701FF0: ctor
+  Client::Game::GameMainUnk210Obj:
+    vtbls:
+      - ea: 0x141A1F3E0
+        base: Client::Game::GameMainUnk58ObjBase
+    funcs:
+      0x140702540: ctor
+  Client::Game::GameMainUnk948Obj:
+    vtbls:
+      - ea: 0x141A1F428
+        base: Client::Game::GameMainUnk58ObjBaseBase
+    funcs:
+      0x140702A50: ctor
+      0x1407029C0: Initialize
+      0x140702A30: Update
+  Client::Game::GameMainUnkA80Obj:
+    vtbls:
+      - ea: 0x141a1f418
+        base: Client::Game::GameMainUnk58ObjBaseBase
+    funcs:
+      0x140702690: ctor
   Client::Game::BGMSystem:
     instances:
       - ea: 0x1421D5790
@@ -730,12 +776,14 @@ classes:
         pointer: False
     funcs:
       0x1412E2D00: Initialize
+      #0x1412e2CE0: Destroy
       0x1412E2EC0: CreateBattleCharacter
       0x1412E3030: CreateEventObject
       0x1412E3110: CreateAreaObject
       0x1412E3200: DeleteObjectByIndex
       0x1412E3360: DeleteAllObjects
       0x1412E34D0: CalculateNextAvailableIndex
+      #0x1412E34B0: GetEntityIdByIndex #return  mount/companion if applicable
       0x1412E3580: GetObjectByIndex
       0x1412E3660: IsValidClientObject
       0x1412E3680: IsValidClientObjectIndex
@@ -1982,6 +2030,7 @@ classes:
       0x140093B40: GetUIModule
       0x140093B60: GetUIClipboard
       0x140093B70: GetUIInputData
+      #0x140094620: UpdateNetwork
       0x140094A20: TaskBegin
       0x140094B60: TaskDraw2DBegin
       0x140094BA0: TaskUpdateInputDevice
@@ -2976,7 +3025,7 @@ classes:
     funcs:
       0x1400F3C80: ctor
       0x14017C8A0: Finalize
-  Client::UI::Info::InfoProxy20:
+  Client::UI::Info::InfoProxyMentor:
     vtbls:
       - ea: 0x1419BF830
         base: Client::UI::Info::InfoProxyInterface
@@ -3120,7 +3169,7 @@ classes:
     vtbls:
       - ea: 0x1419C11E0
         base: Client::UI::Info::InfoProxyInterface
-  Client::UI::Info::InfoProxy28:
+  Client::UI::Info::InfoProxyPvPTeam:
     vtbls:
       - ea: 0x1419C1248
         base: Client::UI::Info::InfoProxyInterface
@@ -3588,8 +3637,10 @@ classes:
       0x14021B600: Finalize
       0x14021B6A0: IsWinSockInitialized
       0x14021B800: SetLanguage
+      #0x14021BE90: FetchPlayTime
       0x14021BF30: GetCurrentDeviceTime
       0x14021BF80: GetCurrentDeviceTimeInMillis
+      #0x14021BFF0: SetOsTypeAndVersion
       0x14021C000: GetLobbyCount
       0x14021C930: IsInCrossWorldDuty
       0x14021C990: SetCurrentInstance
@@ -3893,6 +3944,9 @@ classes:
         base: Client::Graphics::Singleton
     funcs:
       0x1403756B0: ctor
+      #fail 0x140090370: SetGlare
+      #fail 0x1400903F0: SetTranslucentQuality
+      #fail 0x1400903B0: SetGamma
   Client::Graphics::Render::Camera:
     vtbls:
       - ea: 0x1419EE6B0
@@ -4644,6 +4698,7 @@ classes:
       0x140507890: SetValueForced
       0x1405078D0: SetValueForcedUtf8
       0x140507950: SetValueAndUpdate # calls SetValue with silent = false
+      #fail 0x1404F8130: SetValueAndUpdateUtf8
   Component::GUI::ExtendArrayData:
     vtbls:
       - ea: 0x141A05188
