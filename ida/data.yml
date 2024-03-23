@@ -12,8 +12,20 @@ globals:
   0x1421677A8: g_Client::Game::Control::InputManager_MouseButtonHoldState
   0x14217D8D0: g_StackCookie
   0x14217D8D8: g_InverseStackCookie
-  0x142199568: g_stdout
   0x142199000: g_ffxiv_dx11_module
+  0x142199008: g_Window
+  0x142199010: g_WindowName
+  0x142199080: g_ClassName
+  0x1421990E8: g_CallerWindow
+  0x142199110: g_WindowWidth
+  0x142199114: g_WindowHeight
+  0x142199170: g_UserName
+  0x142199388: g_ScreenX
+  0x14219938C: g_ScreenY
+  0x142199390: g_ScreenWidth
+  0x142199394: g_ScreenHeight
+  0x142199560: g_ClientLanguage
+  0x142199568: g_stdout
   0x14219AFF0: g_ThreadLocalPerformanceFrequency
   0x14219B008: g_FrameCountAccum # accumulates over a second to calc FPS
   0x14219B00C: g_FrameTimeAccum # accumulates over a second to calc FPS
