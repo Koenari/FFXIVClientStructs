@@ -7,4 +7,6 @@ public unsafe struct WatchDogThread {
 
     [FieldOffset(0x34)] public int Unk34; //-1 init
 
+    [FieldOffset(0x40)] public int Unk40;
+
 }

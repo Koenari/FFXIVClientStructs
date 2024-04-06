@@ -25,7 +25,8 @@ namespace FFXIVClientStructs.FFXIV.Client.System.Framework;
 public unsafe partial struct Framework {
     [FieldOffset(0x0008)] public byte Unk8;
     [FieldOffset(0x0009)] public bool Unk9;
-    [FieldOffset(0x000C)] public int UnkC;
+    [FieldOffset(0x000A)] public bool StopRequested; 
+    [FieldOffset(0x000C)] public int ProgramReturnCode;
     [FieldOffset(0x0010)] public SystemConfig SystemConfig;
     [FieldOffset(0x0460)] public DevConfig DevConfig;
     [FieldOffset(0x0570)] public SavedAppearanceManager* SavedAppearanceData;

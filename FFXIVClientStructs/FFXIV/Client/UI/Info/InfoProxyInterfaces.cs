@@ -8,7 +8,7 @@ public unsafe partial struct InfoProxyInterface {
     [FieldOffset(0x10)] public uint EntryCount;
 
     [VirtualFunction(2)]
-    public partial void RemoveData(void* dataAddress);
+    public partial void RemoveData(nint dataAddress);
 
     [VirtualFunction(6)]
     public partial void EndRequest();
