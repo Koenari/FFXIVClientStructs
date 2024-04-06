@@ -53,7 +53,7 @@ internal sealed class CStrOverloadsGenerator : IIncrementalGenerator {
         });
     }
 
-    internal sealed record CStrOverloadInfo(MethodInfo MethodInfo, Option<string> IgnoreArgument) {
+    internal sealed record CStrOverloadInfo(MethodInfo MethodInfo, Option<string> IgnoreArgument, string Prefix) {
         public static Validation<DiagnosticInfo, CStrOverloadInfo> GetFromRoslyn(
             MethodDeclarationSyntax methodSyntax, IMethodSymbol methodSymbol) {
             Validation<DiagnosticInfo, MethodInfo> validMethodInfo =
@@ -63,9 +63,13 @@ internal sealed class CStrOverloadsGenerator : IIncrementalGenerator {
                 methodSymbol.GetFirstAttributeDataByTypeName(AttributeName)
                     .GetValidAttributeArgument<string>("IgnoreArgument", 0, AttributeName, methodSymbol)
                     .ToOption();
+            Option<AttributeData> obsoleteAtrribute = methodSymbol.GetFirstAttributeDataByTypeName("System.ObsoleteAttribute");
+            string? obsoletionMessage = obsoleteAtrribute.Bind(data => data.ConstructorArguments).Any() ? obsoleteAtrribute.Bind(data => data.ConstructorArguments).FirstOrDefault().Value as string : null;
+            string wrappedObsoletionMessage = obsoletionMessage is null ? string.Empty : $"(\"{obsoletionMessage}\")";
+            string newObsoletionAtrribute = obsoleteAtrribute.IsSome ? $"[Obsolete{wrappedObsoletionMessage}]" : string.Empty;
 
             return validMethodInfo.Bind<CStrOverloadInfo>(methodInfo =>
-                new CStrOverloadInfo(methodInfo, optionIgnoreArgument));
+                new CStrOverloadInfo(methodInfo, optionIgnoreArgument, newObsoletionAtrribute));
         }
 
         public void RenderOverloadMethods(IndentedStringBuilder builder) {
@@ -80,6 +84,7 @@ internal sealed class CStrOverloadsGenerator : IIncrementalGenerator {
             string returnString = MethodInfo.ReturnType == "void" ? string.Empty : "return ";
 
             builder.AppendLine();
+            builder.Append(Prefix);
             MethodInfo.RenderStartOverload(builder, "byte*", "string", IgnoreArgument);
             foreach (string overloadParamName in overloadParamNames) {
                 var valName = $"utf8StringLength{overloadParamName}";
@@ -110,6 +115,7 @@ internal sealed class CStrOverloadsGenerator : IIncrementalGenerator {
             MethodInfo.RenderEnd(builder);
 
             builder.AppendLine();
+            builder.Append(Prefix);
             MethodInfo.RenderStartOverload(builder, "byte*", "ReadOnlySpan<byte>", IgnoreArgument);
             foreach (string overloadParamName in overloadParamNames) {
                 builder.AppendLine($"fixed (byte* {overloadParamName}Ptr = {overloadParamName})");

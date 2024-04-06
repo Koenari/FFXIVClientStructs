@@ -56,7 +56,7 @@ internal sealed class FixedStringGenerator : IIncrementalGenerator {
         });
     }
 
-    internal sealed record FixedStringInfo(string FieldName, int MaxLength, string PropertyName) {
+    internal sealed record FixedStringInfo(string FieldName, int MaxLength, string PropertyName, string Prefix) {
         public static Validation<DiagnosticInfo, FixedStringInfo> GetFromRoslyn(IFieldSymbol fieldSymbol) {
             Validation<DiagnosticInfo, IFieldSymbol> validSymbol =
                 (fieldSymbol.IsFixedSizeBuffer
@@ -77,13 +77,18 @@ internal sealed class FixedStringGenerator : IIncrementalGenerator {
             Option<AttributeData> attribute = fieldSymbol.GetFirstAttributeDataByTypeName(AttributeName);
 
             Validation<DiagnosticInfo, string> validPropertyName = attribute.GetValidAttributeArgument<string>("PropertyName", 0, AttributeName, fieldSymbol);
+            
+            Option<AttributeData> obsoleteAtrribute = fieldSymbol.GetFirstAttributeDataByTypeName("System.ObsoleteAttribute");
+            string? obsoletionMessage = obsoleteAtrribute.Bind(data => data.ConstructorArguments).Any() ? obsoleteAtrribute.Bind(data => data.ConstructorArguments).FirstOrDefault().Value as string : null;
+            string wrappedObsoletionMessage = obsoletionMessage is null ? string.Empty : $"(\"{obsoletionMessage}\")";
+            string newObsoletionAtrribute = obsoleteAtrribute.IsSome ? $"[Obsolete{wrappedObsoletionMessage}]" : string.Empty;
 
             return (validSymbol, validPropertyName).Apply((symbol, propertyName) =>
-                new FixedStringInfo(symbol.Name, symbol.FixedSize, string.IsNullOrEmpty(propertyName) ? $"{symbol.Name}String" : propertyName));
+                new FixedStringInfo(symbol.Name, symbol.FixedSize, string.IsNullOrEmpty(propertyName) ? $"{symbol.Name}String" : propertyName, newObsoletionAtrribute));
         }
 
         public void RenderFixedString(IndentedStringBuilder builder) {
-            builder.AppendLine($"public string {PropertyName} {{");
+            builder.AppendLine($"{Prefix}public string {PropertyName} {{");
             using (builder.Indent()) {
                 builder.AppendLine($"get {{ fixed (byte* ptr = {FieldName}) {{ var str = Encoding.UTF8.GetString(ptr, 0x{MaxLength:X}); var nullIdx = str.IndexOf('\\0'); return nullIdx >= 0 ? str[..nullIdx] : str; }} }}");
                 builder.AppendLine($"set {{ fixed (byte* ptr = {FieldName}) {{ var bytes = Encoding.UTF8.GetBytes(value ?? string.Empty); var lastBytePos = Math.Min(bytes.Length, 0x{MaxLength:X} - 1); Marshal.Copy(bytes, 0, (nint)ptr, lastBytePos); ptr[lastBytePos] = 0; }} }}");

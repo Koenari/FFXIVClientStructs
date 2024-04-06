@@ -58,7 +58,7 @@ internal sealed class FixedSizeArrayGenerator : IIncrementalGenerator {
         });
     }
 
-    internal sealed record FixedSizeArrayInfo(string FieldName, string TypeName, int Count) {
+    internal sealed record FixedSizeArrayInfo(string FieldName, string TypeName, int Count, string Prefix) {
         public static Validation<DiagnosticInfo, FixedSizeArrayInfo> GetFromRoslyn(IFieldSymbol fieldSymbol) {
             Validation<DiagnosticInfo, IFieldSymbol> validSymbol =
                 (fieldSymbol.IsFixedSizeBuffer
@@ -88,13 +88,16 @@ internal sealed class FixedSizeArrayGenerator : IIncrementalGenerator {
                             AttributeName));
             Validation<DiagnosticInfo, int> validCount =
                 attribute.GetValidAttributeArgument<int>("Count", 0, AttributeName, fieldSymbol);
-
+            Option<AttributeData> obsoleteAtrribute = fieldSymbol.GetFirstAttributeDataByTypeName("System.ObsoleteAttribute");
+            string? obsoletionMessage = obsoleteAtrribute.Bind(data => data.ConstructorArguments).Any() ? obsoleteAtrribute.Bind(data => data.ConstructorArguments).FirstOrDefault().Value as string : null;
+            string wrappedObsoletionNotice = obsoletionMessage is null ? string.Empty : $"(\"{obsoletionMessage}Span\")";
+            string newObsoletionAtrribute = obsoleteAtrribute.IsSome ? $"[Obsolete{wrappedObsoletionNotice}]" : string.Empty;
             return (validSymbol, validType, validCount).Apply((symbol, type, count) =>
-                new FixedSizeArrayInfo(symbol.Name, type, count));
+                new FixedSizeArrayInfo(symbol.Name, type, count, newObsoletionAtrribute));
         }
 
         public void RenderFixedSizeArraySpan(IndentedStringBuilder builder) {
-            builder.AppendLine($"public Span<{TypeName}> {FieldName}Span => new(Unsafe.AsPointer(ref {FieldName}[0]), {Count});");
+            builder.AppendLine($"{Prefix}public Span<{TypeName}> {FieldName}Span => new(Unsafe.AsPointer(ref {FieldName}[0]), {Count});");
         }
     }
 
