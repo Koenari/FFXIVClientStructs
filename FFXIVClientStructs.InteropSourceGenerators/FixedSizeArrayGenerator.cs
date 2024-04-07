@@ -88,12 +88,9 @@ internal sealed class FixedSizeArrayGenerator : IIncrementalGenerator {
                             AttributeName));
             Validation<DiagnosticInfo, int> validCount =
                 attribute.GetValidAttributeArgument<int>("Count", 0, AttributeName, fieldSymbol);
-            Option<AttributeData> obsoleteAtrribute = fieldSymbol.GetFirstAttributeDataByTypeName("System.ObsoleteAttribute");
-            string? obsoletionMessage = obsoleteAtrribute.Bind(data => data.ConstructorArguments).Any() ? obsoleteAtrribute.Bind(data => data.ConstructorArguments).FirstOrDefault().Value as string : null;
-            string wrappedObsoletionNotice = obsoletionMessage is null ? string.Empty : $"(\"{obsoletionMessage}Span\")";
-            string newObsoletionAtrribute = obsoleteAtrribute.IsSome ? $"[Obsolete{wrappedObsoletionNotice}]" : string.Empty;
+
             return (validSymbol, validType, validCount).Apply((symbol, type, count) =>
-                new FixedSizeArrayInfo(symbol.Name, type, count, newObsoletionAtrribute));
+                new FixedSizeArrayInfo(symbol.Name, type, count, new AttributePropagationProvider(fieldSymbol).Output));
         }
 
         public void RenderFixedSizeArraySpan(IndentedStringBuilder builder) {

@@ -63,13 +63,9 @@ internal sealed class CStrOverloadsGenerator : IIncrementalGenerator {
                 methodSymbol.GetFirstAttributeDataByTypeName(AttributeName)
                     .GetValidAttributeArgument<string>("IgnoreArgument", 0, AttributeName, methodSymbol)
                     .ToOption();
-            Option<AttributeData> obsoleteAtrribute = methodSymbol.GetFirstAttributeDataByTypeName("System.ObsoleteAttribute");
-            string? obsoletionMessage = obsoleteAtrribute.Bind(data => data.ConstructorArguments).Any() ? obsoleteAtrribute.Bind(data => data.ConstructorArguments).FirstOrDefault().Value as string : null;
-            string wrappedObsoletionMessage = obsoletionMessage is null ? string.Empty : $"(\"{obsoletionMessage}\")";
-            string newObsoletionAtrribute = obsoleteAtrribute.IsSome ? $"[Obsolete{wrappedObsoletionMessage}]" : string.Empty;
 
             return validMethodInfo.Bind<CStrOverloadInfo>(methodInfo =>
-                new CStrOverloadInfo(methodInfo, optionIgnoreArgument, newObsoletionAtrribute));
+                new CStrOverloadInfo(methodInfo, optionIgnoreArgument, new AttributePropagationProvider(methodSymbol).Output));
         }
 
         public void RenderOverloadMethods(IndentedStringBuilder builder) {

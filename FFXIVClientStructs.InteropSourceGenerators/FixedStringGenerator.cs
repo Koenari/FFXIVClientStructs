@@ -78,13 +78,10 @@ internal sealed class FixedStringGenerator : IIncrementalGenerator {
 
             Validation<DiagnosticInfo, string> validPropertyName = attribute.GetValidAttributeArgument<string>("PropertyName", 0, AttributeName, fieldSymbol);
             
-            Option<AttributeData> obsoleteAtrribute = fieldSymbol.GetFirstAttributeDataByTypeName("System.ObsoleteAttribute");
-            string? obsoletionMessage = obsoleteAtrribute.Bind(data => data.ConstructorArguments).Any() ? obsoleteAtrribute.Bind(data => data.ConstructorArguments).FirstOrDefault().Value as string : null;
-            string wrappedObsoletionMessage = obsoletionMessage is null ? string.Empty : $"(\"{obsoletionMessage}\")";
-            string newObsoletionAtrribute = obsoleteAtrribute.IsSome ? $"[Obsolete{wrappedObsoletionMessage}]" : string.Empty;
-
+            
             return (validSymbol, validPropertyName).Apply((symbol, propertyName) =>
-                new FixedStringInfo(symbol.Name, symbol.FixedSize, string.IsNullOrEmpty(propertyName) ? $"{symbol.Name}String" : propertyName, newObsoletionAtrribute));
+                new FixedStringInfo(symbol.Name, symbol.FixedSize, string.IsNullOrEmpty(propertyName) ? $"{symbol.Name}String" : propertyName, 
+                    new AttributePropagationProvider(fieldSymbol).Output));
         }
 
         public void RenderFixedString(IndentedStringBuilder builder) {
