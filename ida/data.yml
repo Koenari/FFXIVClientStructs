@@ -1,7 +1,7 @@
 version: 2024.03.27.0000.0000
 
 globals:
-#fail   0x1419B273C: g_PathSeparator
+  0x1419B2A7C: g_PathSeparator
   0x1419B2B00: g_ConfigFileName
   0x1419BE930: g_UIColorTable
   0x141A07D58: g_HUDScaleTable
@@ -121,7 +121,6 @@ functions:
   0x1401C04D0: j_SleepEx
   0x1401C04E0: j_Sleep
   0x14021AED0: GetLanguageCode
-  0x1402ECFF0: CountdownPointer
   0x140318AF0: CleanupCharaSelectCharacters
   0x1403293B0: GetGlobalTextParameter
   0x140335660: std::vector_SetSize
@@ -398,50 +397,50 @@ classes:
       0x1400A8570: IsInSanctuary # static, more likely Client::UI::IsInSanctuary but it fits here just fine
   Client::Game::GameMainUnk58ObjBaseBase:
     vtbls:
-      - ea: 0x141D71428 #fail
+      - ea: 0x141D81228
     vfuncs:
-      0: Dispose
+      0: dtor
     funcs:
-      0x14193CD30: ctor #fail
-      0x14193D0A0: dtor #fail
+      0x14193CEE0: ctor
+      0x14193d250: Finalize
   Client::Game::GameMainUnk58ObjBase:
     vtbls:
-      - ea: 0x141A044F0 #fail
+      - ea: 0x141a05240
         base: Client::Game::GameMainUnk58ObjBaseBase
     vfuncs:
       2: GetSheetIndex
       5: GetEntry
       6: GetEntry2
     funcs:
-      0x14193CD60: dtor #fail
-      0x140701A70: Initialize #fail
-      0x140701B40: Update #fail
+      0x14193CF10: Finalize
+      0x140701C00: Initialize
+      0x140701CD0: Update
   Client::Game::GameMainUnk58Obj:
     vtbls:
-      - ea: 0x141A1F380 #fail
+      - ea: 0x141A208F0
         base: Client::Game::GameMainUnk58ObjBase
     funcs:
-      0x140701FF0: ctor #fail
+      0x140702180: ctor
   Client::Game::GameMainUnk210Obj:
     vtbls:
-      - ea: 0x141A1F3E0 #fail
+      - ea: 0x141A20950
         base: Client::Game::GameMainUnk58ObjBase
     funcs:
-      0x140702540: ctor
+      0x1407026d0: ctor
   Client::Game::GameMainUnk948Obj:
     vtbls:
-      - ea: 0x141A1F428 #fail
+      - ea: 0x141a20998
         base: Client::Game::GameMainUnk58ObjBaseBase
     funcs:
-      0x140702A50: ctor #fail
-      0x1407029C0: Initialize #fail
-      0x140702A30: Update #fail
+      0x140702be0: ctor
+      0x140702b50: Initialize
+      0x140702bc0: Update
   Client::Game::GameMainUnkA80Obj:
     vtbls:
-      - ea: 0x141a1f418 #fail
+      - ea: 0x141a20988
         base: Client::Game::GameMainUnk58ObjBaseBase
     funcs:
-      0x140702690: ctor #fail
+      0x140702820: ctor
   Client::Game::BGMSystem:
     instances:
       - ea: 0x1421E6C98
@@ -8377,6 +8376,12 @@ classes:
     vtbls:
       - ea: 0x1419E3370
         base: Client::UI::Agent::AgentInterface
+    funcs:
+      0x1402EC0C0: ctor
+      0x1402EC100: Finalize
+      0x1402ECF20: UpdateGroupStatus
+      0x1402ECFF0: UpdateTimes
+      0x1402ED350: StopCountdown
   Client::UI::Agent::AgentWeeklyPuzzle:
     vtbls:
       - ea: 0x141A74B38
