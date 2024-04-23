@@ -1687,6 +1687,18 @@ classes:
     funcs:
       0x14094A6B0: Initialize
       0x14094A8B0: Finalize
+  Client::Game::SheetWaiterBase:
+#    vtbls:
+#      - ea:
+#        base: Common::Component::Excel::ExcelSheetWaiter
+  Client::Game::SheetWaiter<Client::Game::UI::ScenarioTextReader>:
+#    vtbls:
+#      - ea:
+#        base: Client::Game::SheetWaiterBase
+  Client::Game::UI::ScenarioTextSheetWaiter:
+    vtbls:
+      - ea: 0x141A6E308
+        base: Client::Game::SheetWaiter<Client::Game::UI::ScenarioTextReader>
   Client::Game::UI::ScenarioTextReader:
     vtbls:
       - ea: 0x141A6D120
@@ -1708,6 +1720,10 @@ classes:
         base: Client::Game::UI::ScenarioTextReader
     funcs:
       0x140957CA0: ctor
+  Client::Game::Event::ListenItemCallback<Client::Game::UI::QuestTodoList>:
+    vtbls:
+      - ea: 0x141A6D150
+        base: Client::Game::Event::ListenItemCallbackInterface
   Client::Game::UI::QuestTodoList:
     instances:
       - ea: 0x14220D5E8
@@ -1725,7 +1741,7 @@ classes:
       0x1409655A0: ctor
   Client::Game::UI::Map::MapMarkerData:
     funcs:
-      0x1409652B0: SetData # (int levelId, Utf8String* tooltip, uint iconId, float x, float y, float z, float radius, ushort territoryTypeId, uint mapId, uint placeNameZoneId, uint placeNameId, ushort recommendedLevel, char a14) -> MapMarkerData*
+      0x1409652B0: SetData
   Client::Game::BattleLog:
     funcs:
       0x14099B090: AddLogMessage
@@ -2233,6 +2249,12 @@ classes:
       0x140097330: GetSavePath
       0x140097610: SetDataPathType
       0x140097650: GetProgramName
+  Common::Component::Excel::ExcelSheetWaiter:
+    vtbls:
+      - ea: 0x141D81228
+    funcs:
+      0x14193CEA0: ctor
+      0x14193CF10: Finalize
   Component::Excel::ExcelModuleInterface:
     vtbls:
       - ea: 0x1419B2F40
@@ -2995,7 +3017,7 @@ classes:
       11: GetUseOsHardwareCursor
       12: SetSoftwareCursorScale
       13: GetSoftwareCursorScale
-      14: IsCursorVisible
+      14: GetCursorVisibility
       19: SetShowSoftwareCursorTrajectory
       21: IsMouseNotCaptured
       22: UnloadSoftwareCursor
@@ -3076,6 +3098,10 @@ classes:
       0x1400DDE90: IsUIVisible
       0x140568940: DecRefNumberArrayData
       0x1405689A0: DecRefStringArrayData
+  Client::UI::ExdSheetWaiter:
+    vtbls:
+      - ea: 0x1419BF158
+        base: Common::Component::Excel::ExcelSheetWaiter
   Client::UI::RaptureAtkModule::ItemCache:
     vtbls:
       - ea: 0x1419BF178
@@ -3289,8 +3315,8 @@ classes:
       0x14010CA40: GetLetterBoxUsage
       0x14010CA60: GetNumLettersFromPurchases
       0x14010CA70: GetNumLettersFromGameMasters
-      0x14010CA80: HasLettersFromGameMasters
-      0x14010CA90: HasLettersFromSupportDesk
+      0x14010CA80: GetHasLettersFromGameMasters
+      0x14010CA90: GetHasLettersFromSupportDesk
       0x14017C8D0: Finalize
   Client::UI::Info::InfoProxySearch:
     vtbls:
@@ -3878,6 +3904,7 @@ classes:
       0x14149E740: HandleMarketBoardPurchasePacket
       0x14149F1E0: HandleMarketBoardHistoryPacket
       0x14149E5E0: HandleMarketBoardItemRequestStartPacket
+# wrong offset      0x14130DD20: ctor
   Client::Network::NetworkModulePacketReceiverCallback: # derives Application::Network::PacketReceiverCallbackInterface & Client::Network::PacketDispatcher
     vtbls:
       - ea: 0x1419DD6D0
@@ -3921,12 +3948,52 @@ classes:
       0x1402259A0: ctor
       0x14022B150: Finalize
       0x14022B1B0: Update
-      0x14022B3A0: GetAgentByInternalID
-      0x14022B3B0: GetAgentByInternalID_2  # dupe?
+      0x14022B3A0: GetAgentByInternalId
+      0x14022B3B0: GetAgentByInternalId_2  # dupe?
       0x14022B450: HideAgent
       0x14022B470: HideAgentIfActive
       0x14022B4C0: IsAgentActive
       0x14022B230: HideAll
+      0x140225660: GetAgentScenarioTree
+      0x140225670: GetAgentMateriaAttach
+      0x140225680: GetAgentGoldSaucerReward
+      0x140225690: GetAgentCharacterTitleSelect
+      0x1402256A0: GetAgentReadyCheck
+      0x1402256C0: GetAgentHwdMonument
+      0x1402256D0: GetAgentMycItemBox
+      0x1402256E0: GetAgentMycItemBag
+      0x1402256F0: GetAgentMycDuelRequest
+      0x140225700: GetAgentMycBattleAreaInfo
+      0x140225710: GetAgentTourismMenu
+      0x140225720: GetAgentMJIHud
+      0x140225730: GetAgentMJIPouch
+      0x140225740: GetAgentMJIBuilding
+      0x140225750: GetAgentMJIBuildingMove
+      0x140225760: GetAgentMJICraftSchedule
+      0x140225770: GetAgentMJICraftSales
+      0x140225790: GetAgentMJINekomimiRequest
+      0x1402257A0: GetAgentTripleTriadRuleAnnounce
+      0x1402257B0: GetAgentTripleTriadRuleSetting
+      0x1402257D0: GetAgentTripleTriadTournamentMatchList
+      0x1402257F0: GetAgentPerformanceMode
+      0x140225810: GetAgentCutsceneReplay
+      0x140225820: GetAgentPvPHeader
+      0x140225840: GetAgentBannerList
+      0x140225850: GetAgentBannerEditor
+      0x140225860: GetAgentBannerUpdateView
+      0x140225880: GetAgentFittingShop
+      0x140225890: GetAgentCharaCard
+      0x1402258A0: GetAgentCharaCardDesignSetting
+      0x1402258B0: GetAgentCharaCardProfileSetting
+      0x1402258D0: GetAgentEmjIntro
+      0x1402258E0: GetAgentMap
+      0x1402258F0: GetAgentTofuList
+      0x140225920: GetAgentBannerParty
+      0x140225930: GetAgentBannerMIP
+      0x140225960: GetAgentSXTBattleLog
+      0x140225970: GetAgentFGSHud
+      0x140225980: GetAgentContext
+      0x140225990: GetAgentInventoryContext
   Client::UI::Agent::AgentEventFade:
     vtbls:
       - ea: 0x1419E0140
@@ -8879,6 +8946,12 @@ classes:
         base: Client::UI::Agent::AgentInterface
     funcs:
       0x140C4F1D0: ctor
+  Client::UI::Agent::AgentCollectablesShop:
+    vtbls:
+      - ea: 0x141A8B230
+        base: Client::UI::Agent::AgentInterface
+    funcs:
+      0x140D14F10: ctor
   Client::UI::Agent::AgentMycWarResultNotebook:
     vtbls:
       - ea: 0x141A749B8
@@ -8904,6 +8977,12 @@ classes:
         base: Client::UI::Agent::AgentInterface
     funcs:
       0x140ADDDA0: ctor
+  Client::UI::Agent::AgentMycDuelRequest:
+    vtbls:
+      - ea: 0x141A75008
+        base: Client::UI::Agent::AgentInterface
+    funcs:
+      0x140AE3B30: ctor
   Client::UI::Agent::AgentMycBattleAreaInfo:
     vtbls:
       - ea: 0x141A74EF8
@@ -9092,6 +9171,7 @@ classes:
         base: Client::UI::Agent::AgentInterface
     funcs:
       0x140A04620: ctor
+      0x140A04710: SearchForRecipesUsingItem
   Client::UI::Agent::AgentTeleport:
     vtbls:
       - ea: 0x141A71490
@@ -9673,6 +9753,15 @@ classes:
   Client::Game::UI::GameEventCallback:
     vtbls:
       - ea: 0x141A45D40
+  Client::Game::Event::FormatStringCallbackInterface:
+    vtbls:
+      - ea: 0x141A45D50
+  Client::Game::Event::ActionTimelineCallbackInterface:
+    vtbls:
+      - ea: 0x141A45D68
+  Client::Game::Event::ListenItemCallbackInterface:
+    vtbls:
+      - ea: 0x141A45D80
   Client::Game::Event::EventHandler:
     vtbls:
       - ea: 0x141A45DF0
@@ -9960,10 +10049,21 @@ classes:
     vtbls:
       - ea: 0x141A49730
         base: Client::Game::Event::LuaEventHandler
+    vfuncs:
+      267: PopulateMapMarkers # (this, ushort territoryTypeId, StdVector<MapMarkerData>* markerVector)
     funcs:
       0x14082A0E0: ctor
       0x140964F60: ShowTodo # lua function "ShowDirectorTodo"
       0x140964F70: HideTodo # lua function "HideDirectorTodo"
+  Client::Game::CallbackSheetWaiter<Client::Game::UI::QuestTodoList>:
+    vtbls:
+      - ea: 0x141A6E368
+  Client::Game::Event::CraftEventHandler:
+    vtbls:
+      - ea: 0x141A4D788
+        base: Client::Game::Event::EventHandler
+    funcs:
+      0x14087E660: ctor
   Client::Game::Event::JournalCallback:
     vtbls:
       - ea: 0x141A4C630
@@ -10110,6 +10210,10 @@ classes:
     vtbls:
       - ea: 0x141A4A060
         base: Client::Game::Event::Director
+    vfuncs:
+      292: GetCurrentLevel
+      293: GetMaxLevel
+      319: SetExperience
     funcs:
       0x14082EEC0: ctor
   Client::Game::InstanceContent::InstanceContentDirector:
@@ -11601,13 +11705,27 @@ classes:
         base: Client::Game::InstanceContent::PublicContentDirector
     funcs:
       0x1414B7B40: ctor
+  Client::Game::InstanceContent::DynamicEventContainer:
+    vtbls:
+      - ea: 0x141B3ED38
+        base: Client::Game::InstanceContent::ContentSheetWaiterInterface
+    funcs:
+      0x1412F24D0: ctor
+      0x1412F2550: Finalize
+  Client::Game::InstanceContent::DynamicEvent:
+    vtbls:
+      - ea: 0x141C4AE38
+        base: Common::Component::Excel::ExcelSheetWaiter
+    funcs:
+      0x1414D8DA0: ctor
+      0x1414D8E60: Finalize
   Client::Game::InstanceContent::PublicContentBozja:
     vtbls:
       - ea: 0x141C3AAE8
         base: Client::Game::InstanceContent::PublicContentDirector
     funcs:
       0x1414B97D0: ctor
-  Client::Game::InstanceContent::PublicContentSoutherFront:
+  Client::Game::InstanceContent::PublicContentSouthernFront:
     vtbls:
       - ea: 0x141C3B690
         base: Client::Game::InstanceContent::PublicContentBozja
@@ -11789,7 +11907,7 @@ classes:
         base: Component::GUI::AtkUnitBase
     funcs:
       0x140D96AC0: ctor
-  Client::UI::AddonFriendList:
+  Client::UI::AddonSocialList:
     vtbls:
       - ea: 0x141A95EA0
         base: Component::GUI::AtkUnitBase
@@ -11801,6 +11919,12 @@ classes:
         base: Component::GUI::AtkUnitBase
     funcs:
       0x140DA4450: ctor
+  Client::UI::AddonPartyMemberList:
+    vtbls:
+      - ea: 0x141A96340
+        base: Client::UI::AddonSocialList
+    funcs:
+      0x140DA7EC0: ctor
   Client::UI::AddonRequest:
     vtbls:
       - ea: 0x141A96EB0
@@ -13219,7 +13343,7 @@ classes:
   Client::UI::AddonJobHudACN0::AetherflowACNGaugeData:
     vtbls:
       - ea: 0x141B21438
-        base: Client::UI::AddonJobHud::AddonJobHudGaugeData
+        base: Client::UI::AddonJobHudACN0::AetherflowACNGaugeSimple
   Client::UI::AddonJobHudACN0::AetherflowACNGauge:
     vtbls:
       - ea: 0x141B21488
