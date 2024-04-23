@@ -14,4 +14,5 @@ public partial struct AgentCountDownSettingDialog {
     [FieldOffset(0x34)] public uint Unk34;
     [FieldOffset(0x38)] public bool CountDownActive;
     [FieldOffset(0x3C)] public uint InitiatorObjectId;
+    [FieldOffset(0x40)] public bool Unk40;
 }

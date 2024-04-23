@@ -93,7 +93,7 @@ globals:
   0x14266F9B8: ?s_instance@?$hkSingleton@VhkVtableClassRegistry@@@@2PEAVhkVtableClassRegistry@@EA
 
 functions:
-  #0x140055E00: ProcessTick #Loop function in WinMain
+  0x140055E00: ProcessTick #Loop function in WinMain
   0x140058500: WinMain
   0x1400581B0: std::string::ctor_FromSubStr #(other, idx, len)
   0x1400582F0: std::string::ctor_FromCharArr #(arr, len)
@@ -3213,6 +3213,8 @@ classes:
         base: Client::UI::Info::InfoProxyCommonlist
     funcs:
       0x1400F3C20: ctor
+      0x1400F6E30: SendCountDownPacket #(time,_,_)
+      0x1400F6F00: SendCountDownCanceledPacket #static
       0x14017C9D0: Finalize
   Client::UI::Info::InfoProxyMentor:
     vtbls:
@@ -4443,11 +4445,13 @@ classes:
       0x140489DB0: ctor
       0x140489FC0: CreateDXRenderObjects
       0x14048A410: LoadDataFiles
+      0x14048E120: Update
       0x14048E1D0: GetSlotEqpFlags
       0x14048F960: GetEqpDataForAdults
       0x14048FBC0: GetEqpDataForChildren
       0x14048FD10: GetEqpDataForOther
       0x14048E4A0: GetEvpData
+      
   Client::Graphics::Scene::CharacterBase:
     vtbls:
       - ea: 0x141A006A0
@@ -8382,6 +8386,7 @@ classes:
       0x1402ECF20: UpdateGroupStatus
       0x1402ECFF0: UpdateTimes
       0x1402ED350: StopCountdown
+      0x1402ED3C0: SomeCancelHandleFunc
   Client::UI::Agent::AgentWeeklyPuzzle:
     vtbls:
       - ea: 0x141A74B38
