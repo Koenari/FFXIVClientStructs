@@ -9,8 +9,7 @@ namespace FFXIVClientStructs.FFXIV.Client.System.File;
 public unsafe partial struct FileThread {
     [FieldOffset(0x0008)] public void* SecurityAttributes; //https://learn.microsoft.com/en-us/windows/win32/api/synchapi/nf-synchapi-createeventa
     
-    [FixedSizeArray<Pointer<Unk28Obj>>(20)]
-    [FieldOffset(0x0028)] public fixed byte Unk28Arr[20*0x8];
+    [FieldOffset(0x0028),FixedSizeArray] internal FixedSizeArray20<Pointer<Unk28Obj>> _unk28Arr;
 
     
     [FieldOffset(0x04E8)] public Unk4E8Obj Unk4E8;

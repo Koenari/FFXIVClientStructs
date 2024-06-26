@@ -2,9 +2,11 @@ using FFXIVClientStructs.FFXIV.Client.Network;
 
 namespace FFXIVClientStructs.FFXIV.Application.Network;
 
+[GenerateInterop]
 public unsafe partial struct LobbyClient {
 
-    [StructLayout(LayoutKind.Explicit)]
+    [GenerateInterop]
+    [StructLayout(LayoutKind.Explicit, Size = 0x18)]
     public partial struct LobbyRequestCallback {
         [FieldOffset(0x00)] public void* vtbl;
         [FieldOffset(0x08)] public NetworkModuleProxy* NetworkModule;

@@ -2,7 +2,8 @@
 
 // Client::Game::GameMainUnk58ObjBaseBase
 // ctor "E8 ?? ?? ?? ?? 49 89 76 ?? B8"
-[StructLayout(LayoutKind.Explicit)]
+[GenerateInterop]
+[StructLayout(LayoutKind.Explicit, Size = 0x10)]
 public partial struct GameMainUnk58ObjBaseBase {
 
     [VirtualFunction(0)] public partial void dtor(bool a);
@@ -10,6 +11,7 @@ public partial struct GameMainUnk58ObjBaseBase {
 // Client::Game::GameMainUnk58ObjBase
 //   Client::Game::GameMainUnk58ObjBaseBase
 // no explicit ctor
+[GenerateInterop]
 [StructLayout(LayoutKind.Explicit, Size = 0x38)]
 public unsafe partial struct GameMainUnk58ObjBase {
     [FieldOffset(0x00)] public GameMainUnk58ObjBaseBase GameMainUnk58ObjBaseBase;
@@ -28,8 +30,7 @@ public unsafe partial struct GameMainUnk58ObjBase {
 public unsafe partial struct GameMainUnk58Obj {
     [FieldOffset(0x0)] public GameMainUnk58ObjBase GameMainUnk58ObjBase;
     
-    [FixedSizeArray<Entry>(8)]
-    [FieldOffset(0x38)] public fixed byte Entries[8*0x30];
+    [FieldOffset(0x38), FixedSizeArray] internal FixedSizeArray8<Entry> _entries;
     
     [StructLayout(LayoutKind.Explicit, Size = 0x30)]
     public struct Entry {
@@ -43,8 +44,7 @@ public unsafe partial struct GameMainUnk58Obj {
 [StructLayout(LayoutKind.Explicit)]
 public unsafe partial struct GameMainUnk210Obj {
     [FieldOffset(0x0)] public GameMainUnk58ObjBase Base;
-    [FixedSizeArray<Entry>(10)]
-    [FieldOffset(0x38)] public fixed byte Entries[10*0x70];
+    [FieldOffset(0x38),FixedSizeArray] internal FixedSizeArray10<Entry> _entries;
     
     [StructLayout(LayoutKind.Explicit, Size = 0x70)]
     public struct Entry {

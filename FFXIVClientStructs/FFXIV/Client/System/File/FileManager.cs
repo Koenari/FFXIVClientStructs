@@ -7,8 +7,7 @@ public unsafe partial struct FileManager {
     [FieldOffset(0x00038)] public FileThread* FileThread;
     [FieldOffset(0x00040)] public FileInterface* File;
     [FieldOffset(0x00048)] public Unk48Obj* Unk48;
-    [FixedSizeArray<FileEntry>(128)]
-    [FieldOffset(0x00158)] public fixed byte FileEntries[128 * 0x4F];
+    [FieldOffset(0x00158),FixedSizeArray] internal FixedSizeArray128<FileEntry> _fileEntries;
     //0x28D8 after
     [FieldOffset(0x14180)] public nint SemaphoreHandle;
     [FieldOffset(0x14188)] public nint EventHandle;
@@ -16,8 +15,8 @@ public unsafe partial struct FileManager {
     [StructLayout(LayoutKind.Explicit, Size = 0x13C000)]
     public partial struct Unk48Obj {
 
-        [FixedSizeArray<FileEntry>(2048)]
-        [FieldOffset(0x8)] public fixed byte Entries[2048 * 0x4F];
+        
+        [FieldOffset(0x8),FixedSizeArray] internal FixedSizeArray2048<FileEntry> _entries;
 
         
     }

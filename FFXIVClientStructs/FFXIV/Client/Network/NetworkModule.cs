@@ -5,6 +5,7 @@ using Unknown = nint;
 
 namespace FFXIVClientStructs.FFXIV.Client.Network;
 
+[GenerateInterop]
 [StructLayout(LayoutKind.Explicit, Size = 0xB60)]
 public unsafe partial struct NetworkModule {
 
@@ -13,8 +14,7 @@ public unsafe partial struct NetworkModule {
 
     [FieldOffset(0x028)] public byte LobbyCount;
     [FieldOffset(0x02C)] public fixed uint LobbyPorts[12];
-    [FixedSizeArray<Utf8String>(12)]
-    [FieldOffset(0x060)] public fixed byte LobbyHosts[12 * 0x68];
+    [FieldOffset(0x060),FixedSizeArray] internal FixedSizeArray12<Utf8String> _lobbyHosts;
     [FieldOffset(0x540)] public Utf8String Unk540;
     [FieldOffset(0x5A8)] public int Unk5A8; //OS related Win: 4944 Mac: 4985
     [FieldOffset(0x5AC)] public int OperatingSystemTypeAndVersion; //Most likely this is an enum

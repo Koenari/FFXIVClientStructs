@@ -14,8 +14,6 @@ namespace FFXIVClientStructs.FFXIV.Client.System.Framework;
 [Inherits<ChangeEventInterface>]
 [StructLayout(LayoutKind.Explicit, Size = 0x698)]
 public partial struct EnvironmentManager {
-    [FieldOffset(0x000)] public Task Task;
-    [FieldOffset(0x038)] public ChangeEventInterface ChangeEventInterface;
     
     [FieldOffset(0x060)] public float Unk060; //1
     [FieldOffset(0x064)] public float Unk064; //0.5

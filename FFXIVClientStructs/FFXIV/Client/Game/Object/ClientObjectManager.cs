@@ -2,11 +2,10 @@ namespace FFXIVClientStructs.FFXIV.Client.Game.Object;
 
 // Client::Game::Object::ClientObjectManager
 [GenerateInterop]
-[StructLayout(LayoutKind.Explicit)]
+[StructLayout(LayoutKind.Explicit, Size = 0x10)]
 public unsafe partial struct ClientObjectManager {
 
-    [FixedSizeArray<ObjectEntry>(48)] [FieldOffset(0x10)]
-    public fixed byte Entries[0x30 * 0x10];
+    [FieldOffset(0x10),FixedSizeArray] internal FixedSizeArray48<ObjectEntry> _entries;
 
     [StaticAddress("48 8D 0D ?? ?? ?? ?? E8 ?? ?? ?? ?? C7 43 60 FF FF FF FF", 3)]
     public static partial ClientObjectManager* Instance();

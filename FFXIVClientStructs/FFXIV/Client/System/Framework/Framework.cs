@@ -72,7 +72,7 @@ public unsafe partial struct Framework {
     /// </summary>
     [FieldOffset(0x16BC)] public float RealFrameDeltaTime;
     /// <summary>
-    /// If set to anything non-zero, overrides <see cref="FrameDeltaTime"/>. Has lower precedence than <see cref="FrameDeltaTimeOverride2"/>.
+    /// If set to anything non-zero, overrides <see cref="FrameDeltaTime"/>.
     /// </summary>
     [FieldOffset(0x16C0)] public float FrameDeltaTimeOverride;
     /// <summary>
