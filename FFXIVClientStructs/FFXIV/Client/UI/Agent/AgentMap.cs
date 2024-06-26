@@ -1,7 +1,6 @@
 using System.Numerics;
 using FFXIVClientStructs.FFXIV.Client.Game.UI;
 using FFXIVClientStructs.FFXIV.Client.System.String;
-using FFXIVClientStructs.FFXIV.Component.GUI;
 
 namespace FFXIVClientStructs.FFXIV.Client.UI.Agent;
 
@@ -9,10 +8,10 @@ namespace FFXIVClientStructs.FFXIV.Client.UI.Agent;
 //   Client::UI::Agent::AgentInterface
 //     Component::GUI::AtkModuleInterface::AtkEventInterface
 [Agent(AgentId.Map)]
+[GenerateInterop]
+[Inherits<AgentInterface>]
 [StructLayout(LayoutKind.Explicit, Size = 0x12AB8)]
 public unsafe partial struct AgentMap {
-    [FieldOffset(0x0)] public AgentInterface AgentInterface;
-
     /// <summary> Pointers to markers in <see cref="EventMarkers"/>. </summary>
     [FieldOffset(0x88)] public StdVector<Pointer<MapMarkerData>> EventMarkersPtrs;
     /// <summary> Includes markers from FateManager, EventFramework and SequentialEvent (whatever that is). </summary>
@@ -29,30 +28,22 @@ public unsafe partial struct AgentMap {
     [FieldOffset(0x1C0)] public Utf8String SelectedMapPath;
     [FieldOffset(0x228)] public Utf8String SelectedMapBgPath;
     [FieldOffset(0x290)] public Utf8String CurrentMapBgPath;
-    [FieldOffset(0x2F8), FixedSizeArray<Utf8String>(4)]
-    public fixed byte MapSelectionStrings[4 * 0x68]; // 4 * Utf8String
+    [FieldOffset(0x2F8), FixedSizeArray] internal FixedSizeArray4<Utf8String> _mapSelectionStrings;
     [FieldOffset(0x498)] public Utf8String MapTitleString;
 
-    [FieldOffset(0x638), FixedSizeArray<MapMarkerInfo>(132)]
-    public fixed byte MapMarkerInfoArray[0x48 * 132]; // 132 * MapMarkerInfo
-    [FieldOffset(0x2B58), FixedSizeArray<TempMapMarker>(12)]
-    public fixed byte TempMapMarkerArray[0x110 * 12]; // 12 * TempMapMarker
+    [FieldOffset(0x638), FixedSizeArray] internal FixedSizeArray132<MapMarkerInfo> _mapMarkers;
+    [FieldOffset(0x2B58), FixedSizeArray] internal FixedSizeArray12<TempMapMarker> _tempMapMarkers;
 
     [FieldOffset(0x3818)] public FlagMapMarker FlagMapMarker;
 
-    [FieldOffset(0x3860), FixedSizeArray<MapMarkerBase>(12)]
-    public fixed byte WarpMarkerArray[0x38 * 12]; // 12 * MapMarkerBase
-    [Obsolete("Use MiniMapGatheringMarkersSpan")]
-    [FieldOffset(0x3B00)] public fixed byte UnkArray2[0xA8 * 6];
+    [FieldOffset(0x3860), FixedSizeArray] internal FixedSizeArray12<MapMarkerBase> _warpMarkers;
     /// <remarks>
     /// 0 = mineral deposit and lush vegetation patch<br/>
     /// 1 = legendary mineral deposit<br/>
     /// 2 = unspoiled lush vegetation patch<br/>
     /// </remarks>
-    [FixedSizeArray<MiniMapGatheringMarker>(6)]
-    [FieldOffset(0x3B00)] public fixed byte MiniMapGatheringMarkers[0xA8 * 6];
-    [FieldOffset(0x3EF0), FixedSizeArray<MiniMapMarker>(100)]
-    public fixed byte MiniMapMarkerArray[0x40 * 100]; // 100 * MiniMapMarker
+    [FieldOffset(0x3B00), FixedSizeArray] internal FixedSizeArray6<MiniMapGatheringMarker> _miniMapGatheringMarkers;
+    [FieldOffset(0x3EF0), FixedSizeArray] internal FixedSizeArray100<MiniMapMarker> _miniMapMarkers;
 
     [FieldOffset(0x5898)] public float SelectedMapSizeFactorFloat;
     [FieldOffset(0x589C)] public float CurrentMapSizeFactorFloat;
@@ -86,15 +77,15 @@ public unsafe partial struct AgentMap {
     [FieldOffset(0x6990)] public QuestLinkContainer MiniMapQuestLinkContainer;
 
     [MemberFunction("E8 ?? ?? ?? ?? E9 ?? ?? ?? ?? 48 8B 4B 10 48 85 C9")]
-    public partial void SetFlagMapMarker(uint territoryId, uint mapId, float mapX, float mapY, uint iconId = 0xEC91);
+    public partial void SetFlagMapMarker(uint territoryId, uint mapId, float x, float y, uint iconId = 0xEC91);
 
-    [MemberFunction("E8 ?? ?? ?? ?? 48 8B 5C 24 ?? B0 ?? 48 8B B4 24")]
-    public partial void OpenMapByMapId(uint mapId);
+    [MemberFunction("E8 ?? ?? ?? ?? 48 8B 44 24 ?? 0F B6 48 1D")]
+    public partial void OpenMapByMapId(uint mapId, uint territoryId = 0, bool a4 = false);
 
     [MemberFunction("E8 ?? ?? ?? ?? 49 8B 45 28 48 8D 8C 24")]
     public partial void OpenMap(OpenMapInfo* data);
 
-    [MemberFunction("48 89 5C 24 ?? 48 89 6C 24 ?? 48 89 7C 24 ?? 41 54 41 55 41 56 48 83 EC 20")]
+    [MemberFunction("E8 ?? ?? ?? ?? 48 8D 4D 70 E8 ?? ?? ?? ?? 48 8D 54 24 ??")]
     public partial void AddGatheringTempMarker(uint styleFlags, int mapX, int mapY, uint iconId, int radius, Utf8String* tooltip);
 
     [MemberFunction("40 53 48 83 EC ?? B2 ?? C6 81 ?? ?? ?? ?? ?? 48 8B D9 E8 ?? ?? ?? ?? 33 D2")]
@@ -108,30 +99,30 @@ public unsafe partial struct AgentMap {
 
     public bool AddMiniMapMarker(Vector3 position, uint icon, int scale = 0) {
         if (MiniMapMarkerCount >= 100) return false;
-        var marker = stackalloc MiniMapMarker[1];
-        marker->MapMarker.Index = MiniMapMarkerCount;
-        marker->MapMarker.X = (short)(position.X * 16.0f);
-        marker->MapMarker.Y = (short)(position.Z * 16.0f);
-        marker->MapMarker.Scale = scale;
-        marker->MapMarker.IconId = icon;
-        MiniMapMarkerArraySpan[MiniMapMarkerCount++] = *marker;
+        var marker = new MiniMapMarker();
+        marker.MapMarker.Index = MiniMapMarkerCount;
+        marker.MapMarker.X = (short)(position.X * 16.0f);
+        marker.MapMarker.Y = (short)(position.Z * 16.0f);
+        marker.MapMarker.Scale = scale;
+        marker.MapMarker.IconId = icon;
+        MiniMapMarkers[MiniMapMarkerCount++] = marker;
         return true;
     }
 
     public bool AddMapMarker(Vector3 position, uint icon, int scale = 0, byte* text = null, byte textPosition = 3, byte textStyle = 0) {
         if (MapMarkerCount >= 132) return false;
         if (textPosition is > 0 and < 12)
-            position *= CurrentMapSizeFactorFloat;
-        var marker = stackalloc MapMarkerInfo[1];
-        marker->MapMarker.Index = MapMarkerCount;
-        marker->MapMarker.X = (short)(position.X * 16.0f);
-        marker->MapMarker.Y = (short)(position.Z * 16.0f);
-        marker->MapMarker.Scale = scale;
-        marker->MapMarker.IconId = icon;
-        marker->MapMarker.Subtext = text;
-        marker->MapMarker.SubtextOrientation = textPosition;
-        marker->MapMarker.SubtextStyle = textStyle;
-        MapMarkerInfoArraySpan[MapMarkerCount++] = *marker;
+            position *= SelectedMapSizeFactorFloat;
+        var marker = new MapMarkerInfo();
+        marker.MapMarker.Index = MapMarkerCount;
+        marker.MapMarker.X = (short)(position.X * 16.0f);
+        marker.MapMarker.Y = (short)(position.Z * 16.0f);
+        marker.MapMarker.Scale = scale;
+        marker.MapMarker.IconId = icon;
+        marker.MapMarker.Subtext = text;
+        marker.MapMarker.SubtextOrientation = textPosition;
+        marker.MapMarker.SubtextStyle = textStyle;
+        MapMarkers[MapMarkerCount++] = marker;
         return true;
     }
 
@@ -210,7 +201,7 @@ public struct MiniMapMarker {
     [FieldOffset(0x08)] public MapMarkerBase MapMarker;
 }
 
-[StructLayout(LayoutKind.Explicit, Size = 0x108)]
+[StructLayout(LayoutKind.Explicit, Size = 0x110)]
 public struct TempMapMarker {
     [FieldOffset(0x00)] public Utf8String TooltipText;
     [FieldOffset(0x68)] public MapMarkerBase MapMarker;
@@ -229,12 +220,12 @@ public struct OpenMapInfo {
     // there is a lot more stuff in here depending on what type of map it's used for
 }
 
+[GenerateInterop]
 [StructLayout(LayoutKind.Explicit, Size = 0xB58)]
 public unsafe partial struct QuestLinkContainer {
     [FieldOffset(0x08)] public ushort MarkerCount;
 
-    [FixedSizeArray<QuestLinkMarker>(20)]
-    [FieldOffset(0x18)] public fixed byte Markers[0x88 * 20];
+    [FieldOffset(0x18), FixedSizeArray] internal FixedSizeArray20<QuestLinkMarker> _markers;
 }
 
 [StructLayout(LayoutKind.Explicit, Size = 0x88)]

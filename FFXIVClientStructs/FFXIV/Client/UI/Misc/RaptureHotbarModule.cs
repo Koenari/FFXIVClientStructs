@@ -1,3 +1,4 @@
+using System.Runtime.CompilerServices;
 using FFXIVClientStructs.FFXIV.Client.Game;
 using FFXIVClientStructs.FFXIV.Client.System.Framework;
 using FFXIVClientStructs.FFXIV.Client.UI.Misc.UserFileManager;
@@ -7,13 +8,13 @@ namespace FFXIVClientStructs.FFXIV.Client.UI.Misc;
 // Client::UI::Misc::RaptureHotbarModule
 //   Client::UI::Misc::UserFileManager::UserFileEvent
 // ctor "E8 ?? ?? ?? ?? 48 8D 8F ?? ?? ?? ?? 4C 8B C7 49 8B D4 E8 ?? ?? ?? ?? 48 8D 8F ?? ?? ?? ?? 49 8B D4"
+[GenerateInterop]
+[Inherits<UserFileEvent>]
 [StructLayout(LayoutKind.Explicit, Size = 0x288F8)]
 public unsafe partial struct RaptureHotbarModule {
-    public static RaptureHotbarModule* Instance() => Framework.Instance()->GetUiModule()->GetRaptureHotbarModule();
+    public static RaptureHotbarModule* Instance() => Framework.Instance()->GetUIModule()->GetRaptureHotbarModule();
 
-    [FieldOffset(0)] public UserFileEvent UserFileEvent; // to 0x40
-    [FieldOffset(0x40)] public void** InputCodeModifiedInterfaceVTable;
-    [FieldOffset(0x48)] public UIModule* UiModule;
+    [FieldOffset(0x48)] public UIModule* UIModule;
 
     /// <summary>
     /// Set in RaptureHotbarModule's ReadFile after all processing/loading appears to have been completed.
@@ -31,16 +32,16 @@ public unsafe partial struct RaptureHotbarModule {
     [FieldOffset(0x51)] public byte ActiveHotbarClassJobId;
 
     /// <summary>
-    /// Appears to be set if HOTBAR.DAT was loaded from disk successfully. Set to 0 if decryption fails or
+    /// Appears to be set if <c>HOTBAR.DAT</c> was loaded from disk successfully. Set to 0 if decryption fails or
     /// the file read errors out. Does not appear to track migration state. Set in ReadFile.
     /// </summary>
     [FieldOffset(0x52)] public bool DatFileLoadedSuccessfully;
 
     // PvE hotbars starting from MCH onwards, appears to track whether a hotbar was initialized?
-    [FieldOffset(0x54)] internal fixed bool ExpacJobHotbarsCreated[12];
+    [FieldOffset(0x54), FixedSizeArray] internal FixedSizeArray12<bool> _expacJobHotbarsCreated;
 
     // PvP hotbars for all jobs, appears to track if it's been initialized. 
-    [FieldOffset(0x60)] internal fixed bool PvPHotbarsCreated[22];
+    [FieldOffset(0x60), FixedSizeArray] internal FixedSizeArray22<bool> _pvPHotbarsCreated;
 
     // ????? maybe AllowResets?
     [FieldOffset(0x76)] internal bool ClearCallbackPresent;
@@ -54,14 +55,14 @@ public unsafe partial struct RaptureHotbarModule {
     /// <summary>
     /// A bitfield representing whether a specific hotbar is to be considered "shared" or not.
     /// </summary>
-    [FieldOffset(0x7C)] public fixed byte HotbarShareStateBitmask[4];
+    [FieldOffset(0x7C), FixedSizeArray] internal FixedSizeArray4<byte> _hotbarShareStateBitmask;
 
     /// <summary>
     /// Another bitmask that appears to be related to hotbar sharing state.
     /// Initialized to 0x3E3F8 (default share state) on game start, but doesn't ever appear to be updated or read elsewhere.
     /// Dead field?
     /// </summary>
-    [FieldOffset(0x80)] internal fixed byte HotbarShareStateBitmask2[4];
+    [FieldOffset(0x80), FixedSizeArray] internal FixedSizeArray4<byte> _hotbarShareStateBitmask2;
 
     [FieldOffset(0x88)] public ClearCallback* ClearCallbackPtr;
 
@@ -69,11 +70,10 @@ public unsafe partial struct RaptureHotbarModule {
     /// An array of all active hotbars loaded and available to the player. This field tracks both normal hotbars
     /// (indices 0 to 9) and cross hotbars (indices 10 to 17).
     /// </summary>
-    [FixedSizeArray<HotBar>(18)]
-    [FieldOffset(0x90)] public fixed byte HotBars[18 * HotBar.Size];
+    [FieldOffset(0x90), FixedSizeArray] internal FixedSizeArray18<HotBar> _hotBars;
 
-    public Span<HotBar> StandardHotBars => this.HotBarsSpan[..10];
-    public Span<HotBar> CrossHotBars => this.HotBarsSpan[10..];
+    public Span<HotBar> StandardHotBars => new(Unsafe.AsPointer(ref HotBars[0]), 10);
+    public Span<HotBar> CrossHotBars => new(Unsafe.AsPointer(ref HotBars[10]), 8);
 
     [FieldOffset(0xFC90)] public HotBar PetHotBar;
     [FieldOffset(0x10A90)] public HotBar PetCrossHotBar;
@@ -99,8 +99,7 @@ public unsafe partial struct RaptureHotbarModule {
     /// To retrieve PvP hotbar information, pass in the result of the <see cref="GetPvPSavedHotbarIndexForClassJobId"/>
     /// method.
     /// </remarks>
-    [FixedSizeArray<SavedHotBarGroup>(65)]
-    [FieldOffset(0x11974)] public fixed byte SavedHotBars[65 * SavedHotBarGroup.Size];
+    [FieldOffset(0x11974), FixedSizeArray] internal FixedSizeArray65<SavedHotBarGroup> _savedHotBars;
 
     [FieldOffset(0x28714)] public CrossHotbarFlags CrossHotbarFlags;
 
@@ -131,8 +130,7 @@ public unsafe partial struct RaptureHotbarModule {
     /// <summary>
     /// Hotbar slots representing available Duty Actions (see also <see cref="ActionManager.GetDutyActionId"/>).
     /// </summary>
-    [FixedSizeArray<DutyActionSlot>(2)]
-    [FieldOffset(0x28720)] public fixed byte DutyActionSlots[2 * DutyActionSlot.Size];
+    [FieldOffset(0x28720), FixedSizeArray] internal FixedSizeArray2<DutyActionSlot> _dutyActionSlots;
 
     /// <summary>
     /// Sets whether Duty Actions are present or not. Controls whether to show the appropriate UI element and whether
@@ -152,7 +150,7 @@ public unsafe partial struct RaptureHotbarModule {
     /// </summary>
     /// <param name="macroSet">The macro set to scan for.</param>
     /// <param name="macroIndex">The macro index to scan for.</param>
-    [MemberFunction("E8 ?? ?? ?? ?? EB 1A FF 50 68 44 0F B6 83")]
+    [MemberFunction("E8 ?? ?? ?? ?? EB 13 FF 52 68 44 0F B6 C6")]
     public partial void DeleteMacroSlots(byte macroSet, byte macroIndex);
 
     /// <summary>
@@ -163,7 +161,7 @@ public unsafe partial struct RaptureHotbarModule {
     /// </summary>
     /// <param name="macroSet">The macro set to scan for.</param>
     /// <param name="macroIndex">The macro index to scan for.</param>
-    [MemberFunction("E8 ?? ?? ?? ?? 8B 83 ?? ?? ?? ?? 39 87")]
+    [MemberFunction("E8 ?? ?? ?? ?? EB 13 FF 52 68 44 0F B6 C3")]
     public partial void ReloadMacroSlots(byte macroSet, byte macroIndex);
 
     /// <summary>
@@ -229,22 +227,9 @@ public unsafe partial struct RaptureHotbarModule {
     /// <param name="hotbarModule">A reference to the RaptureHotbarModule of the game.</param>
     /// <param name="slot">A reference to the hotbar slot to calculate the appearance for.</param>
     /// <returns>Returns the same value present in the actionId param.</returns>
-    [MemberFunction("E8 ?? ?? ?? ?? 0F B6 54 24 ?? 8B 44 24 30")]
+    [MemberFunction("48 89 5C 24 ?? 48 89 74 24 ?? 57 48 83 EC 30 48 8B DA 49 8B F0")]
     public static partial uint GetSlotAppearance(HotbarSlotType* actionType, uint* actionId, ushort* UNK_0xC4,
         RaptureHotbarModule* hotbarModule, HotBarSlot* slot);
-
-    /// <summary>
-    /// Gets whether the specified action should be highlighted with ants in the UI.
-    /// Internally calls <see cref="ActionManager.IsActionHighlighted"/>.
-    /// </summary>
-    /// <remarks>
-    /// This method does not appear in any code paths.
-    /// </remarks>
-    /// <param name="commandType">The type of the command to look up.</param>
-    /// <param name="commandId">The ID of the command to look up.</param>
-    /// <returns>Returns <c>true</c> if the action would be highlighted, <c>false</c> otherwise.</returns>
-    [MemberFunction("40 53 48 83 EC 20 44 0F B6 CA 41 8B D8")]
-    public partial bool IsActionHighlighted(HotbarSlotType commandType, uint commandId);
 
     /// <summary>
     /// Helper method to check if a specific hotbar is to be shared between all classes or not.
@@ -256,7 +241,7 @@ public unsafe partial struct RaptureHotbarModule {
     /// <param name="hotbarId">The hotbar ID (bounded between 0 and 17) to check.</param>
     /// <returns>Returns true if the hotbar is shared, false otherwise.</returns>
     public bool IsHotbarShared(uint hotbarId) {
-        return ((1 << ((int)hotbarId & 7)) & this.HotbarShareStateBitmask[hotbarId >> 3]) > 0;
+        return ((1 << ((int)hotbarId & 7)) & this.HotbarShareStateBitmask[(int)hotbarId >> 3]) > 0;
     }
 
     /// <summary>
@@ -273,7 +258,7 @@ public unsafe partial struct RaptureHotbarModule {
     /// <param name="commandId">The command ID to set.</param>
     /// <param name="ignoreSharedHotbars">Unclear use, appears to ignore writing to shared slots if set.</param>
     /// <param name="allowSaveToPvP">If in PVP mode, allow saving to PVP hotbars. No effect if not in PVP mode.</param>
-    [MemberFunction("E8 ?? ?? ?? ?? B0 01 EB B9")]
+    [MemberFunction("E8 ?? ?? ?? ?? B0 01 EB BA")]
     public partial void SetAndSaveSlot(uint hotbarId, uint slotId, HotbarSlotType commandType, uint commandId,
         bool ignoreSharedHotbars = false, bool allowSaveToPvP = true);
 
@@ -324,7 +309,7 @@ public unsafe partial struct RaptureHotbarModule {
     /// <param name="slotSource">The source slot to dump to disk.</param>
     /// <param name="ignoreSharedHotbars">Unclear use, default to false. </param>
     /// <param name="isPvpSlot">If true, will save to the classJob's PvP SavedHotBars slots.</param>
-    [MemberFunction("E8 ?? ?? ?? ?? EB 57 48 8D 9F ?? ?? ?? ??")]
+    [MemberFunction("E8 ?? ?? ?? ?? EB 50 48 8B CF")]
     public partial void WriteSavedSlot(uint classJobId, uint hotbarId, uint slotId, HotBarSlot* slotSource,
         bool ignoreSharedHotbars, bool isPvpSlot);
 
@@ -333,7 +318,7 @@ public unsafe partial struct RaptureHotbarModule {
     /// </summary>
     /// <param name="hotbarId">The saved hotbar ID to select.</param>
     /// <param name="slotId">The saved slot ID to clear.</param>
-    [MemberFunction("E8 ?? ?? ?? ?? FF C7 83 FF 10 7C E3")]
+    [MemberFunction("E8 ?? ?? ?? ?? FF C3 83 FB 10 7C E3")]
     public partial void ClearSavedSlotById(uint hotbarId, uint slotId);
 
     /// <summary>
@@ -342,11 +327,11 @@ public unsafe partial struct RaptureHotbarModule {
     /// </summary>
     /// <param name="classJobId">The ClassJob ID to retrieve a hotbar from.</param>
     /// <param name="hotbarId">The hotbar ID to retrieve.</param>
-    [MemberFunction("E8 ?? ?? ?? ?? FF C7 83 FF 12")]
+    [MemberFunction("E8 ?? ?? ?? ?? FF C7 83 FF 12 7C EA")]
     public partial void LoadSavedHotbar(uint classJobId, uint hotbarId);
 
     /// <summary>
-    /// Get the Saved Hotbar Index for the PVP hotbar for a specific ClassJob, for use in <see cref="SavedHotBarsSpan"/>. 
+    /// Get the Saved Hotbar Index for the PVP hotbar for a specific ClassJob, for use in <see cref="SavedHotBars"/>. 
     /// </summary>
     /// <param name="classJobId">The ClassJob to look up, or 0 for the shared PVP hotbar.</param>
     /// <param name="negOneOnInvalid">Return -1 if the ClassJob can't have a PVP variant.</param>
@@ -360,7 +345,7 @@ public unsafe partial struct RaptureHotbarModule {
     /// </summary>
     /// <param name="savedHotbarIndex">The saved hotbar index to check.</param>
     /// <returns>The EXD Row ID for the ClassJob this hotbar is intended for. If zero, this is a shared hotbar.</returns>
-    [MemberFunction("E8 ?? ?? ?? ?? 41 0F B6 CD BA")]
+    [MemberFunction("E8 ?? ?? ?? ?? 23 77 7C")]
     public partial uint GetClassJobIdForSavedHotbarIndex(int savedHotbarIndex);
 
     /// <summary>
@@ -375,7 +360,7 @@ public unsafe partial struct RaptureHotbarModule {
     /// </summary>
     /// <param name="index">The index of the slot (0 or 1) to retrieve.</param>
     /// <returns>Returns a pointer to the DutyActionSlot.</returns>
-    [MemberFunction("E8 ?? ?? ?? ?? 42 8B 3C FB")]
+    [MemberFunction("E8 ?? ?? ?? ?? 4A 63 3C FB")]
     public partial DutyActionSlot* GetDutyActionSlot(uint index);
 
     /// <summary>

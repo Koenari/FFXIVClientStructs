@@ -1,5 +1,7 @@
 namespace FFXIVClientStructs.FFXIV.Client.System.Framework;
 
+// Client::System::Framework::GameWindow
+[GenerateInterop]
 [StructLayout(LayoutKind.Explicit, Size = 0x282)]
 public unsafe struct GameWindow {
     [FieldOffset(0x00)] public ulong ArgumentCount;
@@ -14,7 +16,7 @@ public unsafe struct GameWindow {
     [FieldOffset(0x58)] public int MinWidth;
     [FieldOffset(0x5C)] public int MinHeight;
     [FieldOffset(0x60)] public bool Unk60; //If set destroys Network module
-    [FieldOffset(0x80)] public fixed char Username[257]; //UNLEN+1
+    [FieldOffset(0x80), FixedSizeArray(isString: true)] internal FixedSizeArray257<char> _userName;
 
     public string GetArgument(ulong idx) => Marshal.PtrToStringUTF8(idx >= ArgumentCount ? nint.Zero : (nint)Arguments[idx]) ?? string.Empty;
 }

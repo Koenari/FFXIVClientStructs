@@ -6,25 +6,19 @@ namespace FFXIVClientStructs.FFXIV.Component.GUI;
 //       Component::GUI::AtkEventListener
 // common CreateAtkComponent function "E8 ?? ?? ?? ?? 48 8B F8 48 85 C0 0F 84 ?? ?? ?? ?? 49 8B 0F"
 // type 12
+[GenerateInterop]
+[Inherits<AtkComponentList>]
 [StructLayout(LayoutKind.Explicit, Size = 0x228)]
 public unsafe partial struct AtkComponentTreeList {
-    [FieldOffset(0x0)] public AtkComponentList AtkComponentList;
-
     [FieldOffset(0x1A8)] public StdVector<Pointer<AtkComponentTreeListItem>> Items;
 
     [FieldOffset(0x21C)] public bool LayoutRefreshPending;
 
-    [VirtualFunction(31)]
-    public partial void SelectItem(uint index, bool dispatchEvent);
-
-    [VirtualFunction(32)]
-    public partial void DeselectItem();
-
     /// <remarks> Does not add it to the <see cref="Items"/> list automatically! </remarks>
-    [MemberFunction("E8 ?? ?? ?? ?? 48 8B D8 45 85 ED")]
+    [MemberFunction("E8 ?? ?? ?? ?? 48 8B F8 8B CD")]
     public partial AtkComponentTreeListItem* CreateItem();
 
-    [MemberFunction("E8 ?? ?? ?? ?? 44 38 60 45")]
+    [MemberFunction("48 83 EC 28 3B 91 ?? ?? ?? ??")]
     public partial AtkComponentTreeListItem* GetItem(uint index);
 
     [MemberFunction("E8 ?? ?? ?? ?? 44 39 BD")]
@@ -42,7 +36,7 @@ public unsafe partial struct AtkComponentTreeList {
     /// Expands the given group and collapses all other groups.<br/>
     /// After calling this, you might also want to set <see cref="LayoutRefreshPending"/> to <c>true</c>.
     /// </remarks>
-    [MemberFunction("E8 ?? ?? ?? ?? 44 88 AB ?? ?? ?? ?? 80 4F 42 10")]
+    [MemberFunction("E8 ?? ?? ?? ?? 44 88 BB ?? ?? ?? ?? 80 4F 42 10")]
     public partial void ExpandGroupExclusively(AtkComponentTreeListItem* groupHeaderItem, bool a3 = false);
 }
 

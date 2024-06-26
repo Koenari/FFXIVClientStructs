@@ -4,6 +4,7 @@ namespace FFXIVClientStructs.FFXIV.Client.Game.Control;
 
 // Client::Game::Control::TargetSystem
 // ctor "E8 ?? ?? ?? ?? 48 8D 0D ?? ?? ?? ?? E8 ?? ?? ?? ?? 48 8D 0D ?? ?? ?? ?? E8 ?? ?? ?? ?? 48 8D 0D ?? ?? ?? ?? E8 ?? ?? ?? ?? 33 C0"
+[GenerateInterop]
 [StructLayout(LayoutKind.Explicit, Size = 0x5370)]
 public unsafe partial struct TargetSystem {
     [FieldOffset(0x80)] public GameObject* Target;
@@ -13,7 +14,7 @@ public unsafe partial struct TargetSystem {
     [FieldOffset(0xE0)] public GameObject* MouseOverNameplateTarget;
     [FieldOffset(0xF8)] public GameObject* FocusTarget;
     [FieldOffset(0x110)] public GameObject* PreviousTarget;
-    [FieldOffset(0x140)] public GameObjectID TargetObjectId;
+    [FieldOffset(0x140)] public GameObjectId TargetObjectId;
     [FieldOffset(0x148)] public GameObjectArray ObjectFilterArray0;
 
     [FieldOffset(0x1A98)] public GameObjectArray ObjectFilterArray1;
@@ -22,14 +23,14 @@ public unsafe partial struct TargetSystem {
 
     // Names might be inaccurate, these seem to be used to control what the player can interact with at any given time
     // For example, when interacting with the aethernet menu, these values change presumable to limit your ability to select an object other than the aetheryte.
-    [FieldOffset(0x52E0)] public fixed uint TargetModes[8];
+    [FieldOffset(0x52E0), FixedSizeArray] internal FixedSizeArray8<uint> _targetModes;
     [FieldOffset(0x5300)] public uint TargetModeIndex;
 
     [StaticAddress("48 8D 0D ?? ?? ?? ?? E8 ?? ?? ?? ?? 48 3B C6 0F 95 C0", 3)]
     public static partial TargetSystem* Instance();
 
-    [MemberFunction("E8 ?? ?? ?? ?? 4C 8B F8 EB 13")]
-    public partial ulong GetCurrentTargetID();
+    [MemberFunction("E8 ?? ?? ?? ?? 4C 8B F0 33 ED EB 16")]
+    public partial GameObjectId GetCurrentTargetId();
 
     [MemberFunction("E8 ?? ?? ?? ?? E9 ?? ?? ?? ?? 83 C0 ED")]
     public partial GameObject* GetCurrentTarget();
@@ -37,7 +38,7 @@ public unsafe partial struct TargetSystem {
     [MemberFunction("48 85 D2 74 2C 4C 63 89")]
     public partial bool IsObjectInViewRange(GameObject* obj);
 
-    [MemberFunction("40 53 48 81 EC ?? ?? ?? ?? 83 BA")]
+    [MemberFunction("E8 ?? ?? ?? ?? 3C 01 75 1E")]
     public partial bool IsObjectOnScreen(GameObject* obj);
 
     [MemberFunction("E9 ?? ?? ?? ?? 48 8B 01 FF 50 08")]
@@ -46,7 +47,7 @@ public unsafe partial struct TargetSystem {
     [MemberFunction("E9 ?? ?? ?? ?? 8B C0 48 8D 0D")]
     public partial void OpenObjectInteraction(GameObject* obj);
 
-    [MemberFunction("E8 ?? ?? ?? ?? 48 8B D8 48 85 DB 74 ?? 48 8B CB")]
+    [MemberFunction("E8 ?? ?? ?? ?? 48 8B D8 48 85 C0 74 50 48 8B CB")]
     public partial GameObject* GetMouseOverObject(int x, int y, GameObjectArray* objectArray, Camera* camera);
 
     public GameObject* GetMouseOverObject(int x, int y) {
@@ -59,16 +60,17 @@ public unsafe partial struct TargetSystem {
     }
 }
 
+[GenerateInterop]
 [StructLayout(LayoutKind.Explicit, Size = 0x12C0)]
-public unsafe struct GameObjectArray {
+public unsafe partial struct GameObjectArray {
     [FieldOffset(0x00)] public int Length;
-    [FieldOffset(0x08)] public fixed ulong Objects[599];
+    [FieldOffset(0x08), FixedSizeArray] internal FixedSizeArray599<Pointer<GameObject>> _objects;
 
     public GameObject* this[int index] {
         get {
             if (Length <= 0 || index < 0 || index > Length)
                 return null;
-            return (GameObject*)Objects[index];
+            return Objects[index];
         }
     }
 }

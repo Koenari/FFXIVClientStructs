@@ -21,8 +21,11 @@ namespace FFXIVClientStructs.FFXIV.Client.System.Framework;
 
 // Client::System::Framework::Framework
 // ctor "E8 ?? ?? ?? ?? 48 8B C8 48 89 05 ?? ?? ?? ?? EB 0A 48 8B CE"
+[GenerateInterop]
 [StructLayout(LayoutKind.Explicit, Size = 0x35C8)]
 public unsafe partial struct Framework {
+    [StaticAddress("49 8B DC 48 89 1D ?? ?? ?? ??", 6, true)]
+    public static partial Framework* Instance();
     [FieldOffset(0x0008)] public byte Unk8;
     [FieldOffset(0x0009)] public bool Unk9;
     [FieldOffset(0x000A)] public bool StopRequested; 
@@ -77,19 +80,14 @@ public unsafe partial struct Framework {
     /// </summary>
     [FieldOffset(0x16C4)] public float FrameDeltaFactor;
     [FieldOffset(0x16C8)] public uint FrameCounter;
-    
+    [FieldOffset(0x16D0)] public long FrameDeltaTimeMSInt; // FrameDeltaTime in milliseconds, rounded to integer
+    [FieldOffset(0x16D8)] public float FrameDeltaTimeMSRem; // sub-millisecond difference between real and rounded dt, added to the next frame
+    [FieldOffset(0x16E0)] public long FrameDeltaTimeUSInt; // FrameDeltaTime in microseconds, rounded to integer
+    [FieldOffset(0x16E8)] public float FrameDeltaTimeUSRem; // sub-microsecond difference between real and rounded dt, added to the next frame
     [FieldOffset(0x16F0)] public SpursManager* SpursManager;
     [FieldOffset(0x16F8)] public TaskManager TaskManager;
     [FieldOffset(0x1768)] public ClientTime ClientTime;
-    [FieldOffset(0x1770)]
-    [Obsolete("Use ClientTime.EorzeaTime")]
-    public long EorzeaTime;
-    [FieldOffset(0x1798)]
-    [Obsolete("Use ClientTime.EorzeaTimeOverride")]
-    public long EorzeaTimeOverride;
-    [FieldOffset(0x17A0)]
-    [Obsolete("Use ClientTime.IsEorzeaTimeOverridden")]
-    public bool IsEorzeaTimeOverridden;
+    [FieldOffset(0x17B0)] public float GameSpeedMultiplier; // usually 1, but during recording replay could be different
     [FieldOffset(0x17C4)] public float FrameRate;
     /// <summary>
     /// If true <see cref="FrameDeltaTime"/> is set to 0.
@@ -97,15 +95,16 @@ public unsafe partial struct Framework {
     [FieldOffset(0x17C8)] public bool DiscardFrame;
     /// <summary>
     /// If set to anything non-zero, overrides <see cref="FrameDeltaTime"/>. If negative <see cref="FrameDeltaTimeOverride"/> is used and 60fps as a fallback.
+    /// Unlike <see cref="FrameDeltaTimeOverride"/>, this applies only to the next frame, and is reset to zero on next tick.
     /// </summary>
-    [FieldOffset(0x17CC)] public float FrameDeltaTimeOverride2;
+    [FieldOffset(0x17CC)] public float NextFrameDeltaTimeOverride;
     [FieldOffset(0x17D0)] public bool WindowInactive;
 
     [FieldOffset(0x17E0)] public int DataPathType;
 
-    [FieldOffset(0x19EC)] private fixed char gamePath[260]; // WideChar Array
-    [FieldOffset(0x1DFC)] private fixed char sqPackPath[260]; // WideChar Array
-    [FieldOffset(0x220C)] private fixed char userPath[260]; // WideChar Array
+    [FieldOffset(0x19EC), FixedSizeArray(isString: true)] internal FixedSizeArray260<char> _gamePath;
+    [FieldOffset(0x1DFC), FixedSizeArray(isString: true)] internal FixedSizeArray260<char> _sqPackPath;
+    [FieldOffset(0x220C), FixedSizeArray(isString: true)] internal FixedSizeArray260<char> _userPath;
 
     [FieldOffset(0x2B30)] public ExcelModuleInterface* ExcelModuleInterface;
     [FieldOffset(0x2B38)] public ExdModule* ExdModule;
@@ -120,11 +119,17 @@ public unsafe partial struct Framework {
     [FieldOffset(0x2B98)] public Unk2B98Obj Unk2B98;
     [FieldOffset(0x2BC8)] public LuaState LuaState;
 
-    [FieldOffset(0x2BF0)] public GameVersion GameVersion;
-    //8 byte
+    [FieldOffset(0x2BF0), FixedSizeArray(isString: true)] internal FixedSizeArray256<byte> _gameVersion;
+    // TODO: convert to array of 64 strings each 32 bytes long if possible
+    [FieldOffset(0x2CF0 + 0 * 0x20), FixedSizeArray(isString: true)] internal FixedSizeArray32<byte> _ex1Version; // Heavensward
+    [FieldOffset(0x2CF0 + 1 * 0x20), FixedSizeArray(isString: true)] internal FixedSizeArray32<byte> _ex2Version; // Stormblood
+    [FieldOffset(0x2CF0 + 2 * 0x20), FixedSizeArray(isString: true)] internal FixedSizeArray32<byte> _ex3Version; // Shadowbringers
+    [FieldOffset(0x2CF0 + 3 * 0x20), FixedSizeArray(isString: true)] internal FixedSizeArray32<byte> _ex4Version; // Endwalker
+    [FieldOffset(0x2CF0 + 4 * 0x20), FixedSizeArray(isString: true)] internal FixedSizeArray32<byte> _ex5Version; // Dawntrail
+
     [FieldOffset(0x34F8)] public WatchDogThread* WatchDogThread;
     [FieldOffset(0x3500)] public bool UseWatchDogThread;
-    
+
     [FieldOffset(0x3510)] public int FramesUntilDebugCheck;
     
     [FieldOffset(0x3570)] public TimePoint Time3570;
@@ -147,11 +152,8 @@ public unsafe partial struct Framework {
     /// </summary>
     [FieldOffset(0x35C0)] public nint SteamApiLibraryHandle;
 
-    [StaticAddress("44 0F B6 C0 48 8B 0D ?? ?? ?? ??", 7, true)]
-    public static partial Framework* Instance();
-
     [MemberFunction("E8 ?? ?? ?? ?? 80 7B 1D 01")]
-    public partial UIModule* GetUiModule();
+    public partial UIModule* GetUIModule();
 
     [MemberFunction("E8 ?? ?? ?? ?? 4C 8B 44 24 ?? 48 8B C8 48 8B D3")]
     public partial UIClipboard* GetUIClipboard();
@@ -159,7 +161,7 @@ public unsafe partial struct Framework {
     [MemberFunction("80 B9 ?? ?? ?? ?? 00 74 ?? 48 8B 81 ?? ?? ?? ?? C3")]
     public partial NetworkModuleProxy* GetNetworkModuleProxy();
 
-    [MemberFunction("E8 ?? ?? ?? ?? 89 47 2C")]
+    [MemberFunction("E8 ?? ?? ?? ?? 03 07")]
     public static partial long GetServerTime();
 
     /// <summary>
@@ -169,26 +171,6 @@ public unsafe partial struct Framework {
     /// <returns>Returns true if the API is ready, false otherwise.</returns>
     [MemberFunction("E8 ?? ?? ?? ?? 88 43 08 84 C0 74 16")]
     public partial bool IsSteamApiInitialized();
-
-    public string GamePath {
-        get {
-            fixed (char* p = gamePath)
-                return new string(p);
-        }
-    }
-    public string SqPackPath {
-        get {
-            fixed (char* p = sqPackPath)
-                return new string(p);
-        }
-    }
-    public string UserPath {
-        get {
-            fixed (char* p = userPath)
-                return new string(p);
-        }
-    }
-
     // ctor "E8 ?? ?? ?? ?? 48 8B C8 48 89 83 ?? ?? ?? ?? E8 ?? ?? ?? ?? 45 33 C0"
     [StructLayout(LayoutKind.Explicit, Size = 0x220)]
     public struct Unk578Obj {

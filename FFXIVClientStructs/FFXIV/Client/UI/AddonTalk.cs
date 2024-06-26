@@ -7,9 +7,10 @@ namespace FFXIVClientStructs.FFXIV.Client.UI;
 //   Component::GUI::AtkUnitBase
 //     Component::GUI::AtkEventListener
 [Addon("Talk")]
+[GenerateInterop]
+[Inherits<AtkUnitBase>]
 [StructLayout(LayoutKind.Explicit, Size = 0xE80)]
-public unsafe struct AddonTalk {
-    [FieldOffset(0x0)] public AtkUnitBase AtkUnitBase;
+public unsafe partial struct AddonTalk {
     [FieldOffset(0x220)] public AtkTextNode* AtkTextNode220;
     [FieldOffset(0x228)] public AtkTextNode* AtkTextNode228;
     [FieldOffset(0x230)] public AtkResNode* AtkResNode230;
@@ -28,6 +29,5 @@ public unsafe struct AddonTalk {
     // there are 16 more strings here with 0x20 bytes between them
     // might be an array of structs that have Utf8String + other things
 
-    [FieldOffset(0xE18)] public AtkEventTarget AtkEventTarget;
-    [FieldOffset(0xE20)] public AtkEventListenerUnk1 AtkEventListenerUnk;
+    [FieldOffset(0xE18)] public AtkAddonControl AddonControl;
 }

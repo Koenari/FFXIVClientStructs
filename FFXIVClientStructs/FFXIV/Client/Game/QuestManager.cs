@@ -3,27 +3,24 @@ using FFXIVClientStructs.FFXIV.Application.Network.WorkDefinitions;
 
 namespace FFXIVClientStructs.FFXIV.Client.Game;
 
+// Client::Game::QuestManager
+[GenerateInterop]
 [StructLayout(LayoutKind.Explicit, Size = 0xF58)]
 public unsafe partial struct QuestManager {
     [MemberFunction("E8 ?? ?? ?? ?? 66 BA 10 0C")]
     public static partial QuestManager* Instance();
 
-    [FixedSizeArray<QuestWork>(30)]
-    [FieldOffset(0x10)] public fixed byte NormalQuests[0x18 * 30];
-    [FixedSizeArray<DailyQuestWork>(12)]
-    [FieldOffset(0x5B8)] public fixed byte DailyQuests[0x10 * 12];
-    [FixedSizeArray<TrackingWork>(5)]
-    [FieldOffset(0x6A8)] public fixed byte TrackedQuests[0x10 * 5];
-    [FixedSizeArray<BeastReputationWork>(17)]
-    [FieldOffset(0xBC8)] public fixed byte BeastReputation[0x10 * 17];
-    [FixedSizeArray<LeveWork>(16)]
-    [FieldOffset(0xCD8)] public fixed byte LeveQuests[0x18 * 16];
+    [FieldOffset(0x10), FixedSizeArray] internal FixedSizeArray30<QuestWork> _normalQuests;
+    [FieldOffset(0x5B8), FixedSizeArray] internal FixedSizeArray12<DailyQuestWork> _dailyQuests;
+    [FieldOffset(0x6A8), FixedSizeArray] internal FixedSizeArray5<TrackingWork> _trackedQuests;
+    [FieldOffset(0xBC8), FixedSizeArray] internal FixedSizeArray17<BeastReputationWork> _beastReputation;
+    [FieldOffset(0xCD8), FixedSizeArray] internal FixedSizeArray16<LeveWork> _leveQuests;
     [FieldOffset(0xE58)] public byte NumLeveAllowances;
 
     [FieldOffset(0xF40)] public byte NumAcceptedQuests;
     [FieldOffset(0xF50)] public byte NumAcceptedLeveQuests;
 
-    [MemberFunction("E8 ?? ?? ?? ?? 41 88 84 2C")]
+    [MemberFunction("E8 ?? ?? ?? ?? 43 88 84 3E ?? ?? ?? ??")]
     public static partial bool IsQuestComplete(ushort questId);
     public static bool IsQuestComplete(uint questId) => IsQuestComplete((ushort)(questId & 0xFFFF));
 
@@ -70,7 +67,7 @@ public unsafe partial struct QuestManager {
     /// </summary>
     /// <param name="levequestId">The RowId of the Leve Sheet.</param>
     /// <returns>Returns <c>true</c> if the levequest has been completed, <c>false</c> otherwise.</returns>
-    [MemberFunction("E8 ?? ?? ?? ?? 48 8B 0D ?? ?? ?? ?? 88 45 80")]
+    [MemberFunction("44 0F B7 C2 4C 8B C9 49 C1 E8 03")]
     public partial bool IsLevequestComplete(ushort levequestId);
 
     /// <summary>
@@ -80,14 +77,14 @@ public unsafe partial struct QuestManager {
     /// Has to be multiplied by 60 for a unix timestamp.<br/>
     /// Use <see cref="GetNextLeveAllowancesUnixTimestamp"/> or <see cref="GetNextLeveAllowancesDateTime"/> instead.
     /// </remarks>
-    [MemberFunction("E8 ?? ?? ?? ?? 41 8D 75 01")]
-    private static partial uint GetNextLeveAllowancesTimestamp();
+    [MemberFunction("E8 ?? ?? ?? ?? 41 8D 74 24 ?? 8B D8")]
+    private static partial int GetNextLeveAllowancesTimestamp();
 
     /// <summary>
     /// Get the time when the player will receive new leve allowances.
     /// </summary>
-    /// <returns>A unix timestamp as <see cref="uint"/>.</returns>
-    public static uint GetNextLeveAllowancesUnixTimestamp() => GetNextLeveAllowancesTimestamp() * 60;
+    /// <returns>A unix timestamp as <see cref="int"/>.</returns>
+    public static int GetNextLeveAllowancesUnixTimestamp() => GetNextLeveAllowancesTimestamp() * 60;
 
     /// <summary>
     /// Get the time when the player will receive new leve allowances.
@@ -95,7 +92,7 @@ public unsafe partial struct QuestManager {
     /// <returns>A <see cref="DateTime"/> in the local time zone.</returns>
     public static DateTime GetNextLeveAllowancesDateTime() => DateTime.UnixEpoch.AddSeconds(GetNextLeveAllowancesUnixTimestamp()).ToLocalTime();
 
-    [MemberFunction("45 33 C9 48 81 C1 ?? ?? ?? ?? 45 8D 51 02")]
+    [MemberFunction("33 C0 4C 8B C1 66 39 81 ?? ?? ?? ?? 0F 94 C0")]
     public partial uint GetBeastTribeAllowance();
 
     public bool IsDailyQuestCompleted(ushort questId) {
@@ -104,7 +101,7 @@ public unsafe partial struct QuestManager {
     }
 
     public QuestWork* GetQuestById(ushort questId) {
-        var span = NormalQuestsSpan;
+        var span = NormalQuests;
         for (var i = 0; i < span.Length; i++) {
             if (span[i].QuestId == questId)
                 return (QuestWork*)Unsafe.AsPointer(ref span[i]);
@@ -113,7 +110,7 @@ public unsafe partial struct QuestManager {
     }
 
     public DailyQuestWork* GetDailyQuestById(ushort questId) {
-        var span = DailyQuestsSpan;
+        var span = DailyQuests;
         for (var i = 0; i < span.Length; i++) {
             if (span[i].QuestId == questId)
                 return (DailyQuestWork*)Unsafe.AsPointer(ref span[i]);
@@ -122,7 +119,7 @@ public unsafe partial struct QuestManager {
     }
 
     public LeveWork* GetLeveQuestById(ushort leveId) {
-        var span = LeveQuestsSpan;
+        var span = LeveQuests;
         for (var i = 0; i < span.Length; i++) {
             if (span[i].LeveId == leveId)
                 return (LeveWork*)Unsafe.AsPointer(ref span[i]);
@@ -132,7 +129,7 @@ public unsafe partial struct QuestManager {
 
     public BeastReputationWork* GetBeastReputationById(uint beastTribeId) {
         var index = beastTribeId - 1;
-        var span = BeastReputationSpan;
+        var span = BeastReputation;
         if (index >= span.Length) return null;
         return (BeastReputationWork*)Unsafe.AsPointer(ref span[(int)index]);
     }

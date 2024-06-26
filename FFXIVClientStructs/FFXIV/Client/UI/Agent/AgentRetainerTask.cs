@@ -1,12 +1,13 @@
-using FFXIVClientStructs.FFXIV.Component.GUI;
-
 namespace FFXIVClientStructs.FFXIV.Client.UI.Agent;
 
+// Client::UI::Agent::AgentRetainerTask
+//   Client::UI::Agent::AgentInterface
+//     Component::GUI::AtkModuleInterface::AtkEventInterface
 [Agent(AgentId.RetainerTask)]
+[GenerateInterop]
+[Inherits<AgentInterface>]
 [StructLayout(LayoutKind.Explicit, Size = 0x90)]
 public unsafe partial struct AgentRetainerTask {
-    [FieldOffset(0x00)] public AgentInterface AgentInterface;
-
     // 00 - None
     // 01 - Request Assignment
     // 02 - Venture in Progress
@@ -19,10 +20,10 @@ public unsafe partial struct AgentRetainerTask {
     [FieldOffset(0x44)] public uint RewardXP;
 
     // Set when venture is complete
-    [FieldOffset(0x50)] public unsafe fixed uint RewardItemIds[2];
+    [FieldOffset(0x50), FixedSizeArray] internal FixedSizeArray2<uint> _rewardItemIds;
 
     // Set when venture is complete
-    [FieldOffset(0x58)] public unsafe fixed uint RewardItemCount[2];
+    [FieldOffset(0x58), FixedSizeArray] internal FixedSizeArray2<uint> _rewardItemCount;
 
     [FieldOffset(0x6C)] public uint RetainerTaskLvRange;
 

@@ -1,17 +1,14 @@
 namespace FFXIVClientStructs.FFXIV.Client.Game.UI;
 
-/// <summary>
-/// A struct representing the UIState Achievement
-/// </summary>
 // Client::Game::UI::Achievement
+[GenerateInterop]
 [StructLayout(LayoutKind.Explicit, Size = 0x558)]
 public unsafe partial struct Achievement {
-    [StaticAddress("48 8D 0D ?? ?? ?? ?? E8 ?? ?? ?? ?? 04 30", 3)]
+    [StaticAddress("48 8D 0D ?? ?? ?? ?? E8 ?? ?? ?? ?? 04 30 FF C3", 3)]
     public static partial Achievement* Instance();
 
-    [FieldOffset(0x00)] public void** vtbl;
     [FieldOffset(0x08)] public AchievementState State;
-    [FieldOffset(0x0C)] public fixed byte CompletedAchievements[428];
+    [FieldOffset(0x0C), FixedSizeArray] internal FixedSizeArray428<byte> _completedAchievements;
 
     [FieldOffset(0x1DC)] public AchievementState ProgressRequestState;
     [FieldOffset(0x1E0)] public uint ProgressAchievementId;
@@ -29,7 +26,7 @@ public unsafe partial struct Achievement {
     /// <summary> Check if an achievement is complete. </summary>
     /// <param name="achievementId">Achievement ID to check against. This is the ID from the Achievement table. </param>
     /// <returns> Returns true if the achievement is complete. </returns>
-    [MemberFunction("E8 ?? ?? ?? ?? 04 30")]
+    [MemberFunction("E8 ?? ?? ?? ?? 04 30 FF C3")]
     public partial bool IsComplete(int achievementId);
 
     /// <summary> Check if the achievement data has been "loaded" from the server. </summary>

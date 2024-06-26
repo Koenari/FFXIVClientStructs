@@ -1,20 +1,20 @@
+using System.Diagnostics.CodeAnalysis;
 using FFXIVClientStructs.FFXIV.Client.Graphics.Scene;
 
 namespace FFXIVClientStructs.FFXIV.Client.Game.Character;
 
 // Client::Game::Character::DrawDataContainer
+//   Client::Game::Character::ContainerInterface
 // ctor "E8 ?? ?? ?? ?? 48 8D 8F ?? ?? ?? ?? 48 8D 05 ?? ?? ?? ?? 48 89 59 ?? 48 89 01 E8"
+[GenerateInterop]
+[Inherits<ContainerInterface>]
 [StructLayout(LayoutKind.Explicit, Size = 0x1A8)]
 public unsafe partial struct DrawDataContainer {
-    [FieldOffset(0x000)] public void** Vtable;
-    [FieldOffset(0x008)] public Character* Parent;
+    [FieldOffset(0x010), FixedSizeArray] internal FixedSizeArray3<DrawObjectData> _weaponData;
 
-    [FixedSizeArray<DrawObjectData>(3)]
-    [FieldOffset(0x010)] public fixed byte WeaponData[3 * DrawObjectData.Size];
-
+    [UnscopedRef]
     public ref DrawObjectData Weapon(WeaponSlot which) {
-        fixed (byte* ptr = WeaponData)
-            return ref ((DrawObjectData*)ptr)[(int)which];
+        return ref WeaponData[(int)which];
     }
 
     [FieldOffset(0x010 + 3 * DrawObjectData.Size + 0x00)] public EquipmentModelId Head;
@@ -30,22 +30,21 @@ public unsafe partial struct DrawDataContainer {
 
     [FieldOffset(0x188)] public CustomizeData CustomizeData;
 
-    [FieldOffset(0x1A2)] public uint Unk18A;
     [FieldOffset(0x1A6)] public byte Flags1;
     [FieldOffset(0x1A7)] public byte Flags2;
 
-    [MemberFunction("E8 ?? ?? ?? ?? 41 B5 ?? FF C6")]
+    [MemberFunction("E8 ?? ?? ?? ?? B1 01 41 FF C6")]
     public partial void LoadEquipment(EquipmentSlot slot, EquipmentModelId* modelId, bool force);
 
 
-    [MemberFunction("E8 ?? ?? ?? ?? 44 8B 9E")]
+    [MemberFunction("E8 ?? ?? ?? ?? 4C 8B 45 7F")]
     public partial void LoadWeapon(WeaponSlot slot, WeaponModelId weaponData, byte redrawOnEquality, byte unk2, byte skipGameObject, byte unk4);
 
     /// <summary>
     /// Called when Hide/Display Weapons when sheathed is toggled or /displayarms is used.
     /// </summary>
     /// <param name="hide">When false, weapons will be turned visible, when true, they will be hidden.</param>
-    [MemberFunction("E8 ?? ?? ?? ?? 0F B6 86 ?? ?? ?? ?? A8 08")]
+    [MemberFunction("E8 ?? ?? ?? ?? 8B 46 54 0F BA E0 08")]
     public partial void HideWeapons(bool hide);
 
     /// <summary>
@@ -53,7 +52,7 @@ public unsafe partial struct DrawDataContainer {
     /// </summary>
     /// <param name="unk">Almost always 0, but sometimes not?</param>
     /// <param name="hide">When false, the headgear will be turned visible, when true it will be hidden.</param>
-    [MemberFunction("E8 ?? ?? ?? ?? 45 85 F6 75 92")]
+    [MemberFunction("E8 ?? ?? ?? ?? 0F B6 55 C9")]
     public partial void HideHeadgear(uint unk, bool hide);
 
     /// <summary>
@@ -98,15 +97,12 @@ public unsafe partial struct DrawDataContainer {
     }
 }
 
-
-
-// ctor: E8 ?? ?? ?? ?? 48 8B E8 EB ?? 33 ED 48 89 AB
-[StructLayout(LayoutKind.Explicit, Size = Size)]
+// ctor: "E8 ?? ?? ?? ?? 48 8B E8 EB ?? 33 ED 48 89 AB"
+[StructLayout(LayoutKind.Explicit, Size = 0x70)]
 public unsafe partial struct DrawObjectData {
     public const int Size = 0x70;
 
     [FieldOffset(0x00)] public WeaponModelId ModelId;
-    [FieldOffset(0x10)] public void** VTable;
     [FieldOffset(0x18)] public DrawObject* DrawObject;
     [FieldOffset(0x60)] public byte State;
     [FieldOffset(0x62)] public ushort Flags1;
@@ -118,19 +114,16 @@ public unsafe partial struct DrawObjectData {
     }
 }
 
-[StructLayout(LayoutKind.Explicit, Size = Count)]
+[GenerateInterop]
+[StructLayout(LayoutKind.Explicit, Size = 0x1A)]
 public unsafe partial struct CustomizeData {
-    private const int Count = 0x1A;
-
-    [FieldOffset(0x00), Obsolete("Use specific fields"), CExportIgnore] public fixed byte Data[Count]; // TODO: Change to private
+    [FieldOffset(0x00), CExportIgnore, FixedSizeArray] internal FixedSizeArray26<byte> _data;
 
     [FieldOffset(0x00)] public byte Race;
     [FieldOffset(0x01)] public byte Sex;
     [FieldOffset(0x02)] public byte BodyType;
     [FieldOffset(0x03)] public byte Height;
     [FieldOffset(0x04)] public byte Tribe;
-    [Obsolete("Renamed to Tribe")]
-    [FieldOffset(0x04)] public byte Clan;
     [FieldOffset(0x05)] public byte Face;
     [FieldOffset(0x06)] public byte Hairstyle;
     // 0x07: Highlights
@@ -175,7 +168,7 @@ public unsafe partial struct CustomizeData {
 
     public byte this[int idx] => Data[idx];
 
-    [MemberFunction("E8 ?? ?? ?? ?? 33 DB 48 8D 75")]
+    [MemberFunction("E8 ?? ?? ?? ?? 33 DB 48 8D 75 20")]
     public partial bool NormalizeCustomizeData(CustomizeData* source);
 }
 

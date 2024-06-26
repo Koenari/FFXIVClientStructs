@@ -5,15 +5,11 @@ namespace FFXIVClientStructs.FFXIV.Client.Game.Character;
 //     Client::Game::Object::GameObject
 //     Client::Graphics::Vfx::VfxDataListenner
 //     Client::Game::Character::CharacterData
-// ctor "E8 ?? ?? ?? ?? 48 8B F0 8B 87"
+// ctor "48 89 5C 24 ?? 48 89 6C 24 ?? 48 89 74 24 ?? 48 89 7C 24 ?? 41 56 48 83 EC ?? 48 8B F1 E8 ?? ?? ?? ?? 48 8D 05 ?? ?? ?? ?? 48 8D 8E"
 // characters that fight (players, monsters, etc)
-[StructLayout(LayoutKind.Explicit, Size = 0x2F80)]
+[GenerateInterop]
+[Inherits<Character>]
+[StructLayout(LayoutKind.Explicit, Size = 0x3690)]
 public unsafe partial struct BattleChara {
-    [FieldOffset(0x0)] public Character Character;
-
-    //[FieldOffset(0x1E60)] public fixed byte UnkBattleCharaStruct[0xF00];
-
-    public StatusManager* GetStatusManager => Character.GetStatusManager();
-    public Character.CastInfo* GetCastInfo => Character.GetCastInfo();
-    public Character.ForayInfo* GetForayInfo => Character.GetForayInfo();
+    //[FieldOffset(0x1E60), FixedSizeArray] internal FixedSizeArray3840<byte> _unkBattleCharaStruct;
 }

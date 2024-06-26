@@ -4,9 +4,12 @@ using FFXIVClientStructs.FFXIV.Common.Math;
 
 namespace FFXIVClientStructs.FFXIV.Client.Graphics.Scene;
 
+// Client::Graphics::Scene::Camera
+//   Client::Graphics::Scene::Object
+[GenerateInterop]
+[Inherits<Object>]
 [StructLayout(LayoutKind.Explicit, Size = 0xF0)]
 public unsafe partial struct Camera {
-    [FieldOffset(0x00)] public Object Object;
     [FieldOffset(0x80)] public Vector3 LookAtVector;
     [FieldOffset(0x90)] public Vector3 Vector_1;
     [FieldOffset(0xA0)] public Matrix4x4 ViewMatrix;
@@ -15,7 +18,7 @@ public unsafe partial struct Camera {
     [MemberFunction("E8 ?? ?? ?? ?? 4C 8B E0 48 8B EB")]
     public partial void ScreenPointToRay(Ray* ray, int x, int y);
 
-    [MemberFunction("48 89 5C 24 ?? 48 89 6C 24 ?? 48 89 74 24 ?? 57 48 83 EC ?? 48 8B E9 48 8B DA 48 8D 0D")]
+    [MemberFunction("E8 ?? ?? ?? ?? 0F 28 C7 0F 28 CE")]
     private static partial Vector2* WorldToScreenPoint(Vector2* screenPoint, Vector3* worldPoint);
 
     public Ray ScreenPointToRay(Vector2 screenPoint) {

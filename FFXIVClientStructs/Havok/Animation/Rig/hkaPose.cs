@@ -1,6 +1,11 @@
-namespace FFXIVClientStructs.Havok;
+using FFXIVClientStructs.Havok.Common.Base.Container.Array;
+using FFXIVClientStructs.Havok.Common.Base.Math.QsTransform;
+using FFXIVClientStructs.Havok.Common.Base.Types.Geometry;
 
-[StructLayout(LayoutKind.Sequential)]
+namespace FFXIVClientStructs.Havok.Animation.Rig;
+
+[GenerateInterop]
+[StructLayout(LayoutKind.Explicit, Size = 0x50)]
 public unsafe partial struct hkaPose {
     public enum PoseSpace {
         ModelSpace = 0,
@@ -17,13 +22,13 @@ public unsafe partial struct hkaPose {
         BoneModelDirty = 1,
     }
 
-    public hkaSkeleton* Skeleton;
-    public hkArray<hkQsTransformf> LocalPose;
-    public hkArray<hkQsTransformf> ModelPose;
-    public hkArray<uint> BoneFlags;
-    public byte ModelInSync;
-    public byte LocalInSync;
-    public hkArray<float> FloatSlotValues;
+    [FieldOffset(0x00)] public hkaSkeleton* Skeleton;
+    [FieldOffset(0x08)] public hkArray<hkQsTransformf> LocalPose;
+    [FieldOffset(0x18)] public hkArray<hkQsTransformf> ModelPose;
+    [FieldOffset(0x28)] public hkArray<uint> BoneFlags;
+    [FieldOffset(0x38)] public byte ModelInSync;
+    [FieldOffset(0x39)] public byte LocalInSync;
+    [FieldOffset(0x40)] public hkArray<float> FloatSlotValues;
 
     [MemberFunction("40 53 48 83 EC 20 4C 89 01 33 C0")]
     public partial void Ctor1(PoseSpace space, hkaSkeleton* skeleton, hkArray<hkQsTransformf>* pose);
@@ -85,7 +90,7 @@ public unsafe partial struct hkaPose {
     [MemberFunction("E8 ?? ?? ?? ?? 4D 8B 4E 40")]
     public partial hkArray<hkQsTransformf>* AccessSyncedPoseLocalSpace();
 
-    [MemberFunction("E8 ?? ?? ?? ?? 48 8B 8F ?? ?? ?? ?? 8B 58 08")]
+    [MemberFunction("E8 ?? ?? ?? ?? 49 8B 8D ?? ?? ?? ?? 8B 58 08")]
     public partial hkArray<hkQsTransformf>* AccessSyncedPoseModelSpace();
 
     [MemberFunction("E8 ?? ?? ?? ?? EB 05 E8 ?? ?? ?? ?? 4D 8B 4E 40")]
@@ -94,7 +99,7 @@ public unsafe partial struct hkaPose {
     // [MemberFunction("")]
     // public partial hkArray<float>* GetFloatSlotValues();
 
-    [MemberFunction("48 8B 01 4C 8B C9")]
+    [MemberFunction("48 8B 01 4C 8B C9 4C 8B 41 08")]
     public partial void SetToReferencePose();
 
     [MemberFunction("48 89 5C 24 ?? 57 48 83 EC 20 48 8B 01 48 8B D9 48 63 78 30")]
@@ -115,6 +120,6 @@ public unsafe partial struct hkaPose {
     [MemberFunction("48 89 5C 24 ?? 48 8B 01 45 33 C0")]
     public partial byte CheckPoseValidity();
 
-    [MemberFunction("48 89 5C 24 ?? 48 89 6C 24 ?? 48 89 74 24 ?? 48 89 7C 24 ?? 41 56 48 83 EC ?? 48 8B 01 33 FF")]
+    [MemberFunction("48 89 5C 24 ?? 48 89 6C 24 ?? 48 89 74 24 ?? 48 89 7C 24 ?? 41 56 48 83 EC 30 48 8B 01 33 FF 0F 29 74 24 ??")]
     public partial byte CheckPoseTransformsValidity();
 }

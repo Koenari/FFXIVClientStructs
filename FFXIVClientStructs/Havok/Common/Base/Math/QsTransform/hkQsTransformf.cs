@@ -1,10 +1,15 @@
-namespace FFXIVClientStructs.Havok;
+using FFXIVClientStructs.Havok.Common.Base.Math.Matrix;
+using FFXIVClientStructs.Havok.Common.Base.Math.Quaternion;
+using FFXIVClientStructs.Havok.Common.Base.Math.Vector;
 
-[StructLayout(LayoutKind.Sequential)]
+namespace FFXIVClientStructs.Havok.Common.Base.Math.QsTransform;
+
+[GenerateInterop]
+[StructLayout(LayoutKind.Explicit, Size = 0x30)]
 public unsafe partial struct hkQsTransformf {
-    public hkVector4f Translation;
-    public hkQuaternionf Rotation;
-    public hkVector4f Scale;
+    [FieldOffset(0x00)] public hkVector4f Translation;
+    [FieldOffset(0x10)] public hkQuaternionf Rotation;
+    [FieldOffset(0x20)] public hkVector4f Scale;
 
     // [MemberFunction("")]
     // public partial void setFromTransformNoScale(hkTransformf* transform);
@@ -21,7 +26,7 @@ public unsafe partial struct hkQsTransformf {
     // [MemberFunction("")]
     // public partial void copyToTransform(hkTransformf* transformOut);
 
-    [MemberFunction("E8 ?? ?? ?? ?? 0F 28 5D F0 44 0F 28 55")]
+    [MemberFunction("E8 ?? ?? ?? ?? 0F 28 5D 00")]
     public partial void get4x4ColumnMajor(float* p);
 
     [MemberFunction("E9 ?? ?? ?? ?? CC CC CC CC CC CC CC CC CC CC CC 0F 28 02")]

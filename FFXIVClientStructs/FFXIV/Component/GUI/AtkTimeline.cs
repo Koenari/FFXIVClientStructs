@@ -1,5 +1,6 @@
 namespace FFXIVClientStructs.FFXIV.Component.GUI;
 
+[GenerateInterop]
 [StructLayout(LayoutKind.Explicit, Size = 0x30)]
 public unsafe partial struct AtkTimeline {
     [FieldOffset(0x00)] public AtkTimelineResource* Resource;
@@ -19,9 +20,34 @@ public unsafe partial struct AtkTimeline {
     [MemberFunction("E8 ?? ?? ?? ?? 0F BF 4B 10")]
     public partial void PlayAnimation(AtkTimelineJumpBehavior behavior, byte labelId, float startTime = 0, float endTime = 0);
 
-    [MemberFunction("E9 ?? ?? ?? ?? C3 48 83 EC 48")]
+    [MemberFunction("40 53 48 83 EC 30 0F B7 41 2A")]
     public partial void UpdateChildTimelines(float frameTime);
 
     [MemberFunction("E8 ?? ?? ?? ?? 84 C0 74 7D 48 8B 43 20")]
     public partial void GetInterpolatedValue(int keyGroupId, AtkTimelineKeyGroupType keyGroupType, AtkTimelineKeyValue* output);
+}
+
+[Flags]
+public enum AtkTimelineMask : byte {
+    Position = 1 << 0,
+    Rotation = 1 << 1,
+    Scale = 1 << 2,
+    Alpha = 1 << 3,
+    NodeTint = 1 << 4,
+    VendorSpecific1 = 1 << 5,
+    VendorSpecific2 = 1 << 6,
+    ActiveLabel = 1 << 7,
+}
+
+[Flags]
+public enum AtkTimelineFlags : byte {
+    IsAnimated = 1 << 6, // 0x4000 relative to Mask
+    UnknownFlag = 1 << 7, // 0x8000 relative to Mask; unsure what this does, but it exists
+}
+
+public enum AtkTimelineJumpBehavior : byte {
+    Start,
+    PlayOnce,
+    LoopForever,
+    Initialize,
 }

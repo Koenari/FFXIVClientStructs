@@ -1,13 +1,12 @@
 namespace FFXIVClientStructs.FFXIV.Client.Game.UI;
 
-/// <summary>
-/// A struct representing the UIState Cabinet (otherwise known as the "Armoire" in-game) and the bitfield for stored
-/// items.
-/// </summary>
+// Client::Game::UI::Cabinet
+// Armoire
+[GenerateInterop]
 [StructLayout(LayoutKind.Explicit, Size = 0x84)]
 public unsafe partial struct Cabinet {
     [FieldOffset(0x00)] public CabinetState State;
-    [FieldOffset(0x04)] public fixed byte UnlockedItems[0x80];
+    [FieldOffset(0x04), FixedSizeArray] internal FixedSizeArray128<byte> _unlockedItems;
 
     /// <summary>
     /// Check if an item is stored in the player's armoire.
@@ -15,7 +14,7 @@ public unsafe partial struct Cabinet {
     /// <param name="cabinetItemId">The armoire item entry ID to check against. This is not an item ID but a specific ID
     /// from the Cabinet table.</param>
     /// <returns>Returns true if the armoire contains the specified item.</returns>
-    [MemberFunction("E8 ?? ?? ?? ?? 84 C0 74 16 8B CB")]
+    [MemberFunction("E8 ?? ?? ?? ?? 84 C0 74 98")]
     public partial bool IsItemInCabinet(int cabinetItemId);
 
     /// <summary>

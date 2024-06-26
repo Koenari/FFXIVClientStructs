@@ -5,9 +5,10 @@ namespace FFXIVClientStructs.FFXIV.Component.GUI;
 //     Component::GUI::AtkEventListener
 // common CreateAtkComponent function "E8 ?? ?? ?? ?? 48 8B F8 48 85 C0 0F 84 ?? ?? ?? ?? 49 8B 0F"
 // type 1
+[GenerateInterop(isInherited: true)]
+[Inherits<AtkComponentBase>]
 [StructLayout(LayoutKind.Explicit, Size = 0x1A8)]
 public unsafe partial struct AtkComponentList {
-    [FieldOffset(0x0)] public AtkComponentBase AtkComponentBase;
     [FieldOffset(0xC0)] public AtkComponentListItemRenderer* FirstAtkComponentListItemRenderer;
     [FieldOffset(0xC8)] public AtkComponentScrollBar* AtkComponentScrollBarC8;
     [FieldOffset(0xF0)] public ListItem* ItemRendererList;
@@ -39,7 +40,7 @@ public unsafe partial struct AtkComponentList {
     public partial bool GetItemHighlightedState(int index);
 
     [VirtualFunction(31)]
-    public partial void SelectItem(int index, bool dispatchEvent37 = false);
+    public partial void SelectItem(int index, bool dispatchEvent = false);
 
     [VirtualFunction(32)]
     public partial void DeselectItem();
@@ -47,15 +48,18 @@ public unsafe partial struct AtkComponentList {
     [VirtualFunction(36)]
     public partial int GetItemCount();
 
+    [MemberFunction("E8 ?? ?? ?? ?? 41 80 FF 04")]
+    public partial void SetItemCount(int value);
+
     /// <remarks> Used by <see cref="AtkComponentDropDownList"/>. </remarks>
-    [MemberFunction("E8 ?? ?? ?? ?? 45 38 A4 3E"), GenerateCStrOverloads]
+    [MemberFunction("E8 ?? ?? ?? ?? FF C5 48 8D 5B 70"), GenerateStringOverloads]
     public partial void SetItemLabel(int index, byte* text);
 
     /// <remarks> Used by <see cref="AtkComponentDropDownList"/>. </remarks>
-    [MemberFunction("E8 ?? ?? ?? ?? 89 5C 24 28 48 8B 5C 24")]
+    [MemberFunction("E8 ?? ?? ?? ?? 4C 8B 97 ?? ?? ?? ?? 89 5C 24 28")]
     public partial byte* GetItemLabel(int index);
 
-    [MemberFunction("83 FA FF 0F 8E")]
+    [MemberFunction("83 FA FF 0F 8E ?? ?? ?? ?? 53")]
     public partial void DispatchItemEvent(int index, AtkEventType eventType);
 
     [StructLayout(LayoutKind.Explicit, Size = 0x18)]

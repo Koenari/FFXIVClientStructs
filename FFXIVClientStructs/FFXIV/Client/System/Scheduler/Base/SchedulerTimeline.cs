@@ -6,10 +6,10 @@ namespace FFXIVClientStructs.FFXIV.Client.System.Scheduler.Base;
 //   Client::System::Scheduler::Base::TimelineController
 //     Client::System::Scheduler::Base::SchedulerState
 // ctor "E8 ?? ?? ?? ?? 48 89 43 ?? 48 89 98"
+[GenerateInterop]
+[Inherits<TimelineController>]
 [StructLayout(LayoutKind.Explicit, Size = 0x280)]
 public unsafe partial struct SchedulerTimeline {
-    [FieldOffset(0)] public TimelineController TimelineController;
-
     // [FieldOffset(0x90)] public TimelineGroup* TimelineGroup;
     [FieldOffset(0x98)] public SchedulerResource* SchedulerResource;
 
@@ -18,10 +18,10 @@ public unsafe partial struct SchedulerTimeline {
 
     [FieldOffset(0x18C)] public uint OwningGameObjectIndex;
 
-    [MemberFunction("E8 ?? ?? ?? ?? 83 7F ?? ?? 75 ?? 0F B6 87")]
+    [MemberFunction("E8 ?? ?? ?? ?? 83 7F 78 05")]
     public partial ulong LoadTimelineResources();
 
-    [MemberFunction("E8 ?? ?? ?? ?? EB CA 48 8B 4C 24")]
+    [MemberFunction("E8 ?? ?? ?? ?? EB CA 48 8B 8C 24 ?? ?? ?? ??")]
     public partial void UpdateBanner(float delta, byte a3 = 0); // not sure on the naming, but this advances the animation forward
 
     [VirtualFunction(28)]

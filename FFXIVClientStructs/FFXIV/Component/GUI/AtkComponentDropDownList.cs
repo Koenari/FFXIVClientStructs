@@ -3,9 +3,10 @@ namespace FFXIVClientStructs.FFXIV.Component.GUI;
 //   Component::GUI::AtkComponentBase
 //     Component::GUI::AtkEventListener
 
+[GenerateInterop]
+[Inherits<AtkComponentBase>]
 [StructLayout(LayoutKind.Explicit, Size = 0xE0)]
 public unsafe partial struct AtkComponentDropDownList {
-    [FieldOffset(0x0)] public AtkComponentBase AtkComponentBase;
     [FieldOffset(0xC0)] public AtkComponentCheckBox* Checkbox;
     [FieldOffset(0xC8)] public AtkComponentList* List;
 
@@ -15,9 +16,9 @@ public unsafe partial struct AtkComponentDropDownList {
     [MemberFunction("E8 ?? ?? ?? ?? 45 89 3E")]
     public partial void SelectItem(int index);
 
-    [MemberFunction("E8 ?? ?? ?? ?? 88 9F ?? ?? ?? ?? E9")]
+    [MemberFunction("E8 ?? ?? ?? ?? 88 9F ?? ?? ?? ?? E9 ?? ?? ?? ?? 48 8B 87 ?? ?? ?? ??")]
     public partial void DeselectItem();
 
-    [MemberFunction("E8 ?? ?? ?? ?? 83 FD 18")]
+    [MemberFunction("E8 ?? ?? ?? ?? 83 C0 41")]
     public partial int GetSelectedItemIndex();
 }

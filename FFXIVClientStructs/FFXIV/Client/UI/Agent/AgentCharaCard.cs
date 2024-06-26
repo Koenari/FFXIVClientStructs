@@ -2,7 +2,6 @@ using FFXIVClientStructs.FFXIV.Client.Game.Object;
 using FFXIVClientStructs.FFXIV.Client.Graphics.Kernel;
 using FFXIVClientStructs.FFXIV.Client.System.String;
 using FFXIVClientStructs.FFXIV.Client.UI.Misc;
-using FFXIVClientStructs.FFXIV.Component.GUI;
 
 namespace FFXIVClientStructs.FFXIV.Client.UI.Agent;
 
@@ -10,13 +9,14 @@ namespace FFXIVClientStructs.FFXIV.Client.UI.Agent;
 //   Client::UI::Agent::AgentInterface
 //     Component::GUI::AtkModuleInterface::AtkEventInterface
 [Agent(AgentId.CharaCard)]
+[GenerateInterop]
+[Inherits<AgentInterface>]
 [StructLayout(LayoutKind.Explicit, Size = 0x38)]
 public unsafe partial struct AgentCharaCard {
-    [FieldOffset(0x0)] public AgentInterface AgentInterface;
 
     [FieldOffset(0x28)] public Storage* Data;
 
-    [MemberFunction("E8 ?? ?? ?? ?? E9 ?? ?? ?? ?? 48 8B 4B 10 48 8D BB")]
+    [MemberFunction("E8 ?? ?? ?? ?? E9 ?? ?? ?? ?? 48 8B 4B 10 48 8B 01 FF 90 ?? ?? ?? ?? 44 0F B7 8B ?? ?? ?? ??")]
     private partial void OpenCharaCardForContentId(ulong contentId);
 
     public void OpenCharaCard(ulong contentId) => OpenCharaCardForContentId(contentId);
@@ -25,13 +25,12 @@ public unsafe partial struct AgentCharaCard {
     private partial void OpenCharaCardForObject(GameObject* gameObject);
     public void OpenCharaCard(GameObject* gameObject) => OpenCharaCardForObject(gameObject);
 
-
     // Client::UI::Agent::AgentCharaCard::Storage
     // ctor "E8 ?? ?? ?? ?? 48 8B F0 48 89 73 ?? C6 06"
     // dtor "E8 ?? ?? ?? ?? BA ?? ?? ?? ?? 48 8B CF E8 ?? ?? ?? ?? 48 89 73 ?? E8"
     [StructLayout(LayoutKind.Explicit, Size = 0x950)]
     public unsafe partial struct Storage {
-        [FieldOffset(0x4)] public uint ObjectId;
+        [FieldOffset(0x4)] public uint EntityId;
         [FieldOffset(0x8)] public ulong ContentId;
 
         [FieldOffset(0x58)] public Utf8String Name;
