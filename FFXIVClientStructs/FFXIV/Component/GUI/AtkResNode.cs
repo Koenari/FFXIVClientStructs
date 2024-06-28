@@ -94,7 +94,7 @@ public unsafe partial struct AtkResNode : ICreatable {
     [MemberFunction("E8 ?? ?? ?? ?? 49 63 DF")]
     public partial AtkComponentBase* GetComponent();
 
-    [MemberFunction("E8 ?? ?? ?? ?? 41 B1 08")]
+    [MemberFunction("E8 ?? ?? ?? ?? 44 0F B7 FE")]
     public partial AtkComponentList* GetAsAtkComponentList();
 
     [MemberFunction("E8 ?? ?? ?? ?? 8B 4C 35 97")]
@@ -103,7 +103,7 @@ public unsafe partial struct AtkResNode : ICreatable {
     [MemberFunction("E8 ?? ?? ?? ?? 8D 55 48")]
     public partial AtkComponentRadioButton* GetAsAtkComponentRadioButton();
 
-    [MemberFunction("E8 ?? ?? ?? ?? 8D 57 33")]
+    [MemberFunction("E8 ?? ?? ?? ?? 8D 56 33")]
     public partial AtkComponentScrollBar* GetAsAtkComponentScrollBar();
 
     [MemberFunction("E8 ?? ?? ?? ?? 48 8B 0B 41 B8 ?? ?? ?? ?? 48 89 83")]
@@ -115,7 +115,7 @@ public unsafe partial struct AtkResNode : ICreatable {
     [MemberFunction("E8 ?? ?? ?? ?? 8D 55 42")]
     public partial AtkComponentCheckBox* GetAsAtkComponentCheckBox();
 
-    [MemberFunction("E8 ?? ?? ?? ?? 49 8D 4F 27")]
+    [MemberFunction("E8 ?? ?? ?? ?? 41 8D 57 1B")]
     public partial AtkComponentTextNineGrid* GetAsAtkTextNineGrid();
 
     [MemberFunction("E8 ?? ?? ?? ?? 48 8B 8E ?? ?? ?? ?? BA ?? ?? ?? ?? 48 89 86 ?? ?? ?? ?? E8 ?? ?? ?? ?? 48 8B 86")]
@@ -144,10 +144,10 @@ public unsafe partial struct AtkResNode : ICreatable {
     [MemberFunction("48 85 C9 74 0B 8B 41 44")]
     public partial void GetPositionFloat(float* outX, float* outY);
 
-    [MemberFunction("E8 ?? ?? ?? ?? 48 83 C5 30")]
+    [MemberFunction("E8 ?? ?? ?? ?? 0F BF 47 30")]
     public partial void SetPositionFloat(float X, float Y);
 
-    [MemberFunction("E8 ?? ?? ?? ?? 0F B7 03 4C 8D 44 24")]
+    [MemberFunction("E8 ?? ?? ?? ?? 41 8B FC 4C 8D B5")]
     public partial void GetPositionShort(short* outX, short* outY);
 
     [MemberFunction("E8 ?? ?? ?? ?? 8D 56 B5")]
@@ -172,16 +172,28 @@ public unsafe partial struct AtkResNode : ICreatable {
     public partial void SetScaleY(float y);
 
     [MemberFunction("E8 ?? ?? ?? ?? F3 0F 58 C7 0F 28 D6")]
-    public partial float GetX();
+    public partial float GetXFloat();
 
     [MemberFunction("E8 ?? ?? ?? ?? 0F BE 43 10")]
-    public partial float GetY();
+    public partial float GetYFloat();
 
     [MemberFunction("E8 ?? ?? ?? ?? 0F BF 07")]
-    public partial void SetX(float x);
+    public partial void SetXFloat(float x);
+
+    [MemberFunction("E8 ?? ?? ?? ?? 41 83 FE 1C")]
+    public partial void SetYFloat(float y);
+
+    [MemberFunction("E8 ?? ?? ?? ?? 0F B7 55 3C")]
+    public partial short GetXShort();
+
+    [MemberFunction("E8 ?? ?? ?? ?? 0F B7 75 3E")]
+    public partial short GetYShort();
+
+    [MemberFunction("E8 ?? ?? ?? ?? 41 8D 55 1C")]
+    public partial void SetXShort(short x);
 
     [MemberFunction("E8 ?? ?? ?? ?? 4C 8B 7D 6F")]
-    public partial void SetY(float y);
+    public partial void SetYShort(short y);
 
     [MemberFunction("E8 ?? ?? ?? ?? 66 03 C0")]
     public partial ushort GetWidth();
@@ -201,7 +213,7 @@ public unsafe partial struct AtkResNode : ICreatable {
     [MemberFunction("E8 ?? ?? ?? ?? 48 83 C7 08 48 83 EE 01 75 D5 48 8B 4C 24 ??")]
     public partial void ToggleVisibility(bool enable);
 
-    [MemberFunction("F6 81 ?? ?? ?? ?? ?? 88 91 ?? ?? ?? ??")]
+    [MemberFunction("E8 ?? ?? ?? ?? 48 63 46 30")]
     public partial void SetAlpha(byte alpha);
 
     [MemberFunction("E8 ?? ?? ?? ?? 66 85 C0 75 55")]

@@ -88,13 +88,13 @@ public unsafe partial struct ActionManager {
     [MemberFunction("E8 ?? ?? ?? ?? 41 3A C5 0F 85 ?? ?? ?? ??")]
     public partial bool UseActionLocation(ActionType actionType, uint actionId, ulong targetId = 0xE000_0000, Vector3* location = null, uint extraParam = 0);
 
-    [MemberFunction("E8 ?? ?? ?? ?? 3D ?? ?? ?? ?? 74 42")]
+    [MemberFunction("E8 ?? ?? ?? ?? 8B 93 ?? ?? ?? ?? 85 C0")]
     public partial uint GetActionStatus(ActionType actionType, uint actionId, ulong targetId = 0xE000_0000, bool checkRecastActive = true, bool checkCastingActive = true, uint* outOptExtraInfo = null);
 
-    [MemberFunction("E8 ?? ?? ?? ?? 8B F8 3B DF")]
+    [MemberFunction("E8 ?? ?? ?? ?? 89 03 8B 03")]
     public partial uint GetAdjustedActionId(uint actionId);
 
-    [MemberFunction("E8 ?? ?? ?? ?? 44 8B 4B 2C")]
+    [MemberFunction("40 53 48 83 EC ?? FF C9")]
     public static partial uint GetSpellIdForAction(ActionType actionType, uint actionId);
 
     [MemberFunction("E8 ?? ?? ?? ?? 83 7F 4C 01 44 0F 28 C8")]
@@ -149,9 +149,8 @@ public unsafe partial struct ActionManager {
     /// </remarks>
     /// <param name="actionType">The type of action (generally, Spell) to trigger a cooldown for.</param>
     /// <param name="actionId">The ID of the action to trigger a cooldown for.</param>
-    /// <returns>Unknown.</returns>
     [MemberFunction("48 89 6C 24 ?? 56 57 41 56 48 83 EC 30 41 8B F0")]
-    public partial nint StartCooldown(ActionType actionType, uint actionId);
+    public partial void StartCooldown(ActionType actionType, uint actionId);
 
     /// <summary>
     /// Check if a specific action is "off cooldown" and can be used again. This method will account for the slidecast
@@ -160,7 +159,7 @@ public unsafe partial struct ActionManager {
     /// <param name="actionType">The type of action to check.</param>
     /// <param name="actionId">The ID of the action to check.</param>
     /// <returns>Returns true if the action is off-cooldown or slidecastable.</returns>
-    [MemberFunction("E8 ?? ?? ?? ?? 84 C0 74 37 8B 84 24 ?? ?? ?? ??")]
+    [MemberFunction("E8 ?? ?? ?? ?? 84 C0 74 ?? 8B 84 24 ?? ?? ?? ?? 89 46")]
     public partial bool IsActionOffCooldown(ActionType actionType, uint actionId);
 
     /// <summary>
@@ -214,7 +213,7 @@ public unsafe partial struct ActionManager {
     [MemberFunction("E8 ?? ?? ?? ?? 8B C8 83 E9 01 74 1E")]
     public partial uint GetCurrentCharges(uint actionId);
 
-    [MemberFunction("48 8B C4 48 89 68 ?? 48 89 70 ?? 41 56 48 83 EC")]
+    [MemberFunction("E8 ?? ?? ?? ?? B0 01 EB D6")]
     public partial void AssignBlueMageActionToSlot(int slot, uint actionId);
 
     [MemberFunction("E8 ?? ?? ?? ?? 85 C0 74 33 FF C3")]
@@ -232,7 +231,7 @@ public unsafe partial struct ActionManager {
     /// <param name="actionType">The action type to check.</param>
     /// <param name="actionId">The action ID to check.</param>
     /// <returns>Returns true if ants should be drawn, false otherwise.</returns>
-    [MemberFunction("E8 ?? ?? ?? ?? 88 46 41")]
+    [MemberFunction("E8 ?? ?? ?? ?? 88 46 41 80 BF")]
     public partial bool IsActionHighlighted(ActionType actionType, uint actionId);
 
     [MemberFunction("48 89 5C 24 ?? 57 48 83 EC 20 48 8B DA 8B F9 E8 ?? ?? ?? ?? 4C 8B C3")]
@@ -243,7 +242,7 @@ public unsafe partial struct ActionManager {
     /// </summary>
     /// <param name="dutyActionSlot">The Duty Action slot number (0 or 1) to look up.</param>
     /// <returns>Returns an Action ID.</returns>
-    [MemberFunction("E8 ?? ?? ?? ?? EB 17 33 C9")]
+    [MemberFunction("E9 ?? ?? ?? ?? 33 C9 E9")]
     public static partial uint GetDutyActionId(ushort dutyActionSlot);
 
     /// <summary>
@@ -268,6 +267,7 @@ public unsafe partial struct ActionManager {
     [MemberFunction("48 8B C4 48 89 58 ?? 56 48 81 EC ?? ?? ?? ?? 48 8B 35")]
     public partial void Update();
 
+    // TODO: accurate as of 6.58, changed in 7.0, needs revision
     public enum CastTimeProc : byte {
         None = 0,
         Firestarter = 1, // THM/BLM

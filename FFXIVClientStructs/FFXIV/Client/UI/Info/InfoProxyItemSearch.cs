@@ -56,14 +56,11 @@ public unsafe partial struct InfoProxyItemSearch {
     [MemberFunction("40 57 41 56 48 83 EC 48 83 3A 00")]
     public partial void ProcessItemHistory(nint a2, nint a3, nint a4);
 
-    [MemberFunction("44 88 4C 24 ?? 44 89 44 24 ?? 48 89 54 24 ?? 53")]
-    public partial nint ProcessItemHistory_Internal(nint a2, uint a3, char a4);
-
     [MemberFunction("E8 ?? ?? ?? ?? 8B 3F 85 FF")]
     public partial nint ProcessRequestResult(nint a2, nint a3, nint a4, int a5, byte a6, int a7);
 
     /// <summary>
-    /// Load player retainer information from a packet into the 
+    /// Load player retainer information from a packet into the
     /// </summary>
     /// <param name="packetData"></param>
     /// <param name="retainerCount"></param>
@@ -80,8 +77,9 @@ public unsafe partial struct InfoProxyItemSearch {
     public partial bool SetLastPurchasedItem(MarketBoardListing* listing);
 }
 
+[GenerateInterop]
 [StructLayout(LayoutKind.Explicit, Size = Size)]
-public unsafe struct MarketBoardListing {
+public unsafe partial struct MarketBoardListing {
     public const int Size = 0xB8;
 
     // [FieldOffset(0x00)] public Utf8String Unk_0x00;
@@ -145,6 +143,6 @@ public struct PlayerRetainerInfo {
     [FieldOffset(0x09)] public bool SellingItems;
     // [FieldOffset(0x0A)] public byte Unk_0x0A;
 
-    // [FieldOffset(0x0C)] public int Unk_0x0C; // Some kind of timestamp? 
+    // [FieldOffset(0x0C)] public int Unk_0x0C; // Some kind of timestamp?
     [FieldOffset(0x10)] public Utf8String Name;
 }

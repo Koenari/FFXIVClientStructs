@@ -15,7 +15,7 @@ namespace FFXIVClientStructs.FFXIV.Client.Graphics.Scene;
 // base class for graphics objects representing characters (human, demihuman, monster, and weapons)
 [GenerateInterop(isInherited: true)]
 [Inherits<DrawObject>]
-[VirtualTable("48 8D 05 ?? ?? ?? ?? 48 89 07 48 8D 9F D0 00 00 00", 3)]
+[VirtualTable("48 8D 05 ?? ?? ?? ?? 89 AF ?? ?? ?? ?? 48 89 07 48 8D 9F ?? ?? ?? ?? B8 ?? ?? ?? ?? 89 AF ?? ?? ?? ?? 66 89 87 ?? ?? ?? ?? 48 8B CB", 3)]
 [StructLayout(LayoutKind.Explicit, Size = 0x8F0)]
 public unsafe partial struct CharacterBase {
     public const int PathBufferSize = 260;
@@ -90,12 +90,6 @@ public unsafe partial struct CharacterBase {
 
     [MemberFunction("E8 ?? ?? ?? ?? 40 F6 C7 01 74 3A 40 F6 C7 04 75 27 48 85 DB 74 2F 48 8B 05 ?? ?? ?? ?? 48 8B D3 48 8B 48 30")]
     public partial void Destroy();
-
-    [MemberFunction("E8 ?? ?? ?? ?? 49 89 04 3E")]
-    public partial Texture* PrepareColorTable(MaterialResourceHandle* material, byte stainId); // aka PrepareColorSet
-
-    [MemberFunction("E8 ?? ?? ?? ?? 49 8B DF 48 8B 0D")]
-    public partial void ReadStainingTemplate(MaterialResourceHandle* material, byte stainId, Half* colorTable);
 
     [VirtualFunction(50)]
     public partial ModelType GetModelType();

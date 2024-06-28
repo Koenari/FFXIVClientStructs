@@ -7,7 +7,7 @@ namespace FFXIVClientStructs.FFXIV.Client.UI.Misc;
 public partial struct RaptureHotbarModule {
     [GenerateInterop(isInherited: true)]
     [StructLayout(LayoutKind.Explicit, Size = Size)]
-    public unsafe partial struct HotBarSlot {
+    public unsafe partial struct HotbarSlot {
         public const int Size = 0xE0;
 
         /// The string that appears when a hotbar slot is hovered over.
@@ -21,21 +21,18 @@ public partial struct RaptureHotbarModule {
         ///  <remarks>
         /// This is generally used for actions with a flexible MP cost (e.g. "All" for Flare), or "x 123" for items.
         /// </remarks>
-        [FieldOffset(0x68), FixedSizeArray(isString: true)]
-        internal FixedSizeArray32<byte> _costText;
+        [FieldOffset(0x68), FixedSizeArray(isString: true)] internal FixedSizeArray32<byte> _costText;
 
         /// A human-friendly display of the keybind used for this hotbar slot.
         ///
         /// This text will generally lead with a space and have wrapping brackets, e.g. " [Ctrl-3]".
-        [FieldOffset(0x88), FixedSizeArray(isString: true)]
-        internal FixedSizeArray32<byte> _popUpKeybindHint;
+        [FieldOffset(0x88), FixedSizeArray(isString: true)] internal FixedSizeArray32<byte> _popUpKeybindHint;
 
         /// A less-friendly version of the keybind used for this hotbar slot.
         ///
         /// The actual use of this field is unknown, but it appears to be related to the hint in the top-left of the hotbar
         /// UI.
-        [FieldOffset(0xA8), FixedSizeArray(isString: true)]
-        internal FixedSizeArray16<byte> _keybindHint;
+        [FieldOffset(0xA8), FixedSizeArray(isString: true)] internal FixedSizeArray16<byte> _keybindHint;
 
         /// The ID of the action that will be executed when this slot is triggered. Action type is determined by the
         /// <see cref="CommandType"/> field.
@@ -73,7 +70,7 @@ public partial struct RaptureHotbarModule {
         [FieldOffset(0xC4)] public ushort UNK_0xC4;
 
         // 0xC6 (198) does not appear to be referenced *anywhere*. Nothing ever reads or writes to it, save for a zero-out
-        // operation. 
+        // operation.
 
         /// The <see cref="HotbarSlotType"/> of the <see cref="CommandId"/> that will be executed when this hotbar slot
         /// is triggered.
@@ -111,7 +108,7 @@ public partial struct RaptureHotbarModule {
         /// - All others: Grey
         [FieldOffset(0xCA)] public byte CostType;
 
-        /// Appears to control display of the primary cost of the action (0xCA). 
+        /// Appears to control display of the primary cost of the action (0xCA).
         ///
         /// - 1: Displays action cost from 0xD0 in bottom left (e.g. for Actions or Craft Actions)
         /// - 2: Mode 1, but display a custom string from CostText instead (generally "All" on Actions with PrimaryCost = 4)
@@ -163,7 +160,7 @@ public partial struct RaptureHotbarModule {
 
         /// UNKNOWN. Appears to be Recipe specific.
         ///
-        /// Always set to 1, apparently? 
+        /// Always set to 1, apparently?
         [FieldOffset(0xDD)] public byte UNK_0xDD;
 
         /// UNKNOWN. Appears to control UI display mode (icon and displayed name) in some way
@@ -237,7 +234,7 @@ public partial struct RaptureHotbarModule {
         /// This method is virtually almost always called using the parameters from <see cref="ApparentSlotType"/> and <see cref="ApparentActionId"/>.
         ///
         /// When <see cref="UNK_0xDE"/> is set to 3, this method will instead override the passed in slotType and actionId with
-        /// the values present in <see cref="OriginalApparentSlotType"/> and <see cref="OriginalApparentActionId"/>. 
+        /// the values present in <see cref="OriginalApparentSlotType"/> and <see cref="OriginalApparentActionId"/>.
         /// </summary>
         /// <param name="slotType">The appearance slot type to use. Virtually almost always <see cref="ApparentSlotType"/>.</param>
         /// <param name="actionId">The appearance action ID to use. Virtually almost always <see cref="ApparentActionId"/>.</param>
@@ -253,7 +250,7 @@ public partial struct RaptureHotbarModule {
         /// </summary>
         /// <param name="slotType">The slot type to look up and return information for.</param>
         /// <param name="actionId">The action ID to look up and return information for.</param>
-        /// <returns>Returns the cost value for this HotBarSlot.</returns>
+        /// <returns>Returns the cost value for this HotbarSlot.</returns>
         [MemberFunction("48 89 5C 24 ?? 57 48 83 EC 30 0F B6 C2 41 8B D8")]
         public partial uint GetCostValueForSlot(HotbarSlotType slotType, uint actionId);
 
@@ -266,7 +263,7 @@ public partial struct RaptureHotbarModule {
         /// </summary>
         /// <param name="slotType">The slot type to look up and return information for.</param>
         /// <param name="actionId">The action ID to look up and return information for.</param>
-        /// <returns>Returns the cost text for this HotBarSlot.</returns>
+        /// <returns>Returns the cost text for this HotbarSlot.</returns>
         [MemberFunction("E8 ?? ?? ?? ?? 48 85 C0 74 29 80 38 00")]
         public partial uint GetCostTextForSlot(HotbarSlotType slotType, uint actionId);
 
@@ -274,7 +271,7 @@ public partial struct RaptureHotbarModule {
         /// Retrieves a <see cref="ActionType"/> for the specified hotbar slot type.
         /// </summary>
         /// <remarks>
-        /// This method doesn't actually read any data from the HotBarSlot it's a member of.
+        /// This method doesn't actually read any data from the HotbarSlot it's a member of.
         /// </remarks>
         /// <param name="type">A <see cref="HotbarSlotType"/> to check against.</param>
         /// <returns>Returns an ActionType if found, else 0xFFFFFFFF.</returns>
@@ -286,12 +283,12 @@ public partial struct RaptureHotbarModule {
         /// <see cref="ApparentActionId"/>). If this hotbar slot references an action that does not use charges, this will return either 0 or 1.
         /// </summary>
         /// <returns>Returns a uint.</returns>
-        [MemberFunction("40 53 48 83 EC 40 8B 99 ?? ?? ?? ??")]
+        [MemberFunction("40 53 48 83 EC 40 8B 99")]
         public partial uint GetApparentIconRecastCharges();
 
         /// <summary>
         /// Check whether the action contained in this slot is considered usable or not. When set to false, the respective
-        /// slot in the UI is greyed out (though is still interactable). 
+        /// slot in the UI is greyed out (though is still interactable).
         /// </summary>
         /// <param name="slotType">The slot type to check against - always <see cref="ApparentSlotType"/>.</param>
         /// <param name="actionId">The actionID to check against - always <see cref="ApparentActionId"/>.</param>
@@ -345,12 +342,12 @@ public partial struct RaptureHotbarModule {
     }
 
     /// <summary>
-    /// A special extended <see cref="HotBarSlot"/> used for duty actions
+    /// A special extended <see cref="HotbarSlot"/> used for duty actions
     /// </summary>
     [StructLayout(LayoutKind.Explicit, Size = Size)]
-    [Inherits<HotBarSlot>]
+    [Inherits<HotbarSlot>]
     public struct DutyActionSlot {
-        public const int Size = HotBarSlot.Size + 8;
+        public const int Size = HotbarSlot.Size + 8;
 
         /// <summary>
         /// The PrimaryCostType from the Action EXD (+0x29).

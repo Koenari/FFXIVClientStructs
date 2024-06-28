@@ -22,9 +22,10 @@ public unsafe partial struct AddonConfig {
     /// <param name="unk2">Unknown, generally True</param>
     /// <returns></returns>
     [MemberFunction("E8 ?? ?? ?? ?? 33 C0 EB 12")]
-    public partial nint ChangeHudLayout(uint layoutIndex, bool unk1 = false, bool unk2 = true);
+    public partial void ChangeHudLayout(uint layoutIndex, bool unk1 = false, bool unk2 = true);
 }
 
+[GenerateInterop]
 [StructLayout(LayoutKind.Explicit, Size = 0x9E90)]
 public unsafe partial struct AddonConfigData {
     [FieldOffset(0x00)] public Utf8String DefaultString; // Literally says "Default"

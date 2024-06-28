@@ -38,7 +38,7 @@ public unsafe partial struct InfoProxyCrossRealm {
     [MemberFunction("E8 ?? ?? ?? ?? 48 85 C0 74 0C 0F B6 40 2E")]
     public static partial CrossRealmMember* GetMemberByContentId(ulong contentId);
 
-    [MemberFunction("E8 ?? ?? ?? ?? 83 FF 32")]
+    [MemberFunction("48 89 5C 24 ?? 48 89 7C 24 ?? 4C 8B 15")]
     public static partial CrossRealmMember* GetMemberByEntityId(uint entityId);
 
     [MemberFunction("E8 ?? ?? ?? ?? 84 C0 75 ?? 0F B6 5E")]
@@ -52,8 +52,9 @@ public unsafe partial struct CrossRealmGroup {
     [FieldOffset(0x08), FixedSizeArray] internal FixedSizeArray8<CrossRealmMember> _groupMembers;
 }
 
+[GenerateInterop]
 [StructLayout(LayoutKind.Explicit, Size = 0x58)]
-public unsafe struct CrossRealmMember {
+public unsafe partial struct CrossRealmMember {
     [FieldOffset(0x08)] public ulong ContentId;
     [FieldOffset(0x18)] public uint EntityId;
     [FieldOffset(0x20)] public byte Level;

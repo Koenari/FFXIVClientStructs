@@ -42,25 +42,25 @@ public unsafe partial struct RaptureLogModule {
     [FieldOffset(0x3478)] public LogMessageSource* MsgSourceArray;
     [FieldOffset(0x3480)] public int MsgSourceArrayLength;
 
-    [MemberFunction("E8 ?? ?? ?? ?? 8B D8 45 85 F6")]
+    [MemberFunction("E8 ?? ?? ?? ?? 8B D8 48 8D 4D 00")]
     public partial uint PrintMessage(ushort logKindId, Utf8String* senderName, Utf8String* message, int timestamp, bool silent = false);
 
     [MemberFunction("E8 ?? ?? ?? ?? EB AA")]
     public partial void ShowLogMessage(uint logMessageId);
 
-    [MemberFunction("E8 ?? ?? ?? ?? 41 8B 5E 28")]
+    [MemberFunction("E8 ?? ?? ?? ?? 41 8B 5E 28")] // ShowLogMessage<uint>
     public partial void ShowLogMessageUInt(uint logMessageId, uint value);
 
-    [MemberFunction("E8 ?? ?? ?? ?? 0F BE 4B 44")]
-    public partial void ShowLogMessageUInt2(uint logMessageId, uint value1, uint value2);
+    [MemberFunction("E8 ?? ?? ?? ?? 0F BE 4B 44")] // ShowLogMessage<uint,uint>
+    public partial void ShowLogMessageUIntUInt(uint logMessageId, uint value1, uint value2);
 
-    [MemberFunction("E8 ?? ?? ?? ?? 40 84 ED 74 0A 8B D7")]
-    public partial void ShowLogMessageUInt3(uint logMessageId, uint value1, uint value2, uint value3);
+    [MemberFunction("E8 ?? ?? ?? ?? 40 84 ED 0F 84 ?? ?? ?? ?? 83 7F 20 00")] // ShowLogMessage<uint,uint,uint>
+    public partial void ShowLogMessageUIntUIntUInt(uint logMessageId, uint value1, uint value2, uint value3);
 
-    [MemberFunction("E8 ?? ?? ?? ?? EB 68 48 8B 07")]
+    [MemberFunction("E8 ?? ?? ?? ?? EB 68 48 8B 07")] // ShowLogMessage<string>
     public partial void ShowLogMessageString(uint logMessageId, Utf8String* value);
 
-    [MemberFunction("E8 ?? ?? ?? ?? FE 44 24 50"), GenerateStringOverloads]
+    [MemberFunction("E8 ?? ?? ?? ?? 40 80 C6 41"), GenerateStringOverloads]
     public partial void PrintString(byte* str);
 
     [MemberFunction("E8 ?? ?? ?? ?? 49 8D 4D 50 44 0F B7 E0")]
@@ -69,11 +69,11 @@ public unsafe partial struct RaptureLogModule {
     [MemberFunction("E8 ?? ?? ?? ?? 84 C0 0F 84 ?? ?? ?? ?? 48 8D 96 ?? ?? ?? ?? 48 8D 4C 24")]
     public partial bool GetLogMessage(int index, Utf8String* str);
 
-    [MemberFunction("E8 ?? ?? ?? ?? 84 C0 74 51 44 0F B6 95 ?? ?? ?? ??")]
+    [MemberFunction("E8 ?? ?? ?? ?? 84 C0 74 51 44 0F B6 95")]
     public partial bool GetLogMessageDetail(int index, short* logKind, Utf8String* sender, Utf8String* message, int* timestamp);
 
-    [MemberFunction("4C 8B D9 48 8B 89 ?? ?? ?? ??")]
-    public partial void AddMsgSourceEntry(ulong contentId, int messageIndex, ushort worldId, ushort chatType);
+    [MemberFunction("4C 8B D9 48 8B 89")]
+    public partial void AddMsgSourceEntry(ulong contentId, int messageIndex, ulong a3, ushort worldId, ushort chatType); // TODO: figure out what is a3
 
     public bool GetLogMessage(int index, out byte[] message) {
         using var pMsg = new Utf8String();

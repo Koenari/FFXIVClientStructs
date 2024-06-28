@@ -16,14 +16,11 @@ public unsafe partial struct AtkComponentBase {
     [MemberFunction("E8 ?? ?? ?? ?? 49 63 D7")]
     public partial AtkResNode* GetTextNodeById(uint id);
 
-    [MemberFunction("E8 ?? ?? ?? ?? 8D 56 9C")]
+    [MemberFunction("E8 ?? ?? ?? ?? 8D 53 47")]
     public partial AtkResNode* GetImageNodeById(uint id);
 
     [MemberFunction("E8 ?? ?? ?? ?? 8B 53 F8")]
     public partial AtkResNode* GetScrollBarNodeById(uint id);
-
-    [MemberFunction("E9 ?? ?? ?? ?? 48 85 C0 74 61")]
-    public partial void PlayTimelineAnimation(byte labelId);
 
     [MemberFunction("E8 ?? ?? ?? ?? 41 3A C6 74 22")]
     public partial bool IsAnimated();
