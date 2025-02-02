@@ -53,7 +53,9 @@ public unsafe partial struct InfoProxyCommonList {
     public partial struct CharacterData {
         [FieldOffset(0x00)] public ulong ContentId;
         [FieldOffset(0x08)] public OnlineStatus State;
-        //12 bytes
+
+        [FieldOffset(0x13)] public byte Unk13; //Some sort of Status info
+        [FieldOffset(0x14)] public byte DictIndex;
         /// <summary>
         /// Extra flags for status:
         /// 0x10 = ? always set when accepted friend request

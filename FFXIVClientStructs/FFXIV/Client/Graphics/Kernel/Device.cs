@@ -37,10 +37,30 @@ public unsafe partial struct Device {
 
     [FieldOffset(0x8C0)] public void* ImmediateContext; // Client::Graphics::Kernel::Device::ImmediateContext
 
+    [FieldOffset(0x1E8)] public UnkObj* Unk1E8;
+    [FieldOffset(0x1F0)] public UnkObj* Unk1F0;
+    
     [MemberFunction("E8 ?? ?? ?? ?? 49 89 45 48")]
     public partial ConstantBuffer* CreateConstantBuffer(int byteSize, uint flags, uint unk);
 
     // TODO: use TextureFormat enum for textureFormat API 12 spec
     [MemberFunction("E8 ?? ?? ?? ?? 48 89 07 48 8D 7F 20")]
     public partial Texture* CreateTexture2D(int* size, byte mipLevel, uint textureFormat, uint flags, uint unk);
+    
+
+    [StructLayout(LayoutKind.Explicit)]
+    public struct UnkObj {
+
+        [FieldOffset(0x08)] public nint LPCRITICAL_SECTION;
+        [FieldOffset(0x30)] public Unk30Obj* Data;
+        [FieldOffset(0x38)] public uint Capacity;
+        [FieldOffset(0x3C)] public uint Count;
+
+        [StructLayout(LayoutKind.Explicit)]
+        public struct Unk30Obj {
+            [FieldOffset(0x0)] public void* FunctionPointer;
+            [FieldOffset(0x8)] public void* Param;
+        }
+    }
+
 }

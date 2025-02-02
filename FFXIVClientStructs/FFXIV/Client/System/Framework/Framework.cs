@@ -1,10 +1,12 @@
-using System.Runtime.CompilerServices;
 using FFXIVClientStructs.FFXIV.Client.Game;
 using FFXIVClientStructs.FFXIV.Client.Network;
 using FFXIVClientStructs.FFXIV.Client.Sound;
 using FFXIVClientStructs.FFXIV.Client.System.Configuration;
 using FFXIVClientStructs.FFXIV.Client.System.File;
 using FFXIVClientStructs.FFXIV.Client.System.Input;
+using FFXIVClientStructs.FFXIV.Client.System.String;
+using FFXIVClientStructs.FFXIV.Client.System.Task;
+using FFXIVClientStructs.FFXIV.Client.System.Threading;
 using FFXIVClientStructs.FFXIV.Client.System.Timer;
 using FFXIVClientStructs.FFXIV.Client.UI;
 using FFXIVClientStructs.FFXIV.Common;
@@ -13,6 +15,7 @@ using FFXIVClientStructs.FFXIV.Common.Lua;
 using FFXIVClientStructs.FFXIV.Component.Excel;
 using FFXIVClientStructs.FFXIV.Component.Exd;
 using FFXIVClientStructs.FFXIV.Component.SteamApi;
+using Thread = FFXIVClientStructs.FFXIV.Client.System.Threading.Thread;
 
 namespace FFXIVClientStructs.FFXIV.Client.System.Framework;
 
@@ -23,12 +26,16 @@ namespace FFXIVClientStructs.FFXIV.Client.System.Framework;
 public unsafe partial struct Framework {
     [StaticAddress("49 8B DC 48 89 1D ?? ?? ?? ??", 6, true)]
     public static partial Framework* Instance();
-
+    [FieldOffset(0x0008)] public byte Unk8;
+    [FieldOffset(0x0009)] public bool Unk9;
+    [FieldOffset(0x000A)] public bool StopRequested; 
+    [FieldOffset(0x000C)] public int ProgramReturnCode;
     [FieldOffset(0x0010)] public SystemConfig SystemConfig;
     [FieldOffset(0x0460)] public DevConfig DevConfig;
     [Obsolete("Use CharamakeAvatarSaveData")]
     [FieldOffset(0x0570)] public SavedAppearanceManager* SavedAppearanceData;
     [FieldOffset(0x0570)] public CharamakeAvatarSaveDataContainer* CharamakeAvatarSaveData;
+    [FieldOffset(0x0578)] public Unk578Obj* Unk578;
     [FieldOffset(0x0580)] public byte ClientLanguage;
     [FieldOffset(0x0581)] public byte Region;
     [FieldOffset(0x0588)] public Cursor* Cursor;
@@ -70,6 +77,7 @@ public unsafe partial struct Framework {
     [FieldOffset(0x16E0)] public float FrameDeltaTimeMSRem; // sub-millisecond difference between real and rounded dt, added to the next frame
     [FieldOffset(0x16E8)] public long FrameDeltaTimeUSInt; // FrameDeltaTime in microseconds, rounded to integer
     [FieldOffset(0x16F0)] public float FrameDeltaTimeUSRem; // sub-microsecond difference between real and rounded dt, added to the next frame
+    [FieldOffset(0x16F8)] public SpursManager* SpursManager;
     [FieldOffset(0x1700)] public TaskManager TaskManager;
     [FieldOffset(0x1770)] public ClientTime ClientTime;
     [FieldOffset(0x17B8)] public float GameSpeedMultiplier; // usually 1, but during recording replay could be different
@@ -94,11 +102,15 @@ public unsafe partial struct Framework {
 
     [FieldOffset(0x2B38)] public ExcelModuleInterface* ExcelModuleInterface;
     [FieldOffset(0x2B40)] public ExdModule* ExdModule;
+    [FieldOffset(0x2B48)] public void* VulgarWordFilter;
+    [FieldOffset(0x2B50)] public void* VulgarWordFilterParty;
     [FieldOffset(0x2B58)] public BGCollisionModule* BGCollisionModule;
     [FieldOffset(0x2B68)] public UIModule* UIModule;
     [FieldOffset(0x2B70)] public UIClipboard* UIClipboard;
     [FieldOffset(0x2B80)] public EnvironmentManager* EnvironmentManager;
     [FieldOffset(0x2B88)] public SoundManager* SoundManager;
+    [FieldOffset(0x2B98)] public InputThread.InputThread* InputThread;
+    [FieldOffset(0x2BA0)] public Unk2B98Obj Unk2B98;
     [FieldOffset(0x2BD0)] public LuaState LuaState;
 
     [FieldOffset(0x2BF8), FixedSizeArray(isString: true)] internal FixedSizeArray256<byte> _gameVersion;
@@ -109,9 +121,12 @@ public unsafe partial struct Framework {
     [FieldOffset(0x2CF8 + 3 * 0x20), FixedSizeArray(isString: true)] internal FixedSizeArray32<byte> _ex4Version; // Endwalker
     [FieldOffset(0x2CF8 + 4 * 0x20), FixedSizeArray(isString: true)] internal FixedSizeArray32<byte> _ex5Version; // Dawntrail
 
+    [FieldOffset(0x3500)] public WatchDogThread* WatchDogThread;
     [FieldOffset(0x3508)] public bool UseWatchDogThread;
 
     [FieldOffset(0x3518)] public int FramesUntilDebugCheck;
+    
+    [FieldOffset(0x3578)] public TimePoint Time3570;
     /// <summary>
     /// Set if <c>IsSteam</c> was set for this instance as part of <c>SetupSteamApi</c>. Set even if loading the Steam API
     /// fails for some reason.
@@ -172,4 +187,44 @@ public unsafe partial struct Framework {
     /// <returns>Returns <c>true</c> if the API was initialized successfully, false otherwise.</returns>
     [MemberFunction("48 89 5C 24 ?? 57 48 81 EC 40 02 00 00 48 8B 05")]
     public partial bool SetupSteamApi();
+    // ctor "E8 ?? ?? ?? ?? 48 8B C8 48 89 83 ?? ?? ?? ?? E8 ?? ?? ?? ?? 45 33 C0"
+    [StructLayout(LayoutKind.Explicit, Size = 0x220)]
+    public struct Unk578Obj {
+        [FieldOffset(0x048)] public Utf8String Unk048;
+        [FieldOffset(0x0B0)] public Utf8String Unk0B0;
+        [FieldOffset(0x118)] public Utf8String Unk118;
+        [FieldOffset(0x180)] public Utf8String Unk180;
+    }
+
+    //ctor -Unsiggable-
+    [StructLayout(LayoutKind.Explicit, Size = 0x28)]
+    public struct Unk2B98Obj {
+
+    }
+
+    // ctor E8 ?? ?? ?? ?? 48 8D 8E ?? ?? ?? ?? 48 89 AE ?? ?? ?? ?? 66 C7 86 
+    [StructLayout(LayoutKind.Explicit, Size = 0xA8)]
+    public struct Unk15C8Obj {
+        //Some derived class 
+        [FieldOffset(0x00)] public Thread Thread;
+        [FieldOffset(0x38)] public Task Task;
+    }
+
+    // ctor C6 01 ?? 48 8D 81 
+    [StructLayout(LayoutKind.Explicit, Size = 0x494)]
+    public struct Unk2A8Obj {
+
+    }
+
+    //ctor 33 D2 C6 41 ?? ?? 48 89 51 ?? 8B C2 
+    [StructLayout(LayoutKind.Explicit, Size = 0x30)]
+    public struct Unk9F8Obj {
+        [FieldOffset(0x00)] public int CursorPosX;
+        [FieldOffset(0x04)] public int CursorPosY;
+    }
+
+    // ctor E8 ?? ?? ?? ?? 33 C0 45 89 BE 
+    [StructLayout(LayoutKind.Explicit, Size = 0x194)]
+    public struct Unk7B0Obj {
+    }
 }

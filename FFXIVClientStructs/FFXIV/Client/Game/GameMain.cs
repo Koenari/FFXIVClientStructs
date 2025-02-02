@@ -12,6 +12,12 @@ public unsafe partial struct GameMain {
     [FieldOffset(0x0), FixedSizeArray] internal FixedSizeArray4<Festival> _activeFestivals;
     [FieldOffset(0x40), FixedSizeArray] internal FixedSizeArray4<Festival> _queuedFestivals;
 
+    [FieldOffset(0x0058)] public GameMainUnk58Obj Unk58;
+    
+    [FieldOffset(0x0210)] public GameMainUnk210Obj Unk210;
+
+    [FieldOffset(0x948)] public GameMainUnk948Obj Unk948;
+    
     [FieldOffset(0xAD8)] public JobGaugeManager JobGaugeManager;
 
     [FieldOffset(0x3FD0)] public EmoteManager EmoteManager;

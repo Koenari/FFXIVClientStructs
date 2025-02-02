@@ -2,8 +2,11 @@ namespace FFXIVClientStructs.FFXIV.Client.Game.Object;
 
 // Client::Game::Object::ClientObjectManager
 [GenerateInterop]
-[StructLayout(LayoutKind.Explicit)]
+[StructLayout(LayoutKind.Explicit, Size = 0x10)]
 public unsafe partial struct ClientObjectManager {
+
+    [FieldOffset(0x10),FixedSizeArray] internal FixedSizeArray48<ObjectEntry> _entries;
+
     [StaticAddress("48 8D 0D ?? ?? ?? ?? E8 ?? ?? ?? ?? C7 43 60 FF FF FF FF", 3)]
     public static partial ClientObjectManager* Instance();
 
@@ -21,4 +24,11 @@ public unsafe partial struct ClientObjectManager {
 
     [MemberFunction("E8 ?? ?? ?? ?? 8B F8 48 8B CB 83 F8 FF")]
     public partial uint CalculateNextAvailableIndex();
+
+    [StructLayout(LayoutKind.Explicit, Size = 0x10)]
+    public struct ObjectEntry {
+        [FieldOffset(0x0)] public long EntityId;
+        [FieldOffset(0x8)] public bool IsPopulated;
+        [FieldOffset(0xE)] public byte Index;
+    }
 }

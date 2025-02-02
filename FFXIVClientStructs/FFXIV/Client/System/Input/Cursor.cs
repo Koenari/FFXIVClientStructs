@@ -7,14 +7,18 @@ namespace FFXIVClientStructs.FFXIV.Client.System.Input;
 [GenerateInterop]
 [StructLayout(LayoutKind.Explicit, Size = 0x378)]
 public unsafe partial struct Cursor {
+    [FieldOffset(0x000)] public void* vtbl;
+
     [FieldOffset(0x009)] public bool UseSoftwareCursor;
     [FieldOffset(0x00A)] public byte SoftwareCursorScale;
     [FieldOffset(0x00B)] public bool IsCursorVisible;
-    [FieldOffset(0x00C)] public bool MouseNotCpatured;
+    [FieldOffset(0x00C)] public bool MouseNotCaptured;
     [FieldOffset(0x00D)] public bool IsCursorOutsideViewPort;
 
     [FieldOffset(0x010)] public uint ActiveCursorType; //Hand,Cursor, Cross, etc
 
+    //[FieldOffset(0x098)] public bool SystemMouseOperationTrajectory;
+    
     [FieldOffset(0x1B0), FixedSizeArray] internal FixedSizeArray16<ulong> _cursorHandles; //HCURSOR (winuser.h)
 
     [FieldOffset(0x238), FixedSizeArray] internal FixedSizeArray16<Pointer<byte>> _cursorNames;
