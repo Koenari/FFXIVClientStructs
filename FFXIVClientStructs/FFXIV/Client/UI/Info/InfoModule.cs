@@ -14,18 +14,18 @@ public unsafe partial struct InfoModule {
     [FieldOffset(0x1978), FixedSizeArray] internal FixedSizeArray35<Pointer<InfoProxyInterface>> _infoProxies;
     [FieldOffset(0x1A90)] public ulong LocalContentId;
     [FieldOffset(0x1A98)] public Utf8String LocalCharName;
-    [FieldOffset(0x1B00)] public Utf8String UnkString1;
-    [FieldOffset(0x1B68)] public Utf8String UnkString2;
-    [FieldOffset(0x1BD0)] public Utf8String UnkString3;
+    [FieldOffset(0x1B00)] private Utf8String UnkString1;
+    [FieldOffset(0x1B68)] private Utf8String UnkString2;
+    [FieldOffset(0x1BD0)] private Utf8String UnkString3;
     [FieldOffset(0x1C38)] public ulong OnlineStatusFlags;
 
     [MemberFunction("E8 ?? ?? ?? ?? 45 85 E4 7E 5C")]
     public partial InfoProxyInterface* GetInfoProxyById(InfoProxyId id);
 
     [MemberFunction("E8 ?? ?? ?? ?? 49 C7 C1 ?? ?? ?? ?? 48 8D 8C 24 ?? ?? ?? ??")]
-    public partial byte* GetLocalCharacterName();
+    public partial CStringPointer GetLocalCharacterName();
 
-    [MemberFunction("E8 ?? ?? ?? ?? 49 39 07")]
+    [MemberFunction("E8 ?? ?? ?? ?? 49 39 87")]
     public partial ulong GetLocalContentId();
 
     /// <summary>
@@ -34,9 +34,6 @@ public unsafe partial struct InfoModule {
     /// <param name="id">The RowId in the OnlineStatus sheet.</param>
     [MemberFunction("48 8B 81 ?? ?? ?? ?? 0F B6 CA 48 D3 E8")]
     public partial bool IsOnlineStatusSet(byte id);
-
-    [Obsolete("Use param type of byte instead")]
-    public bool IsOnlineStatusSet(uint id) => IsOnlineStatusSet((byte)id);
 
     /// <summary>
     /// Sets the local player's online status to the specified flag bitmask.
@@ -81,7 +78,7 @@ public enum InfoProxyId : uint {
     NoviceNetworkMentor = 23,
     // unconfirmed:
     // PvpTeam = 24,
-    // PvpTeamMember = 25,
+    // PvpTeamMember = 25, // "xpvpgroup"?
     // PvpTeamResult = 26,
     // PvpTeamActivity = 27,
     // PvPTeamOrganization = 28,

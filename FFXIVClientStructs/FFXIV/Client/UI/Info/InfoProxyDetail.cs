@@ -31,14 +31,14 @@ public unsafe partial struct InfoProxyDetail {
     [MemberFunction("48 39 51 30 74 0B")]
     public partial void SetUpdateLookingForPartyClassJobIdMask(ulong classJobIdMask);
 
-    [MemberFunction("E8 ?? ?? ?? ?? 0F B6 53 15")]
+    [MemberFunction("E8 ?? ?? ?? ?? 48 8B 6C 24 ?? ?? ?? ?? 41 B1")]
     public partial void SetUpdateOnlineStatus(InfoProxyCommonList.CharacterData.OnlineStatus onlineStatus, bool skipAwayCheck = false);
 
-    [MemberFunction("E8 ?? ?? ?? ?? 48 8D 53 16")]
+    [MemberFunction("E8 ?? ?? ?? ?? 48 8B 5C 24 ?? 41 83 FE")]
     public partial void SetUpdateLanguageMask(InfoProxyCommonList.CharacterData.LanguageMask languageMask);
 
     [MemberFunction("E8 ?? ?? ?? ?? 33 D2 48 8B CF E8 ?? ?? ?? ?? C6 46 08 01"), GenerateStringOverloads]
-    public partial void SetUpdateSearchComment(byte* searchComment);
+    public partial void SetUpdateSearchComment(CStringPointer searchComment);
 
     [MemberFunction("48 89 5C 24 ?? 48 89 74 24 ?? 57 48 83 EC 20 48 8B D9 BF ?? ?? ?? ?? 8B C7")]
     public partial void SendOnlineStatusUpdate(uint onlineStatusId);
@@ -46,4 +46,7 @@ public unsafe partial struct InfoProxyDetail {
     /// <param name="updateData">The packet to send. If <c>null</c>, it will use <see cref="UpdateData"/>.</param>
     [MemberFunction("E8 ?? ?? ?? ?? C6 83 ?? ?? ?? ?? ?? 40 84 FF")]
     public partial void SendUpdateData(UpdateDataPacket* updateData = null);
+
+    [MemberFunction("48 89 5C 24 ?? 57 48 83 EC 20 4C 8B 49 28 48 8B D9")]
+    public partial void RefreshOnlineStatus();
 }

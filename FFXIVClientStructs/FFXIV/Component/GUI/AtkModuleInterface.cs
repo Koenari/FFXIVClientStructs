@@ -7,7 +7,7 @@ namespace FFXIVClientStructs.FFXIV.Component.GUI;
 [StructLayout(LayoutKind.Explicit, Size = 0x08)]
 public unsafe partial struct AtkModuleInterface {
     [VirtualFunction(0)]
-    public partial void Dtor(bool free);
+    public partial void Dtor(byte freeFlags);
 
     [VirtualFunction(9)]
     public partial NumberArrayData* GetNumberArrayData(int index);
@@ -39,14 +39,23 @@ public unsafe partial struct AtkModuleInterface {
     [VirtualFunction(23)]
     public partial bool RefreshAddon(uint addonId, uint valueCount, AtkValue* values);
 
+    [VirtualFunction(25)]
+    public partial bool SetAddonVisibility(uint addonId, bool visible);
+
     [VirtualFunction(26)]
     public partial bool IsAddonReady(uint addonId);
+
+    [VirtualFunction(27)]
+    public partial bool FocusAddon(uint addonId, bool focusContextMenu = false);
 
     [VirtualFunction(28)]
     public partial void ClearFocus();
 
     [VirtualFunction(33)]
     public partial bool IsCursorVisible();
+
+    [VirtualFunction(39)]
+    public partial void SetUiVisibility(bool uiVisible);
 
     [VirtualFunction(40)]
     public partial SoftKeyboardDeviceInterface* GetSoftKeyboardDeviceInterface();
@@ -58,5 +67,8 @@ public unsafe partial struct AtkModuleInterface {
     public unsafe partial struct AtkEventInterface {
         [VirtualFunction(0)]
         public partial AtkValue* ReceiveEvent(AtkValue* returnValue, AtkValue* values, uint valueCount, ulong eventKind);
+
+        [VirtualFunction(1)]
+        public partial AtkValue* ReceiveEvent2(AtkValue* returnValue, AtkValue* values, uint valueCount, ulong eventKind); // seems to handle user input validation? but... not always 🤔
     }
 }

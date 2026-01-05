@@ -3,6 +3,7 @@ using FFXIVClientStructs.FFXIV.Application.Network.WorkDefinitions;
 using FFXIVClientStructs.FFXIV.Client.Network;
 using FFXIVClientStructs.FFXIV.Client.System.String;
 using FFXIVClientStructs.FFXIV.Common.Component.Excel;
+using FFXIVClientStructs.FFXIV.Component.GUI;
 using FFXIVClientStructs.FFXIV.Component.Text;
 
 namespace FFXIVClientStructs.FFXIV.Client.UI.Agent;
@@ -10,11 +11,14 @@ namespace FFXIVClientStructs.FFXIV.Client.UI.Agent;
 // Client::UI::Agent::AgentLobby
 //   Client::UI::Agent::AgentInterface
 //     Component::GUI::AtkModuleInterface::AtkEventInterface
+//   Component::GUI::AtkMessageBoxManager::AtkMessageBoxEvent
+//   Application::Network::LogoutCallbackInterface
+//   Application::Network::ZoneLoginCallbackInterface
 [Agent(AgentId.Lobby)]
 [GenerateInterop]
-[Inherits<AgentInterface>, Inherits<LogoutCallbackInterface>(0x30)]
+[Inherits<AgentInterface>, Inherits<AtkMessageBoxManager.AtkMessageBoxEvent>, Inherits<LogoutCallbackInterface>, Inherits<ZoneLoginCallbackInterface>]
 [StructLayout(LayoutKind.Explicit, Size = 0x2308)]
-[VirtualTable("48 8D 05 ?? ?? ?? ?? 48 89 69 ?? 48 89 01 4C 8B E1", 3)]
+[VirtualTable("48 8D 05 ?? ?? ?? ?? C6 41 ?? ?? 48 89 01 33 ED", 3)]
 public unsafe partial struct AgentLobby {
     [FieldOffset(0x40)] public LobbyData LobbyData; // for lack of a better name
 
@@ -22,13 +26,15 @@ public unsafe partial struct AgentLobby {
     [FieldOffset(0xA28)] public ExcelSheet* LobbySheet;
     [FieldOffset(0xA30)] public NetworkModuleProxy* NetworkModuleProxy;
     [FieldOffset(0xA38)] public StdDeque<TextParameter> LobbyTextParameters;
-    [FieldOffset(0xA60), FixedSizeArray] internal FixedSizeArray5<Utf8String> _tempUtf8Strings;
+    [FieldOffset(0xA60), FixedSizeArray] internal FixedSizeArray4<Utf8String> _tempUtf8Strings;
+    [FieldOffset(0xC00)] public Utf8String ConnectingToDatacenterString;
     [FieldOffset(0xC68)] public StdVector<Utf8String> VersionStrings;
     [FieldOffset(0xC80)] public Utf8String DisplayedVersionString;
 
     [FieldOffset(0xD00), FixedSizeArray] internal FixedSizeArray8<Utf8String> _unkUtf8Strings;
 
     [FieldOffset(0x1178)] public sbyte ServiceAccountIndex;
+    [FieldOffset(0x1179)] public byte SelectedCharacterIndex;
 
     [FieldOffset(0x1180)] public ulong HoveredCharacterContentId;
     [FieldOffset(0x1188)] public byte DataCenter;
@@ -57,6 +63,7 @@ public unsafe partial struct AgentLobby {
 
     [FieldOffset(0x11E0)] public long IdleTime;
 
+    [FieldOffset(0x11F0)] public long QueueTimeSinceLastUpdate;
     [FieldOffset(0x1200)] public int QueuePosition;
 
     [FieldOffset(0x1205)] public sbyte HoveredCharacterIndex; // index in CharaSelectCharacterList
@@ -76,23 +83,13 @@ public unsafe partial struct AgentLobby {
 
     [FieldOffset(0x22B4)] public bool HasShownCharacterNotFound; // "The character you last logged out with in this play environment could not be found on the current data center."
 
-    // TODO: everything below here is wrong
-
-    // title movie stuff is seemingly no longer part of AgentLobby
-    [FieldOffset(0xA98), Obsolete("Title movie data no longer part of AgentLobby.", true)] public uint AccountExpansion;
-    [FieldOffset(0xA9C), Obsolete("Title movie data no longer part of AgentLobby.", true)] public bool ShowFreeTrialLogo;
-    [FieldOffset(0xAA0), Obsolete("Title movie data no longer part of AgentLobby.", true)] public uint TitleScreenExpansion;
-    [FieldOffset(0xAA4), Obsolete("Title movie data no longer part of AgentLobby.", true)] public bool ShowOriginalLogo; // pre-relaunch
-
-    [FieldOffset(0x12B0), Obsolete("Not updated since before Dawntrail.")] public byte RequestCharaterIndex;
-
-    [MemberFunction("E8 ?? ?? ?? ?? 48 8D 8E ?? ?? ?? ?? 41 8B D7")]
+    [MemberFunction("E8 ?? ?? ?? ?? 48 8D 8E ?? ?? ?? ?? 41 8B D5")]
     public partial void UpdateLobbyUIStage();
 
-    [MemberFunction("E8 ?? ?? ?? ?? 84 C0 74 07 C6 86 ?? ?? ?? ?? ?? 80 BE")]
+    [MemberFunction("E8 ?? ?? ?? ?? E9 ?? ?? ?? ?? 83 FB ?? 0F 8E ?? ?? ?? ?? 48 8D 4F")]
     public partial bool UpdateCharaSelectDisplay(sbyte index, bool a2);
 
-    [MemberFunction("E8 ?? ?? ?? ?? C6 83 ?? ?? ?? ?? ?? 66 C7 83")]
+    [MemberFunction("E8 ?? ?? ?? ?? C6 87 ?? ?? ?? ?? ?? 66 C7 87")]
     public partial void OpenLoginWaitDialog(int position);
 
     [MemberFunction("40 56 41 56 41 57 48 83 EC 40 80 B9")]
@@ -115,7 +112,7 @@ public unsafe partial struct LobbyData {
     [FieldOffset(0x9DC)] public ushort CurrentWorldId;
     [FieldOffset(0x9DE)] public ushort HomeWorldId;
 
-    [MemberFunction("E9 ?? ?? ?? ?? 4C 0F BF 89")]
+    [MemberFunction("E8 ?? ?? ?? ?? 84 C0 74 ?? C6 87 ?? ?? ?? ?? ?? B0 ?? 48 8B 5C 24")]
     public partial CharaSelectCharacterEntry* GetCharacterEntryFromServer(byte index, ulong contentId);
 
     [MemberFunction("40 53 48 83 EC 20 49 63 D9 E8 ?? ?? ?? ??")]

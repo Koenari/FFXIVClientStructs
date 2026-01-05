@@ -9,7 +9,7 @@ namespace FFXIVClientStructs.FFXIV.Client.UI.Agent;
 [Agent(AgentId.SatisfactionSupply)]
 [GenerateInterop]
 [Inherits<AgentInterface>]
-[StructLayout(LayoutKind.Explicit, Size = 0x500)]
+[StructLayout(LayoutKind.Explicit, Size = 0x4F8)]
 public unsafe partial struct AgentSatisfactionSupply {
 
     [FieldOffset(0x40)] public SatisfactionSupplyNpcInfo NpcInfo;
@@ -18,38 +18,24 @@ public unsafe partial struct AgentSatisfactionSupply {
     [FieldOffset(0x60)] public ushort ClassJobLevel;
 
     [FieldOffset(0x64)] public SatisfactionSupplyManager.NpcInfo NpcData;
-    [FieldOffset(0x64), Obsolete("Use NpcData.NpcId")] public uint NpcId;
-    [FieldOffset(0x78), Obsolete("Use NpcData.RemainingAllowances")] public ushort RemainingAllowances;
-    [FieldOffset(0x7A), Obsolete("Use NpcData.LevelUnlocked")] public short LevelUnlocked;
-    [FieldOffset(0x7C), Obsolete("Use NpcData.CanGlamour")] public byte CanGlamour;
 
     [FieldOffset(0x80), FixedSizeArray] internal FixedSizeArray3<ItemInfo> _items;
 
-    [FieldOffset(0x138)] public void* ENpcResidentRow;
-    [FieldOffset(0x140)] public void* Item1Row;
-    [FieldOffset(0x148)] public void* Item2Row;
-    [FieldOffset(0x150)] public void* Item3Row;
+    [FieldOffset(0x138), CExporterExcel("ENpcResident")] public void* ENpcResidentRow;
+    [FieldOffset(0x140), CExporterExcel("Item")] internal FixedSizeArray3<nint> _itemRows;
 
-    [FieldOffset(0x158), FixedSizeArray] internal FixedSizeArray3<AgentDeliveryItemInfo> _deliveryInfo;
+    [FieldOffset(0x158), FixedSizeArray] internal FixedSizeArray3<DeliveryItemInfo> _deliveryInfo;
 
-    [FieldOffset(0x470)] public void* Item1Reward1Row;
-    [FieldOffset(0x478)] public void* Item2Reward1Row;
-    [FieldOffset(0x480)] public void* Item3Reward1Row;
-    [FieldOffset(0x488)] public void* Item1Reward2Row;
-    [FieldOffset(0x490)] public void* Item2Reward2Row;
-    [FieldOffset(0x498)] public void* Item3Reward2Row;
-    [FieldOffset(0x4A0)] public void* GilRow;
-    [FieldOffset(0x4A8)] public void* CrafterScripRow1;
-    [FieldOffset(0x4B0)] public void* CrafterScripRow2;
-    [FieldOffset(0x4B8)] public void* GathererScripRow1;
-    [FieldOffset(0x4C0)] public void* GathererScripRow2;
-    [FieldOffset(0x4C8)] public void* FishingSpotRow;
-    [FieldOffset(0x4D0)] public void* SpearfishingNotebookRow;
+    [FieldOffset(0x470), CExporterExcel("Item")] internal FixedSizeArray3<nint> ItemRewardRows1;
+    [FieldOffset(0x488), CExporterExcel("Item")] internal FixedSizeArray3<nint> ItemRewardRows2;
+    [FieldOffset(0x4A0), CExporterExcel("Item")] public void* GilRow;
+    [FieldOffset(0x4A8), CExporterExcel("Item")] internal FixedSizeArray2<nint> CrafterScripRows;
+    [FieldOffset(0x4B8), CExporterExcel("Item")] internal FixedSizeArray2<nint> GathererScripRows;
+    [FieldOffset(0x4C8), CExporterExcel("FishingSpot")] public void* FishingSpotRow;
+    [FieldOffset(0x4D0), CExporterExcel("SpearfishingNotebook")] public void* SpearfishingNotebookRow;
 
-    [FieldOffset(0x4D8)] public uint CrafterScripId1;
-    [FieldOffset(0x4DC)] public uint CrafterScripId2;
-    [FieldOffset(0x4E0)] public uint GathererScripId1;
-    [FieldOffset(0x4E4)] public uint GathererScripId2;
+    [FieldOffset(0x4D8), FixedSizeArray] internal FixedSizeArray2<uint> _crafterScripIds;
+    [FieldOffset(0x4E0), FixedSizeArray] internal FixedSizeArray2<uint> _gathererScripIds;
     [FieldOffset(0x4E8)] public uint TimeRemainingHours;
     [FieldOffset(0x4EC)] public uint TimeRemainingMinutes;
 
@@ -62,7 +48,7 @@ public unsafe partial struct AgentSatisfactionSupply {
         [FieldOffset(0x12)] public bool AddonUpdated;
         [FieldOffset(0x13)] public bool ForceRefresh;
         [FieldOffset(0x14)] public ushort SelectedItemIndex;
-        [FieldOffset(0x19)] public byte IsQuestSomething; // TODO: doesn't seem right, 0x18 is used as a dword...
+        [FieldOffset(0x19)] public bool IsQuestSomething; // TODO: doesn't seem right, 0x18 is used as a dword...
     }
 
     // TODO: this is likely part of SatisfactionSupplyManager, since it's filled by one of its member functions (assuming agent knows about manager and not vice versa)
@@ -74,7 +60,6 @@ public unsafe partial struct AgentSatisfactionSupply {
         [FieldOffset(0x06)] public ushort Collectability2;
         [FieldOffset(0x08)] public ushort Collectability3;
         [FieldOffset(0x0A)] public bool IsBonus;
-        [FieldOffset(0x0A), Obsolete("Use IsBonus")] public ushort Bonus;
         [FieldOffset(0x0C)] public uint Reward1Id;
         [FieldOffset(0x10)] public uint Reward2Id;
         [FieldOffset(0x14), FixedSizeArray] internal FixedSizeArray3<ushort> _reward1Quantity; // per quality level
@@ -87,9 +72,16 @@ public unsafe partial struct AgentSatisfactionSupply {
         [FieldOffset(0x38)] public ushort FishingSpotId;
         [FieldOffset(0x3A)] public ushort SpearFishingSpotId;
     }
-}
 
-[StructLayout(LayoutKind.Explicit, Size = 0x108)]
-public unsafe partial struct AgentDeliveryItemInfo {
-    [FieldOffset(0xA0)] public Utf8String ItemName;
+    /// <summary>
+    /// Byte info from 0x00 to one byte before <see cref="DeliveryItemInfo.ItemName"/> is filled with the info from ItemRow directly
+    /// </summary>
+    [StructLayout(LayoutKind.Explicit, Size = 0x108)]
+    public unsafe partial struct DeliveryItemInfo {
+        // the following two is just to expose the data properly in reverse engineering tools
+        [FieldOffset(0x00), CExporterExcelBegin("Item")] private uint Singular;
+        [FieldOffset(0x9F), CExporterExcelEnd] private byte PackedBool9F;
+        // the only useful data that is in the struct that can't be gotten through other means
+        [FieldOffset(0xA0)] public Utf8String ItemName;
+    }
 }

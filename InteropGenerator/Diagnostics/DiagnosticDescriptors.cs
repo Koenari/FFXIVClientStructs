@@ -141,8 +141,8 @@ internal static class DiagnosticDescriptors {
 
     public static readonly DiagnosticDescriptor GenerateStringOverloadsMethodMustHaveValidParameter = new(
         "CSIG0108",
-        "GenerateStringOverloads method generation target must have a valid byte* parameter to overload",
-        "Method {0} must contain a valid string overload parameter (byte*)",
+        "GenerateStringOverloads method generation target must have a valid CStringPointer parameter to overload",
+        "Method {0} must contain a valid string overload parameter (CStringPointer)",
         "InteropGenerator.Method",
         DiagnosticSeverity.Error,
         true,
@@ -157,6 +157,16 @@ internal static class DiagnosticDescriptors {
         DiagnosticSeverity.Error,
         true,
         "A method marked for string overload generation has a StringIgnore attribute on an invalid target parameter."
+    );
+
+    public static readonly DiagnosticDescriptor VirtualFunctionIndexOutOfBounds = new(
+        "CSIG0110",
+        "The VirtualFunction attribute index is out of the bounds defined by the VirtualTable attribute",
+        "The VirtualFunction attribute on method {0} has index {1}, which is out of the bounds of {2} defined by the VirtualTable attribute",
+        "InteropGenerator.Method",
+        DiagnosticSeverity.Error,
+        true,
+        "A method marked for virtual function generation has an out of bounds index."
     );
 
     public static readonly DiagnosticDescriptor SignatureContainsInvalidCharacters = new(
@@ -214,4 +224,31 @@ internal static class DiagnosticDescriptors {
         DiagnosticSeverity.Error,
         true,
         "A field marked with the FixedSizeArray attribute and isString set to true does not use the proper type.");
+
+    public static readonly DiagnosticDescriptor FixedSizeArrayBitArrayFieldMustBeByte = new(
+        "CSIG0305",
+        "Fixed size bit array backing field must be byte type",
+        "The field {0} marked as a fixed size bit array must use byte type",
+        "InteropGenerator.Field",
+        DiagnosticSeverity.Error,
+        true,
+        "A field marked with the FixedSizeArray attribute and isBitArray set to true does not use the proper type.");
+
+    public static readonly DiagnosticDescriptor FixedSizeArrayBitArrayFieldBitCountMustMatchSize = new(
+        "CSIG0306",
+        "Fixed size bit array backing field must have a size that fits the bit count",
+        "The field {0} marked as a fixed size bit array must have a size that fits the bit count",
+        "InteropGenerator.Field",
+        DiagnosticSeverity.Error,
+        true,
+        "A field marked with the FixedSizeArray attribute and isBitArray set to true has a size that doesn't match the given bitCount. The size must be calculated as (bitCount + 7) / 8.");
+
+    public static readonly DiagnosticDescriptor FixedSizeArrayFieldCannotBeStringAndBitArray = new(
+        "CSIG0307",
+        "Fixed size array cannot be both string and bit array",
+        "The field {0} marked as a fixed size array cannot have both isString and isBitArray set to true",
+        "InteropGenerator.Field",
+        DiagnosticSeverity.Error,
+        true,
+        "A field marked with the FixedSizeArray attribute cannot set both isString and isBitArray to true.");
 }

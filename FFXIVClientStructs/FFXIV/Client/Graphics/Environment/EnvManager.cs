@@ -5,7 +5,7 @@ namespace FFXIVClientStructs.FFXIV.Client.Graphics.Environment;
 
 // Client::Graphics::Environment::EnvManager
 [GenerateInterop]
-[StructLayout(LayoutKind.Explicit, Size = 0xBF0)]
+[StructLayout(LayoutKind.Explicit, Size = 0xBD0)]
 public unsafe partial struct EnvManager {
     [StaticAddress("0F 28 F2 48 8B 05", 6, isPointer: true)]
     public static partial EnvManager* Instance();
@@ -28,5 +28,5 @@ public unsafe partial struct EnvManager {
 
     [FieldOffset(0x8E0)] public ShadowCamera ShadowCamera;
 
-    // [FieldOffset(0x8F4)] public uint UnkFlags;
+    // [FieldOffset(0x8F4)] private uint UnkFlags;
 }

@@ -6,11 +6,10 @@ using FFXIVClientStructs.STD.Helper;
 namespace FFXIVClientStructs.FFXIV.Client.System.String;
 
 // Client::System::String::Utf8String
-// ctor "E8 ?? ?? ?? ?? 48 03 1F"
 [GenerateInterop]
 [StructLayout(LayoutKind.Explicit, Size = 0x68)]
 public unsafe partial struct Utf8String : ICreatable, IDisposable, IStaticNativeObjectOperation<Utf8String> {
-    [FieldOffset(0x0)] public byte* StringPtr; // pointer to null-terminated string
+    [FieldOffset(0x0)] public CStringPointer StringPtr;
     [FieldOffset(0x8)] public long BufSize; // default buffer = 0x40
     /// <remarks>String length including null terminator.</remarks>
     [FieldOffset(0x10)] public long BufUsed;
@@ -102,17 +101,17 @@ public unsafe partial struct Utf8String : ICreatable, IDisposable, IStaticNative
     [MemberFunction("48 89 5C 24 ?? 57 48 83 EC 50 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 44 24 ?? 33 C0 48 C7 44 24")]
     public static partial int ToInteger(Utf8String* value, int fromBase = 0); // base 0 = detect format (0x hex, 0b bin, 0o oct)
 
-    [MemberFunction("E8 ?? ?? ?? ?? 8D 56 40")]
+    [MemberFunction("E8 ?? ?? ?? ?? F7 C3")]
     public partial void Ctor();
 
     [MemberFunction("E8 ?? ?? ?? ?? 41 8B CF EB 15")]
     public partial Utf8String* Ctor_FromSequence(byte* str, nuint length);
 
-    [MemberFunction("E8 ?? ?? ?? ?? 48 83 6E ?? ?? 75 08")]
+    [MemberFunction("E8 ?? ?? ?? ?? C7 44 F5")]
     public partial void Dtor();
 
     [MemberFunction("E8 ?? ?? ?? ?? 4D 39 2E"), GenerateStringOverloads]
-    public partial void SetString(byte* cStr);
+    public partial void SetString(CStringPointer cStr);
 
     [MemberFunction("E8 ?? ?? ?? ?? 0F B6 87 ?? ?? ?? ?? 48 83 EE 80")]
     public partial void Copy(Utf8String* other);
@@ -120,11 +119,11 @@ public unsafe partial struct Utf8String : ICreatable, IDisposable, IStaticNative
     [MemberFunction("E8 ?? ?? ?? ?? 85 ED 79")]
     public partial void Clear();
 
-    [MemberFunction("E8 ?? ?? ?? ?? EB 17 45 85 E4")]
+    [MemberFunction("E8 ?? ?? ?? ?? 84 C0 41 8B F6")]
     public partial bool EqualTo(Utf8String* other);
 
     [MemberFunction("E8 ?? ?? ?? ?? EB 25 83 F9 03"), GenerateStringOverloads]
-    public partial bool EqualToString(byte* other);
+    public partial bool EqualToString(CStringPointer other);
 
     [MemberFunction("45 33 C0 4C 8B C9 4C 39 41")]
     public partial Utf8String* ToLower();
@@ -140,7 +139,7 @@ public unsafe partial struct Utf8String : ICreatable, IDisposable, IStaticNative
     [MemberFunction("E8 ?? ?? ?? ?? 48 8B F8 48 3B C3")]
     public partial Utf8String* CopySubStrTo(Utf8String* destination, int start, int length);
 
-    [MemberFunction("E8 ?? ?? ?? ?? 48 8D 4D A7 E8 ?? ?? ?? ?? EB 18")]
+    [MemberFunction("E8 ?? ?? ?? ?? 48 8D 4D ?? E8 ?? ?? ?? ?? 41 B4")]
     public partial Utf8String* Replace(Utf8String* toFind, Utf8String* replacement);
 
     [MemberFunction("E8 ?? ?? ?? ?? B9 ?? ?? ?? ?? 45 84 ED")]
@@ -164,11 +163,8 @@ public unsafe partial struct Utf8String : ICreatable, IDisposable, IStaticNative
     /// <param name="characterList">
     /// An optional list of ASCII characters that are explicitly allowed in the sanitized string when the <see cref="AllowedEntities.CharacterList"/> flag is set in the <paramref name="flags"/> argument.
     /// </param>
-    [MemberFunction("E8 ?? ?? ?? ?? 48 8D 4C 24 ?? 0F B6 F0 E8 ?? ?? ?? ?? 48 8D 4D C0")]
+    [MemberFunction("E8 ?? ?? ?? ?? 48 8D 4C 24 ?? 0F B6 F8 E8 ?? ?? ?? ?? 48 8D 4D ?? 44 0F B6 F7")]
     public partial void SanitizeString(AllowedEntities flags, Utf8String* characterList = null);
-
-    [Obsolete("Use SanitizeString with AllowedEntities enum")]
-    public void SanitizeString(ushort flags, Utf8String* characterList) => SanitizeString((AllowedEntities)flags, characterList);
 
     [MemberFunction("E8 ?? ?? ?? ?? 4C 8B 74 24 ?? 48 8B 74 24 ?? 48 89 5C 24 ?? 48 89 5D 80 49 8B DE 48 C7 45 ?? ?? ?? ?? ?? 4C 3B F6 0F 84 ?? ?? ?? ?? 48 8B 03 80 38 00 74 1F 41 8B C4")]
     public partial void GetParts(StdVector<Utf8StringPart>* vector);
@@ -179,7 +175,7 @@ public unsafe partial struct Utf8String : ICreatable, IDisposable, IStaticNative
     public static partial Utf8String* Concat(Utf8String* str, Utf8String* buffer, Utf8String* other);
 
     [MemberFunction("E8 ?? ?? ?? ?? 48 8B 6B 20"), GenerateStringOverloads]
-    public partial Utf8String* ConcatCStr(byte* buffer);
+    public partial Utf8String* ConcatCStr(CStringPointer buffer);
 
     public static implicit operator ReadOnlySpan<byte>(in Utf8String value)
         => value.AsSpan();
@@ -236,12 +232,12 @@ public enum AllowedEntities : ushort {
     /// <summary> Anything that's not handled in the alphanumerical filters (presumably). </summary>
     OtherCharacters = 1 << 5,
 
-    /// <summary> SeString payloads </summary>
+    /// <summary> SeString payloads, mostly used to carry fixed macros (auto translate). </summary>
     Payloads = 1 << 6,
 
     Unknown7 = 1 << 7,
     Unknown8 = 1 << 8,
-    Unknown9 = 1 << 9, // Only used in Chinese/Korean clients?!
+    Unknown9 = 1 << 9, // Only used in Chinese/Korean/Taiwanese clients
 
     /// <summary> Hiragana, Katakana, CJK Unified Ideographs </summary>
     CJK = 1 << 10,

@@ -1,6 +1,7 @@
 using FFXIVClientStructs.FFXIV.Client.Game;
 using FFXIVClientStructs.FFXIV.Client.System.String;
 using FFXIVClientStructs.FFXIV.Common.Component.Excel;
+using FFXIVClientStructs.FFXIV.Component.GUI;
 
 namespace FFXIVClientStructs.FFXIV.Client.UI.Agent;
 
@@ -16,13 +17,16 @@ public unsafe partial struct AgentContentsFinder {
 
     [FieldOffset(0x8A8)] public AgentContentsFinderReward RewardSub;
 
+    // Offset can be found with "48 8D BE ? ? ? ? 48 85 DB"
+    [FieldOffset(0x1E70)] public RewardContextMenuEventHandler RewardContextMenuHandler;
+
     [FieldOffset(0x1E98)] public StdVector<Pointer<Contents>> ContentList;
     [FieldOffset(0x1EB0)] public StdVector<ContentsId> SelectedContent;
-
-    [FieldOffset(0x1ECC)] public int SelectedDutyId; // ContentFinderCondition rowId for duties, ContentRoulette rowId for roulette
+    [FieldOffset(0x1EC8)] public ContentsId SelectedDuty;
     [FieldOffset(0x1ED8)] public byte NumCollectedRewards; // Value used for "Reward already received"
-    [FieldOffset(0x1ED9)] public byte HasRouletteSelected; // Prevents more roulettes from being selected
+    [FieldOffset(0x1ED9)] public bool HasRouletteSelected; // Prevents more roulettes from being selected
 
+    // TODO: this is part of an event interface class
     [FieldOffset(0x1F18)] public UIModule* UIModule;
 
     [FieldOffset(0x1F28), FixedSizeArray] internal FixedSizeArray10<Utf8String> _strings; // Tooltips and Category headers, ie "Gil", "Trials (Endwalker)"
@@ -30,16 +34,36 @@ public unsafe partial struct AgentContentsFinder {
     [FieldOffset(0x2391), FixedSizeArray] internal FixedSizeArray11<ContentsRouletteRole> _contentRouletteRoleBonuses;
 
     [FieldOffset(0x239C)] public uint DutyPenaltyMinutes;
-    [FieldOffset(0x23A0)] public uint UnkPenaltyMinutes;
+    [FieldOffset(0x23A0)] private uint UnkPenaltyMinutes;
 
     [FieldOffset(0x23D4)] public int CurrentTimestamp;
+
+    [FieldOffset(0x23DC)] public int RecruitingParties;
     [FieldOffset(0x23E0)] public byte SelectedTab;
+
+    [FieldOffset(0x23E8)] private bool TabChanged;
+    [FieldOffset(0x23E9)] public bool ListChanged;
+    [FieldOffset(0x23EA)] private bool DetailsChanged;
 
     [MemberFunction("48 89 6C 24 ?? 48 89 74 24 ?? 57 48 81 EC ?? ?? ?? ?? 48 8B F9 41 0F B6 E8")]
     public partial void OpenRegularDuty(uint contentsFinderCondition, bool hideIfShown = false);
 
     [MemberFunction("E9 ?? ?? ?? ?? 8B 93 ?? ?? ?? ?? 48 83 C4 20")]
     public partial void OpenRouletteDuty(byte roulette, bool hideIfShown = false);
+
+    [MemberFunction("40 53 48 83 EC ?? 48 8B 01 48 8B D9 FF 50 ?? 84 C0 74 ?? 48 8B CB C6 83")]
+    public partial void Refresh();
+
+    [MemberFunction("E8 ?? ?? ?? ?? 41 C6 45 ?? ?? 4C 8D 9C 24")]
+    public partial void UpdateAddon();
+
+    [GenerateInterop]
+    [Inherits<AtkModuleInterface.AtkEventInterface>]
+    [StructLayout(LayoutKind.Explicit, Size = 0x20)]
+    public partial struct RewardContextMenuEventHandler {
+        [FieldOffset(0x10)] public uint AddonId;
+        [FieldOffset(0x18)] public AgentContentsFinderReward.ItemWrap* SelectedReward;
+    }
 }
 
 public enum ContentsRouletteRole : byte {
@@ -74,7 +98,7 @@ public unsafe partial struct AgentContentsFinderReward {
     [FieldOffset(0x00)] public RewardWrap NormalItems; // Actual items, e.g "Cracked Cluster"
     [FieldOffset(0x220), FixedSizeArray] internal FixedSizeArray5<InventoryItem> _unkItems;
     [FieldOffset(0x388)] public RewardWrap BonusItems; // Actual items, e.g "Cracked Cluster"
-    [FieldOffset(0x5A8)] public RewardWrap UnkItemsWrap;
+    [FieldOffset(0x5A8)] private RewardWrap UnkItemsWrap;
 
     [FieldOffset(0x7D0)] public ExcelSheet* ItemSheet;
 
@@ -108,7 +132,7 @@ public unsafe partial struct AgentContentsFinderReward {
 public unsafe partial struct AgentContentsFinderInterface {
     [FieldOffset(0x00)] public AgentContentsFinder* AgentContentsFinder;
     [FieldOffset(0x10)] public Utf8String Description;
-    [FieldOffset(0x78)] public UnkItemsSub UnkSub;
+    [FieldOffset(0x78)] private UnkItemsSub UnkSub;
 
     [FieldOffset(0x840)] public ExcelSheet* InstanceContentSheet;
     [FieldOffset(0x848)] public ExcelSheet* ContentFinderConditionTransientSheet;
@@ -120,6 +144,6 @@ public unsafe partial struct AgentContentsFinderInterface {
     [FieldOffset(0x870)] public int SelectedDutyId; // ContentFinderCondition rowId for duties, ContentRoulette rowId for roulette
 
     [StructLayout(LayoutKind.Explicit, Size = 0x7C8)]
-    public unsafe partial struct UnkItemsSub {
+    private unsafe partial struct UnkItemsSub {
     }
 }

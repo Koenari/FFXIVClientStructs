@@ -13,9 +13,9 @@ public unsafe partial struct AchievementListModule {
         return uiModule == null ? null : uiModule->GetAchievementListModule();
     }
 
-    // [FieldOffset(0x48)] public byte Unk40;
+    // [FieldOffset(0x48)] private byte Unk40;
     [FieldOffset(0x4A), FixedSizeArray] internal FixedSizeArray30<ushort> _watchList;
-    // [FieldOffset(0x86)] public byte Unk7E;
+    // [FieldOffset(0x86)] private byte Unk7E;
     [FieldOffset(0x88)] public byte WatchlistCount; // 30 max
 
     [MemberFunction("C6 81 ?? ?? ?? ?? ?? 48 8D 41 4A")]
@@ -24,7 +24,7 @@ public unsafe partial struct AchievementListModule {
     [MemberFunction("48 83 EC 28 33 C0 4C 8D 41 4A")]
     public partial bool AddToWatchlist(ushort achievementId);
 
-    [MemberFunction("E8 ?? ?? ?? ?? 45 33 FF FF C7")]
+    [MemberFunction("E8 ?? ?? ?? ?? E9 ?? ?? ?? ?? 84 DB 0F 84 ?? ?? ?? ?? 0F B6 45")]
     public partial bool RemoveFromWatchlist(ushort achievementId);
 
     [MemberFunction("E8 ?? ?? ?? ?? 84 C0 41 B9 ?? ?? ?? ??")]

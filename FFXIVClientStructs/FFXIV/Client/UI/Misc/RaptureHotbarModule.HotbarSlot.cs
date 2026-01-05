@@ -7,7 +7,7 @@ public partial struct RaptureHotbarModule {
     [GenerateInterop(isInherited: true)]
     [StructLayout(LayoutKind.Explicit, Size = Size)]
     public unsafe partial struct HotbarSlot {
-        public const int Size = 0xE0;
+        public const int Size = 0xE8;
 
         /// The string that appears when a hotbar slot is hovered over.
         ///
@@ -46,9 +46,6 @@ public partial struct RaptureHotbarModule {
         /// </remarks>
         [FieldOffset(0xBC)] public uint OriginalApparentActionId;
 
-        [Obsolete($"Renamed to {nameof(OriginalApparentActionId)}.", true)]
-        [FieldOffset(0xBC)] public uint IconA;
-
         /// <summary>
         /// The action ID that is used to determine this hotbar slot's icon (and usually display text).
         ///
@@ -58,15 +55,12 @@ public partial struct RaptureHotbarModule {
         /// </summary>
         [FieldOffset(0xC0)] public uint ApparentActionId;
 
-        [Obsolete($"Renamed to {nameof(ApparentActionId)}.", true)]
-        [FieldOffset(0xC0)] public uint IconB;
-
         /// Unknown field with offset 0xC4 (196), possibly overloaded
         ///
         /// Appears to have relation to the following:
         /// - Lost Finds Items appear to set this value to 1
         /// - In PVP actions, the high byte controls combo icon and the low byte counts which action the combo is on
-        [FieldOffset(0xC4)] public ushort UNK_0xC4;
+        [FieldOffset(0xC4)] private ushort UNK_0xC4;
 
         // 0xC6 (198) does not appear to be referenced *anywhere*. Nothing ever reads or writes to it, save for a zero-out
         // operation.
@@ -81,17 +75,11 @@ public partial struct RaptureHotbarModule {
         /// <seealso cref="OriginalApparentActionId"/>
         [FieldOffset(0xC8)] public HotbarSlotType OriginalApparentSlotType;
 
-        [Obsolete($"Renamed to {nameof(OriginalApparentSlotType)}.", true)]
-        [FieldOffset(0xC8)] public uint IconTypeA;
-
         /// <summary>
         /// The <see cref="HotbarSlotType"/> assigned to this hotbar slot for display purposes.
         /// </summary>
         /// <seealso cref="ApparentActionId"/>
         [FieldOffset(0xC9)] public HotbarSlotType ApparentSlotType;
-
-        [Obsolete($"Renamed to {nameof(ApparentSlotType)}.", true)]
-        [FieldOffset(0xC9)] public uint IconTypeB;
 
         /// Appears to be the "primary cost" of this action, mapping down to 0, 1, 2, 4, 5, 6, 7.
         ///
@@ -105,7 +93,7 @@ public partial struct RaptureHotbarModule {
         /// - 6: Blue (Job Gauge?)
         /// - 7: Bright Yellow (Rival Wings - CE)
         /// - All others: Grey
-        [FieldOffset(0xCA)] public byte CostType;
+        [FieldOffset(0xCB)] public byte CostType;
 
         /// Appears to control display of the primary cost of the action (0xCA).
         ///
@@ -114,13 +102,13 @@ public partial struct RaptureHotbarModule {
         /// - 3: Displays the value of 0xD0 in the bottom right (e.g. for Gearsets/UNK_0x17)
         /// - 4: Mode 3, but display a custom string from CostText instead (generally "x {count}" for Items)
         /// - 0/255: No display, all other cases
-        [FieldOffset(0xCB)] public byte CostDisplayMode;
+        [FieldOffset(0xCC)] public byte CostDisplayMode;
 
         /// <summary>
         /// The current Icon ID (usually used in form <c>ui/icon/{ID}.tex</c>) that this hotbar slot should display. Loaded
         /// with <see cref="LoadIconId"/> based on information in <see cref="ApparentActionId"/>.
         /// </summary>
-        [FieldOffset(0xCC)] public uint IconId;
+        [FieldOffset(0xD0)] public uint IconId;
 
         /// <summary>
         /// The "cost" of an action, usually in MP/TP/CP/GP or similar. The specific display type depends on the value in
@@ -128,7 +116,7 @@ public partial struct RaptureHotbarModule {
         ///
         /// For items, this contains the quantity currently present in the player's inventory.
         /// </summary>
-        [FieldOffset(0xD0)] public uint CostValue;
+        [FieldOffset(0xD4)] public uint CostValue;
 
         /// <summary>
         /// The ID of the item that this hotbar slot contains a recipe for.
@@ -136,7 +124,7 @@ public partial struct RaptureHotbarModule {
         /// <remarks>
         /// This field <em>may</em> be used for other purposes, but they have not been found yet.
         /// </remarks>
-        [FieldOffset(0xD4)] public uint RecipeItemId;
+        [FieldOffset(0xD8)] public uint RecipeItemId;
 
         /// <summary>
         /// The CraftType of the recipe currently in this hotbar slot.
@@ -144,7 +132,7 @@ public partial struct RaptureHotbarModule {
         /// <remarks>
         /// This field <em>may</em> be used for other purposes, but they have not been found yet.
         /// </remarks>
-        [FieldOffset(0xD8)] public uint RecipeCraftType;
+        [FieldOffset(0xDC)] public uint RecipeCraftType;
 
         /// <summary>
         /// A boolean representing if the recipe in this hotbar slot is valid or not. Set to 1 when the recipe would result
@@ -155,12 +143,12 @@ public partial struct RaptureHotbarModule {
         /// <remarks>
         /// This field <em>may</em> be used for other purposes, but they have not been found yet.
         /// </remarks>
-        [FieldOffset(0xDC)] public byte RecipeValid;
+        [FieldOffset(0xE0)] public byte RecipeValid;
 
         /// UNKNOWN. Appears to be Recipe specific.
         ///
         /// Always set to 1, apparently?
-        [FieldOffset(0xDD)] public byte UNK_0xDD;
+        [FieldOffset(0xE1)] private byte UNK_0xE1;
 
         /// UNKNOWN. Appears to control UI display mode (icon and displayed name) in some way
         ///
@@ -171,17 +159,17 @@ public partial struct RaptureHotbarModule {
         /// - 5: Set for Lost Finds Items (?)
         /// - 128: Appears as a flag?
         /// - 0/255: "generic"
-        [FieldOffset(0xDE)] public byte UNK_0xDE;
+        [FieldOffset(0xE2)] private byte UNK_0xE2;
 
         /// <summary>
-        /// A "boolean" representing if this specific hotbar slot has been fully loaded. False for empty slots and slots
+        /// A boolean representing if this specific hotbar slot has been fully loaded. False for empty slots and slots
         /// that have yet to be loaded in the UI.
         /// </summary>
         /// <remarks>
         /// This appears to initialize as 0 and is set to 1 when the hotbar slot appears on a visible hotbar. It will not
         /// reset if the slot is hidden (and subsequently outdated).
         /// </remarks>
-        [FieldOffset(0xDF)] public byte IsLoaded; // ?
+        [FieldOffset(0xE3)] public bool IsLoaded; // ?
 
         /// <summary>
         /// Check if this hotbar slot is considered "empty" or not, based on whether this hotbar slot has a <see cref="CommandId"/>
@@ -216,7 +204,7 @@ public partial struct RaptureHotbarModule {
         /// <summary>
         /// Loads cost data to <see cref="CostText"/> or <see cref="CostValue"/> for this hotbar slot.
         /// </summary>
-        [MemberFunction("E8 ?? ?? ?? ?? 40 0A E8 C6 46 3E 00")]
+        [MemberFunction("E8 ?? ?? ?? ?? 40 0A F0 C6 47")]
         public partial bool LoadCostDataForSlot(bool isLoaded = true);
 
         /// <summary>
@@ -236,14 +224,14 @@ public partial struct RaptureHotbarModule {
         ///
         /// This method is virtually almost always called using the parameters from <see cref="ApparentSlotType"/> and <see cref="ApparentActionId"/>.
         ///
-        /// When <see cref="UNK_0xDE"/> is set to 3, this method will instead override the passed in slotType and actionId with
+        /// When <see cref="UNK_0xE2"/> is set to 3, this method will instead override the passed in slotType and actionId with
         /// the values present in <see cref="OriginalApparentSlotType"/> and <see cref="OriginalApparentActionId"/>.
         /// </summary>
         /// <param name="slotType">The appearance slot type to use. Virtually almost always <see cref="ApparentSlotType"/>.</param>
         /// <param name="actionId">The appearance action ID to use. Virtually almost always <see cref="ApparentActionId"/>.</param>
         /// <returns>Returns a string representation of the name to be displayed to the user for this hotbar slot.</returns>
         [MemberFunction("E8 ?? ?? ?? ?? 48 8B CB 48 85 C0 75 12")]
-        public partial byte* GetDisplayNameForSlot(HotbarSlotType slotType, uint actionId);
+        public partial CStringPointer GetDisplayNameForSlot(HotbarSlotType slotType, uint actionId);
 
         /// <summary>
         /// Gets the <see cref="CostValue"/> for a specific hotbar slot, taking account the specified appearance slot type
@@ -296,7 +284,7 @@ public partial struct RaptureHotbarModule {
         /// <param name="slotType">The slot type to check against - always <see cref="ApparentSlotType"/>.</param>
         /// <param name="actionId">The actionID to check against - always <see cref="ApparentActionId"/>.</param>
         /// <returns>Returns a bool indicating if the action within this slot is usable.</returns>
-        [MemberFunction("E8 ?? ?? ?? ?? 88 46 3E EB AC")]
+        [MemberFunction("E8 ?? ?? ?? ?? 88 47 ?? EB ?? 80 BB")]
         public partial bool IsSlotUsable(HotbarSlotType slotType, uint actionId);
 
         /// <summary>
@@ -304,7 +292,7 @@ public partial struct RaptureHotbarModule {
         /// on the hotbar slot.
         /// </summary>
         /// <returns>Returns a bool indicating whether the action's range constraints are met.</returns>
-        [MemberFunction("40 53 48 83 EC 20 44 0F B6 81 ?? ?? ?? ?? 48 8B D9")]
+        [MemberFunction("40 53 48 83 EC 20 44 0F B6 81 ?? ?? ?? ?? 48 8B D9 41 8B D0")]
         public partial bool IsSlotActionTargetInRange();
 
         /// <summary>
@@ -327,7 +315,7 @@ public partial struct RaptureHotbarModule {
         /// <param name="outCooldownSecondsLeft">An out parameter representing the seconds left in cooldown. Unused if cooldown is GCD.</param>
         /// <param name="a3">Unknown, appears to be a UI-related field for forcing values if the percentage is 0.</param>
         /// <returns>Returns a range from 0 to 100.</returns>
-        [MemberFunction("E8 ?? ?? ?? ?? 48 8B 5C 24 ?? 89 47 24")]
+        [MemberFunction("E8 ?? ?? ?? ?? 89 47 ?? E9 ?? ?? ?? ?? 80 BB")]
         public partial int GetSlotActionCooldownPercentage(int* outCooldownSecondsLeft, int a3 = 0);
 
         /// <summary>

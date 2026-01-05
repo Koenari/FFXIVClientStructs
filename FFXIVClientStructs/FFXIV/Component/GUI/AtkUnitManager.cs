@@ -1,14 +1,16 @@
 using FFXIVClientStructs.FFXIV.Client.UI;
+using FFXIVClientStructs.FFXIV.Common.Math;
 
 namespace FFXIVClientStructs.FFXIV.Component.GUI;
 
 // Component::GUI::AtkUnitManager
 //   Component::GUI::AtkEventListener
 [GenerateInterop(isInherited: true)]
-[StructLayout(LayoutKind.Explicit, Size = 0x9C90)]
+[Inherits<AtkEventListener>]
+[VirtualTable("48 8D 05 ?? ?? ?? ?? 48 8B D9 ?? ?? ?? 48 81 C1 ?? ?? ?? ?? E8 ?? ?? ?? ?? 48 8D 15", 3, 43)]
+[StructLayout(LayoutKind.Explicit, Size = 0x9CA0)]
 public unsafe partial struct AtkUnitManager {
-    [FieldOffset(0x0)] public AtkEventListener AtkEventListener;
-    [FieldOffset(0x30), FixedSizeArray, CExportIgnore] internal FixedSizeArray13<AtkUnitList> _depthLayers;
+    [FieldOffset(0x30), FixedSizeArray, CExporterIgnore] internal FixedSizeArray13<AtkUnitList> _depthLayers;
     [FieldOffset(0x30)] public AtkUnitList DepthLayerOneList;
     [FieldOffset(0x840)] public AtkUnitList DepthLayerTwoList;
     [FieldOffset(0x1050)] public AtkUnitList DepthLayerThreeList;
@@ -27,8 +29,8 @@ public unsafe partial struct AtkUnitManager {
     [FieldOffset(0x7920)] public AtkUnitList UnitList16;
     [FieldOffset(0x8130)] public AtkUnitList UnitList17;
     [FieldOffset(0x8940)] public AtkUnitList UnitList18;
-    [FieldOffset(0x9150)] private AtkUnitBase* UnkOperationGuideAddon1; // used by AtkOperationGuide in AtkStage
-    [FieldOffset(0x9158)] private AtkUnitBase* UnkOperationGuideAddon2; // used by AtkOperationGuide in AtkStage
+    [FieldOffset(0x9150)] public AtkUnitBase* FocusedAddon;
+    [FieldOffset(0x9158)] private AtkUnitBase* FocusedAddon2; // unsure, looks like it's used for pushing it back to the FocusedUnitsList when FocusedAddon changed
     [FieldOffset(0x9160)] public AddonCursor* AddonCursor;
     [FieldOffset(0x9168)] public AddonOperationGuide* AddonOperationGuide;
     [FieldOffset(0x9170)] public AddonFilter* AddonFilter;
@@ -36,7 +38,11 @@ public unsafe partial struct AtkUnitManager {
     [FieldOffset(0x9180)] public AddonDragDrop* AddonDragDrop;
     [FieldOffset(0x9188)] public AtkManagedInterface* ManagedScreenFrame;
 
-    [FieldOffset(0x9C88)] public AtkUnitManagerFlags Flags;
+    [FieldOffset(0x92A0)] private AtkResNode Unk92A0;
+    [FieldOffset(0x9360)] public Size LastScreenSize;
+
+    [FieldOffset(0x9398), FixedSizeArray] internal FixedSizeArray48<HudAnchoringInfo> _hudAnchoringTable;
+    [FieldOffset(0x9C98)] public AtkUnitManagerFlags Flags;
 
     [VirtualFunction(8)]
     public partial bool SetAddonVisibility(ushort addonId, bool visible);
@@ -51,10 +57,26 @@ public unsafe partial struct AtkUnitManager {
     public partial void AddonRequestUpdateById(ushort addonId, NumberArrayData** numberArrayData, StringArrayData** stringArrayData, bool forced);
 
     [MemberFunction("E8 ?? ?? ?? ?? 48 8B F8 41 B0 01"), GenerateStringOverloads]
-    public partial AtkUnitBase* GetAddonByName(byte* name, int index = 1);
+    public partial AtkUnitBase* GetAddonByName(CStringPointer name, int index = 1);
 
     [MemberFunction("E8 ?? ?? ?? ?? 8B 6B 20")]
     public partial AtkUnitBase* GetAddonById(ushort id);
+
+    /// <summary>
+    /// Gets an AtkUnitBase pointer to the addon that contains the input node.
+    /// This function will check all parents to the input node searching
+    /// for a node that matches any loaded AtkUnitBase's rootnode address
+    /// </summary>
+    /// <param name="node">Pointer to a AtkResNode</param>
+    /// <returns>Pointer to AtkUnitBase or null</returns>
+    [MemberFunction("E8 ?? ?? ?? ?? 48 3B E8 75 0E")]
+    public partial AtkUnitBase* GetAddonByNode(AtkResNode* node);
+
+    [MemberFunction("E8 ?? ?? ?? ?? 40 B5 ?? 48 83 C3")]
+    public partial bool SetAddonDepthLayer(ushort id, uint depthLayerIndex);
+
+    [MemberFunction("E8 ?? ?? ?? ?? 0F 28 CE 48 8B CB E8 ?? ?? ?? ?? 0F 28 CE 48 8D 8B ?? ?? ?? ??")]
+    public partial void UpdateCursor();
 
     public enum AddonStatus {
         NotLoaded = 0,
@@ -62,17 +84,32 @@ public unsafe partial struct AtkUnitManager {
         Shown = 1 << 2,
         Hidden = 1 << 3,
     }
+
+    // not sure how this works
+    [StructLayout(LayoutKind.Explicit, Size = 0x30)]
+    public struct HudAnchoringInfo {
+        [FieldOffset(0x00)] public AtkUnitBase* AtkUnitBase;
+        [FieldOffset(0x08)] public uint NameHash;
+        [FieldOffset(0x0C)] public AlignmentType AlignmentType; // 9-slice anchor point, i guess
+        /// <remarks> X/Y coordinates between 0 and 1, depending on <see cref="AlignmentType"/>. </remarks>
+        [FieldOffset(0x10)] public float NormalizedCoordinate;
+    }
 }
 
 [Flags]
 public enum AtkUnitManagerFlags : byte {
-    None = 0x00,
-    Unk01 = 0x01,
+    None = 0,
+    /// <summary> This flag is temporarily set when any AtkUnitList was modified. Cleared in UpdateDrawOrderIndexes. </summary>
+    UnitListsChanged = 0x01,
+    [Obsolete($"Renamed to {nameof(UnitListsChanged)}", true)] Unk01 = 0x01,
+    /// <summary> This flag is temporarily set to call AtkModule CallbackHandler 0, which sets <see cref="AtkModule.IsHudInitialized"/> to <see langword="true"/>. </summary>
     Unk02 = 0x02,
     UiHidden = 0x04,
     Unk08 = 0x08,
     Unk10 = 0x10,
-    Unk20 = 0x20,
+    /// <remarks> <see cref="RaptureAtkModule.UIScene"/> == <see cref="GameUIScene.GameMain"/> </remarks>
+    InGame = 0x20,
+    [Obsolete($"Renamed to {nameof(InGame)}", true)] Unk20 = 0x20,
     Unk40 = 0x40,
     Unk80 = 0x80,
 }

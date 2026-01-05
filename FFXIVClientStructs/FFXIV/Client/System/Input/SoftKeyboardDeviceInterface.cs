@@ -7,7 +7,7 @@ namespace FFXIVClientStructs.FFXIV.Client.System.Input;
 [StructLayout(LayoutKind.Explicit, Size = 0x08)]
 public unsafe partial struct SoftKeyboardDeviceInterface {
     [VirtualFunction(0)]
-    public partial void Dtor(bool freeMemory);
+    public partial void Dtor(byte freeFlags);
 
     [VirtualFunction(1)]
     public partial bool Enable();
@@ -31,12 +31,12 @@ public unsafe partial struct SoftKeyboardDeviceInterface {
     public partial bool IsSoftKeyboardOpen();
 
     // Client::System::Input::SoftKeyboardDeviceInterface::SoftKeyboardInputInterface
-    [GenerateInterop]
+    [GenerateInterop(true)]
     [StructLayout(LayoutKind.Explicit, Size = 0x8)]
     public unsafe partial struct SoftKeyboardInputInterface {
         // CAUTION: May be the concrete class' dtor!
         [VirtualFunction(0)]
-        public partial void Dtor(bool freeMemory);
+        public partial void Dtor(byte freeFlags);
 
         [VirtualFunction(2)]
         public partial void WriteString(Utf8String* stringToWrite);

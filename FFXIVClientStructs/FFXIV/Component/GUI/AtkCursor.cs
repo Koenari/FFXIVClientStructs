@@ -14,10 +14,10 @@ public partial struct AtkCursor {
     [MemberFunction("48 83 EC 58 80 79 1A 00 75 6C")]
     public partial void Show();
 
-    [MemberFunction("E8 ?? ?? ?? ?? 48 8B 4D B0 49 8B D7")]
+    [MemberFunction("E8 ?? ?? ?? ?? E9 ?? ?? ?? ?? 8B FA")]
     public partial void SetVisible(bool visible);
 
-    [MemberFunction("E9 ?? ?? ?? ?? 41 83 F9 63")]
+    [MemberFunction("E8 ?? ?? ?? ?? 48 8B CE C6 83")]
     public partial void SetCursorType(CursorType type, byte a3 = 0);
 
     public enum CursorType : byte {
@@ -30,7 +30,7 @@ public partial struct AtkCursor {
         Hand,
         ResizeWE,
         ResizeNS,
-        ResizeNWSR,
+        ResizeNWSE,
         ResizeNESW,
         Clickable,
         TextInput,

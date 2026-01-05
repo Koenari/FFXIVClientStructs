@@ -9,8 +9,8 @@ namespace FFXIVClientStructs.FFXIV.Client.UI.Info;
 [Inherits<InfoProxyInterface>]
 [StructLayout(LayoutKind.Explicit, Size = 0x1E8)]
 public unsafe partial struct InfoProxyLinkshell {
-    [FieldOffset(0x038)] public Utf8String UnkString0;
-    [FieldOffset(0x0A0)] public Utf8String UnkString1;
+    [FieldOffset(0x038)] private Utf8String UnkString0;
+    [FieldOffset(0x0A0)] private Utf8String UnkString1;
 
     [FieldOffset(0x108), FixedSizeArray] internal FixedSizeArray8<Entry> _linkShells;
     [FieldOffset(0x1C8)] public uint ActiveLinkShellIndex;
@@ -21,7 +21,7 @@ public unsafe partial struct InfoProxyLinkshell {
     public partial Entry* GetLinkshellInfo(uint index);
 
     [MemberFunction("E8 ?? ?? ?? ?? 4C 8B C8 44 8D 47 01")]
-    public partial byte* GetLinkshellName(ulong id);
+    public partial CStringPointer GetLinkshellName(ulong id);
 
     [StructLayout(LayoutKind.Explicit, Size = 0x18)]
     public struct Entry {

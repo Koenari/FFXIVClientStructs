@@ -13,7 +13,7 @@ namespace FFXIVClientStructs.FFXIV.Client.UI.Misc;
 //   Component::Excel::ExcelLanguageEvent
 [GenerateInterop]
 [Inherits<TextModule>, Inherits<TextChecker.ExecNonMacroFunc>, Inherits<ExcelLanguageEvent>]
-[StructLayout(LayoutKind.Explicit, Size = 0xE60)]
+[StructLayout(LayoutKind.Explicit, Size = 0xE68)]
 public unsafe partial struct RaptureTextModule {
     public static RaptureTextModule* Instance() {
         var uiModule = UI.UIModule.Instance();
@@ -24,14 +24,19 @@ public unsafe partial struct RaptureTextModule {
     [FieldOffset(0x528)] public TextChecker TextChecker;
     [FieldOffset(0x620)] public ExcelSheet* AddonSheet;
 
+    // [0] = TempLinkString
+    // [1] = <edgecolortype(0)><colortype(0)>
+    // [2] = LinkTerminator (<link(0xCE,0,0,0,)>)
     [FieldOffset(0x630), FixedSizeArray] internal FixedSizeArray7<Utf8String> _unkStrings0;
 
     [FieldOffset(0x908)] public StdDeque<TextParameter> LocalTextParameters;
-    //[FieldOffset(0x930)] public StdDeque<TextParameter> ItemColorParameters;
+    // [FieldOffset(0x930)] public StdDeque<TextParameter> ItemRarityParameters; // to format Addon#6
 
+    // [3] = TempItemRarity
+    // [4] = TempItemNameOutput
     [FieldOffset(0x958), FixedSizeArray] internal FixedSizeArray9<Utf8String> _unkStrings1;
 
-    // [FieldOffset(0xD18)] public RowWrapper<Addon>* AddonRowCache; // only for the first 4000 Addon rows
+    [FieldOffset(0xD18)] public IExcelRowWrapper** AddonRowCache; // only for the first 4000 Addon rows
 
     [FieldOffset(0xE18)] internal ExcelSheet* AchievementSheet;
     [FieldOffset(0xE20)] internal ExcelSheet* StatusSheet;
@@ -46,14 +51,23 @@ public unsafe partial struct RaptureTextModule {
     /// <remarks> Array of 51 (AkatsukiNote row count) ushorts. Mapping AkatsukiNote RowId to AkatsukiNoteString RowId. </remarks>
     [FieldOffset(0xE58)] public ushort* AkatsukiNoteTitleIds;
 
-    [MemberFunction("E9 ?? ?? ?? ?? 80 EA 20")]
-    public partial byte* GetAddonText(uint addonId);
+    [MemberFunction("E9 ?? ?? ?? ?? 80 EB 20")]
+    public partial CStringPointer GetAddonText(uint addonId);
 
-    [MemberFunction("E8 ?? ?? ?? ?? 8B 7D FF")] // FormatAddonText1<int,int,uint>
-    public partial byte* FormatAddonText1IntIntUInt(uint addonId, int intParam1, int intParam2, uint uintParam);
+    [MemberFunction("E8 ?? ?? ?? ?? 49 8D 4E ?? 48 8B D0 E8 ?? ?? ?? ?? 8B 44 24")]
+    public partial CStringPointer FormatAddonTextApply(uint addonId, FormatAddonTextApplyMode mode, StdDeque<TextParameter>* localParameters, Utf8String* formatBuffer, Utf8String* normalizationBuffer);
 
-    [MemberFunction("E8 ?? ?? ?? ?? EB 51 0F B6 DB")] // FormatAddonText2<int,int>
-    public partial byte* FormatAddonText2IntInt(uint addonId, int intParam1, int intParam2);
+    [MemberFunction("E8 ?? ?? ?? ?? EB ?? 44 89 7C 24 ?? 44 89 4C 24")] // FormatAddonText1<int,int,uint>
+    public partial CStringPointer FormatAddonText1IntIntUInt(uint addonId, int intParam1, int intParam2, uint uintParam);
+
+    [MemberFunction("E8 ?? ?? ?? ?? EB ?? 3A 56")] // FormatAddonText2<int>
+    public partial CStringPointer FormatAddonText2Int(uint addonId, int value);
+
+    [MemberFunction("E8 ?? ?? ?? ?? 48 8B D8 44 39 7E")] // FormatAddonText2<int,int>
+    public partial CStringPointer FormatAddonText2IntInt(uint addonId, int intParam1, int intParam2);
+
+    [MemberFunction("E8 ?? ?? ?? ?? EB ?? 80 7E ?? ?? 74 ?? 48 8D 05")] // FormatAddonText2<int,int,uint>
+    public partial CStringPointer FormatAddonText2IntIntUInt(uint addonId, int value1, int value2, uint value3);
 
     /// <summary>
     /// Display a timespan as hours, minutes or seconds with only the largest non zero unit.
@@ -62,56 +76,63 @@ public unsafe partial struct RaptureTextModule {
     /// <param name="alternativeMinutesGlyph">Use U+E028 for minutes</param>
     /// <returns>string containing one of 23h, 59m, 59s</returns>
     [MemberFunction("48 83 EC 28 45 0F B6 C8 85 D2")]
-    public partial byte* FormatTimeSpan(uint seconds, bool alternativeMinutesGlyph = false);
+    public partial CStringPointer FormatTimeSpan(uint seconds, bool alternativeMinutesGlyph = false);
 
-    /// <remarks> Singular only. The usage of intParam2 is unknown. </remarks>
-    /// <returns>
-    /// A pointer to a null terminated string containing the formatted name.<br/>
-    /// It was observed, that it can return a nullptr when the excel page was not loaded. Try calling it again in subsequent frames.
-    /// </returns>
-    [MemberFunction("E8 ?? ?? ?? ?? 48 8B CE 48 8B D0")]
-    public static partial byte* FormatName(NameFormatterPlaceholder placeholder, int id, NameFormatterIdConverter idConverter, int intParam2 = 1);
-}
+    [MemberFunction("E8 ?? ?? ?? ?? 33 F6 89 44 24 ?? 33 D2")]
+    public partial SheetRedirectFlags ResolveSheetRedirect(Utf8String* sheetName, int* outRowId, int* outColIndex);
 
-public enum NameFormatterPlaceholder : int {
-    ObjStr = 0,
-    Item = 1,   // bypasses IdConverter
-    ActStr = 2,
-}
+    [MemberFunction("E8 ?? ?? ?? ?? 48 8B 4C 24 ?? 48 8D 55 ?? E8 ?? ?? ?? ?? E9")]
+    public partial void AddSheetRedirectItemDecoration(Utf8String* sheetName, SheetRedirectFlags flags, int rowId);
 
-public enum NameFormatterIdConverter : uint {
-    None = 0,
+    [MemberFunction("E8 ?? ?? ?? ?? 48 8B 4D 80 48 8D 55 60")]
+    public partial void CreateSheetLink(ExcelSheet* sheet, Utf8String* text, int rowId, int colParam);
 
-    // ObjStr
-    // TODO: this is equivalent to ObjectKind, see Character.GetName()
-    BNpcName = 2,
-    ENpcResident = 3,
-    Treasure = 4,
-    Aetheryte = 5,
-    GatheringPointName = 6,
-    EObjName = 7,
-    // Mount = 8, // does not work?
-    Companion = 9,
-    // 10-11 unused
-    // Item = 12, // does not work?
+    /// <summary> Sets global parameters 1, 4, 6 and 65 </summary>
+    [MemberFunction("E8 ?? ?? ?? ?? 48 8D 4D 97 E8 ?? ?? ?? ?? 0F B6 5E 05")]
+    public partial void SetGlobalTempEntity1Utf8(Utf8String* name, int sex, uint objStrId);
 
-    // ActStr
-    Trait = 0,
-    Action = 1,
-    // Item = 2, // does not work?
-    // EventItem = 3, // does not work?
-    EventAction = 4,
-    // EObjName = 5, // does not work?
-    GeneralAction = 5,
-    BuddyAction = 6,
-    MainCommand = 7,
-    // Companion = 8, // unresolved, use Companion
-    CraftAction = 9,
-    Action2 = 10,
-    PetAction = 11,
-    CompanyAction = 12,
-    Mount = 13,
-    // 14-18 unused
-    BgcArmyAction = 19,
-    Ornament = 20,
+    /// <summary> Sets global parameters 1, 4, 6 and 65 </summary>
+    /// <remarks> The caller must ensure the name pointer remains valid until the subsequent formatting call has processed global parameter 1. </remarks>
+    [MemberFunction("E8 ?? ?? ?? ?? 83 EE 16")]
+    public partial void SetGlobalTempEntity1(CStringPointer name, int sex, uint objStrId);
+
+    /// <summary> Sets global parameters 2, 5, 7 and 66 </summary>
+    [MemberFunction("E8 ?? ?? ?? ?? 48 8D 4D 97 E8 ?? ?? ?? ?? 4C 8B 64 24 ??")]
+    public partial void SetGlobalTempEntity2Utf8(Utf8String* name, int sex, uint objStrId);
+
+    /// <summary> Sets global parameters 2, 5, 7 and 66 </summary>
+    /// <remarks> The caller must ensure the name pointer remains valid until the subsequent formatting call has processed global parameter 1. </remarks>
+    [MemberFunction("E8 ?? ?? ?? ?? 48 8B 75 A8")]
+    public partial void SetGlobalTempEntity2(CStringPointer name, int sex, uint objStrId);
+
+    [Flags]
+    public enum SheetRedirectFlags {
+        None = 0,
+        Item = 1 << 0,
+        EventItem = 1 << 1,
+        HighQuality = 1 << 2,
+        Collectible = 1 << 3,
+        Action = 1 << 4,
+        ActionSheet = 1 << 5,
+    }
+
+    public enum FormatAddonTextApplyMode {
+        /// <summary>
+        /// Returns the Addon text as is.
+        /// </summary>
+        Raw = 0,
+
+        /// <summary>
+        /// Formats the Addon text with the given LocalParameters.
+        /// </summary>
+        Formatted = 1,
+
+        /// <summary>
+        /// Formats the Addon text with the given LocalParameters and decodes the following macro (for example for CounterNode, which uses a special font texture):<br/>
+        /// - Wait macros are removed (an internal counter goes up).<br/>
+        /// - NonBreakingSpace macros are replaced with a normal space (0x20: ' ').<br/>
+        /// - Hyphen macros are replaced with a normal hyphen-minus (0x2D: '-').
+        /// </summary>
+        Normalized = 2,
+    }
 }

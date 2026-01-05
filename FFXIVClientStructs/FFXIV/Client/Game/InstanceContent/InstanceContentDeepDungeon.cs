@@ -6,36 +6,42 @@ namespace FFXIVClientStructs.FFXIV.Client.Game.InstanceContent;
 //       Client::Game::Event::Director
 //         Client::Game::Event::LuaEventHandler
 //           Client::Game::Event::EventHandler
-// ctor "48 89 5C 24 ?? 57 48 83 EC ?? 48 8B D9 E8 ?? ?? ?? ?? 48 8D 05 ?? ?? ?? ?? C6 83 ?? ?? ?? ?? ?? 48 89 03 48 8D 8B"
 [GenerateInterop]
 [Inherits<InstanceContentDirector>]
-[StructLayout(LayoutKind.Explicit, Size = 0x2920)]
+[StructLayout(LayoutKind.Explicit, Size = 0x2B30)]
 public unsafe partial struct InstanceContentDeepDungeon {
-    [FieldOffset(0x1E88), FixedSizeArray] internal FixedSizeArray4<DeepDungeonPartyInfo> _party;
-    [FieldOffset(0x1EA8), FixedSizeArray] internal FixedSizeArray16<DeepDungeonItemInfo> _items;
-    [FieldOffset(0x1ED8), FixedSizeArray] internal FixedSizeArray16<DeepDungeonChestInfo> _chests;
-    [FieldOffset(0x1EF8), FixedSizeArray] internal FixedSizeArray3<byte> _magicite;
+    [FieldOffset(0x2038), FixedSizeArray] internal FixedSizeArray4<DeepDungeonPartyInfo> _party;
+    [FieldOffset(0x2058), FixedSizeArray] internal FixedSizeArray16<DeepDungeonItemInfo> _items;
+    [FieldOffset(0x2088), FixedSizeArray] internal FixedSizeArray16<DeepDungeonChestInfo> _chests;
+    [FieldOffset(0x20B0), FixedSizeArray] internal FixedSizeArray3<byte> _magicite;
 
-    [FieldOffset(0x1F00)] public uint BonusLootItemId;
-    [FieldOffset(0x1F04)] public byte Floor;
-    [FieldOffset(0x1F05)] public byte ReturnProgress;
-    [FieldOffset(0x1F06)] public byte PassageProgress;
+    [FieldOffset(0x20B8)] public uint BonusLootItemId;
+    [FieldOffset(0x20BC)] public byte Floor;
+    [FieldOffset(0x20BD)] public byte ReturnProgress;
+    [FieldOffset(0x20BE)] public byte PassageProgress;
 
-    [FieldOffset(0x1F08)] public byte WeaponLevel;
-    [FieldOffset(0x1F09)] public byte ArmorLevel;
-    [FieldOffset(0x1F0A)] public byte SyncedGearLevel;
-    [FieldOffset(0x1F0B)] public byte HoardCount;
+    [FieldOffset(0x20C0)] public byte WeaponLevel;
+    [FieldOffset(0x20C1)] public byte ArmorLevel;
+    [FieldOffset(0x20C2)] public byte SyncedGearLevel;
+    [FieldOffset(0x20C3)] public byte HoardCount;
+    [FieldOffset(0x20C4)] public byte DeepDungeonGimmickEffectIdCurrent;
+    [FieldOffset(0x20C5)] public byte DeepDungeonGimmickEffectIdNext;
 
-    [FieldOffset(0x28CE)] public byte DeepDungeonId; // 1-3
+    [FieldOffset(0x20D2)] public byte DeepDungeonStatusId;
+    [FieldOffset(0x20D3)] public byte DeepDungeonBanId;
+    [FieldOffset(0x20D4)] public byte DeepDungeonDangerId;
 
-    [FieldOffset(0x2900), FixedSizeArray] internal FixedSizeArray25<RoomFlags> _mapData;
+    [FieldOffset(0x2A86)] public byte DeepDungeonId; // 1-3
 
-    // each DD floor map actually contains two mirrored copies of the same layout; this is usually either 0 or 1, but LayoutInfos[2] *is* referenced in the code - might be HoH hall of fallacies? (large rectangular room with no walls)
-    [FieldOffset(0x291A)] public byte ActiveLayoutIndex;
+    [FieldOffset(0x2AF4), FixedSizeArray] internal FixedSizeArray25<RoomFlags> _mapData;
+
+    // each DD floor map actually contains two mirrored copies of the same layout; this is usually either 0 or 1
+    // but LayoutInfos[2] *is* referenced in the code - might be HoH hall of fallacies? (large rectangular room with no walls)
+    [FieldOffset(0x2B27)] public byte ActiveLayoutIndex;
     // seen values:
     // 1 - normal
     // 6 - in boss arena
-    [FieldOffset(0x291B)] public byte LayoutInitializationType;
+    [FieldOffset(0x2B28)] public byte LayoutInitializationType;
 
     [StructLayout(LayoutKind.Explicit, Size = 0x08)]
     public struct DeepDungeonPartyInfo {
@@ -60,7 +66,7 @@ public unsafe partial struct InstanceContentDeepDungeon {
     }
 
     [Flags]
-    public enum RoomFlags : byte {
+    public enum RoomFlags : ushort {
         None = 0,
         ConnectionN = 1,
         ConnectionS = 1 << 1,
@@ -85,7 +91,7 @@ public unsafe partial struct InstanceContentDeepDungeon {
     /// </summary>
     /// <remarks>Returns an error if the player's animation lock is greater than 0.</remarks>
     /// <param name="slot">Slot number in the range 0-2.</param>
-    [MemberFunction("E8 ?? ?? ?? ?? EB 70 48 8D 4F 10")]
+    [MemberFunction("E8 ?? ?? ?? ?? EB ?? 48 8D 4F ?? E8 ?? ?? ?? ?? 85 C0")]
     public partial void UseStone(uint slot);
 
 }

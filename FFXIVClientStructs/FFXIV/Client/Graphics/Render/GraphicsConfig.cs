@@ -3,7 +3,7 @@ namespace FFXIVClientStructs.FFXIV.Client.Graphics.Render;
 // Client::Graphics::Render::GraphicsConfig
 //   Client::Graphics::Singleton
 [GenerateInterop]
-[StructLayout(LayoutKind.Explicit, Size = 0xC0)]
+[StructLayout(LayoutKind.Explicit, Size = 0xD8)]
 public unsafe partial struct GraphicsConfig {
     [StaticAddress("48 8B 05 ?? ?? ?? ?? 0F B6 8B ?? ?? ?? ?? 88 48", 3, isPointer: true)]
     public static partial GraphicsConfig* Instance();
@@ -58,4 +58,10 @@ public unsafe partial struct GraphicsConfig {
     [FieldOffset(0x54)] public byte GraphicsRezoUpscaleType;
 
     [FieldOffset(0x56)] public bool GrassEnableDynamicInterference;
+
+    [FieldOffset(0x65)] public bool HousingSSAOEnable;
+    [FieldOffset(0x66)] public bool PortraitPreview; // GPose: Preview the framing of the camera composition used in portrait mode.
+    [FieldOffset(0x67)] public bool PortraitMode; // GPose: Enter portrait mode, rotating the camera ninety degrees.<br>* Screenshots must be taken manually.
+
+    [FieldOffset(0x78)] public float JitterMultiplier;
 }

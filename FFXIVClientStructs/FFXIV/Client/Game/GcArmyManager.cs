@@ -4,11 +4,10 @@ namespace FFXIVClientStructs.FFXIV.Client.Game;
 
 // Client::Game::GcArmyManager
 // Squadron
-// ctor "48 83 EC ?? 48 83 3D ?? ?? ?? ?? ?? 75 ?? 33 D2 45 33 C0 8D 4A ?? E8 ?? ?? ?? ?? 33 C9 48 85 C0 74 ?? 48 89 08 48 89 48 ?? 48 89 05"
 [GenerateInterop]
 [StructLayout(LayoutKind.Explicit, Size = 0x10)]
 public unsafe partial struct GcArmyManager {
-    [MemberFunction("E8 ?? ?? ?? ?? 48 8D 4D AC")]
+    [MemberFunction("E8 ?? ?? ?? ?? 8B 54 2B")]
     public static partial GcArmyManager* Instance();
 
     /// <remarks> Data is loaded on-demand inside GC Barracks </remarks>
@@ -19,12 +18,12 @@ public unsafe partial struct GcArmyManager {
     [MemberFunction("E8 ?? ?? ?? ?? 48 8B 4E 28 8B FB")]
     public partial uint GetMemberCount();
 
-    [MemberFunction("E8 ?? ?? ?? ?? 0F B6 48 13")]
+    [MemberFunction("E8 ?? ?? ?? ?? 48 8B 4E ?? 44 8B C7")]
     public partial GcArmyMember* GetMember(uint index);
 }
 
 [GenerateInterop]
-[StructLayout(LayoutKind.Explicit, Size = 0xF28)] // TODO: size changed, fix offsets
+[StructLayout(LayoutKind.Explicit, Size = 0xF30)]
 public unsafe partial struct GcArmyData {
     [FieldOffset(0), FixedSizeArray] internal FixedSizeArray8<GcArmyMember> _members;
     // Receive network packet: "0F 10 02 48 8B C2"

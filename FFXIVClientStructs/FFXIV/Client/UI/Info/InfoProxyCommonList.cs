@@ -1,3 +1,4 @@
+using FFXIVClientStructs.FFXIV.Client.Game.Character;
 using FFXIVClientStructs.FFXIV.Client.System.String;
 using FFXIVClientStructs.FFXIV.Client.UI.Agent;
 
@@ -6,23 +7,25 @@ namespace FFXIVClientStructs.FFXIV.Client.UI.Info;
 // Client::UI::Info::InfoProxyCommonList
 //   Client::UI::Info::InfoProxyPageInterface
 //     Client::UI::Info::InfoProxyInterface
+//   Client::Game::Character::CharacterManagerInterface
 [GenerateInterop(isInherited: true)]
-[Inherits<InfoProxyPageInterface>]
+[Inherits<InfoProxyPageInterface>, Inherits<CharacterManagerInterface>]
+[VirtualTable("48 8D 05 ?? ?? ?? ?? 48 89 69 30", 3)]
 [StructLayout(LayoutKind.Explicit, Size = 0xD0)]
 public unsafe partial struct InfoProxyCommonList {
-    [FieldOffset(0x38)] public Utf8String UnkString;
+    [FieldOffset(0x38)] private Utf8String UnkString;
     [FieldOffset(0xA0)] public byte NumberArrayIndex;
     [FieldOffset(0xA1)] public byte StringArrayIndex;
     [FieldOffset(0xA2)] public ushort DataSize;
     [FieldOffset(0xA4)] public ushort DictSize;
-    [FieldOffset(0xA6)] public ushort UnkA6; //10 * DataSize
-    [FieldOffset(0xA8)] public ushort UnkA8; //10 * DataSize
+    [FieldOffset(0xA6)] private ushort UnkA6; //10 * DataSize
+    [FieldOffset(0xA8)] private ushort UnkA8; //10 * DataSize
     [FieldOffset(0xB0)] public CharacterData* CharData;
     [FieldOffset(0xB8)] public CharacterIndex* IndexData;
-    [FieldOffset(0xC0)] public Sorting SortGroup;
-    [FieldOffset(0xC1)] public DisplayGroup FilterGroup;
+    [FieldOffset(0xC0)] public DisplayGroup FilterGroup;
     [FieldOffset(0xC4)] public byte MoveSelector; // 0x9 Not Selected or 0xB Selected
-    //[FieldOffset(0xAC)] public uint UnkAC; // Some kind of flag mask for OnlineStatus check InfoProxyCommonlist_vf14
+    [FieldOffset(0xCA)] public Sorting SortGroup;
+    //[FieldOffset(0xAC)] private uint UnkAC; // Some kind of flag mask for OnlineStatus check InfoProxyCommonlist_vf14
 
     public ReadOnlySpan<CharacterData> CharDataSpan => new(CharData, (int)InfoProxyPageInterface.InfoProxyInterface.EntryCount); // It cant be higher than 200 at this time anyways so this is fine
     public ReadOnlySpan<CharacterIndex> CharIndexSpan => new(IndexData, (int)InfoProxyPageInterface.InfoProxyInterface.EntryCount); // It cant be higher than 200 at this time anyways so this is fine
@@ -36,8 +39,8 @@ public unsafe partial struct InfoProxyCommonList {
     [MemberFunction("E8 ?? ?? ?? ?? 48 85 C0 74 12 8B 40 20")]
     public partial CharacterData* GetEntryByContentId(ulong contentId, uint nameCrc32 = 0, byte a4 = 0);
 
-    [MemberFunction("E8 ?? ?? ?? ?? EB 44 41 8D 46 EF"), GenerateStringOverloads]
-    public partial CharacterData* GetEntryByName(byte* characterName, ushort worldId);
+    [MemberFunction("E8 ?? ?? ?? ?? EB ?? 41 8D 47"), GenerateStringOverloads]
+    public partial CharacterData* GetEntryByName(CStringPointer characterName, ushort worldId);
 
     [MemberFunction("E8 ?? ?? ?? ?? 48 8B 13 45 33 C9")]
     public partial void ApplyFilters();

@@ -51,20 +51,20 @@ public unsafe partial struct AozNoteModule {
     }
 
     [MemberFunction("E9 ?? ?? ?? ?? 48 8D 0D ?? ?? ?? ?? 8B 14 99")]
-    public partial byte* GetActiveSetCustomNamePtr(int activeSetIndex);
+    public partial CStringPointer GetActiveSetCustomNamePtr(int activeSetIndex);
 
     [MemberFunction("E8 ?? ?? ?? ?? 84 C0 74 19 8B D3")]
     public partial bool HasActiveSetCustomName(int activeSetIndex);
 
     [MemberFunction("41 0F 10 00 8B C2 48 69 D0 ?? ?? ?? ?? 0F 11 84 0A"), GenerateStringOverloads]
-    public partial void SetActiveSetCustomName(int activeSetIndex, byte* name);
+    public partial void SetActiveSetCustomName(int activeSetIndex, CStringPointer name);
 
     [MemberFunction("E8 ?? ?? ?? ?? 49 69 F6")]
     public partial void SaveActiveSetHotBars(int activeSetIndex);
 
-    [MemberFunction("E8 ?? ?? ?? ?? 33 D2 48 8D 0D ?? ?? ?? ?? E8 ?? ?? ?? ?? 3C 24 40 0F 94 C7")]
+    [MemberFunction("E8 ?? ?? ?? ?? 33 D2 48 8D 0D ?? ?? ?? ?? E8 ?? ?? ?? ?? 8B 74 24")]
     public partial void LoadActiveSetHotBars(int activeSetIndex);
 
     public void ResetActiveSetCustomName(int activeSetIndex)
-        => *GetActiveSetCustomNamePtr(activeSetIndex) = 0;
+        => *GetActiveSetCustomNamePtr(activeSetIndex).Value = 0;
 }

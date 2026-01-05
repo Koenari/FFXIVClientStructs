@@ -6,8 +6,8 @@ namespace FFXIVClientStructs.FFXIV.Component.GUI;
 [Inherits<AtkArrayData>]
 [StructLayout(LayoutKind.Explicit, Size = 0x38)]
 public unsafe partial struct StringArrayData {
-    [FieldOffset(0x28)] public byte** StringArray;
-    [FieldOffset(0x30)] public byte** ManagedStringArray;
+    [FieldOffset(0x28)] public CStringPointer* StringArray;
+    [FieldOffset(0x30)] public CStringPointer* ManagedStringArray;
 
     /// <summary>
     /// Set a value at the specified index of the StringArray.
@@ -30,8 +30,8 @@ public unsafe partial struct StringArrayData {
     /// <param name="suppressUpdates">
     /// If <c>false</c> and the value was changed, <see cref="UpdateState"/> will be set to <c>1</c> to request an update on subscribed addons.
     /// </param>
-    [MemberFunction("E8 ?? ?? ?? ?? 44 38 63 0E"), GenerateStringOverloads]
-    public partial void SetValue(int index, byte* value, bool readBeforeWrite = true, bool managed = true, bool suppressUpdates = false);
+    [MemberFunction("48 89 6C 24 ?? 56 48 83 EC ?? 49 8B F0 48 8B E9 3B 51"), GenerateStringOverloads]
+    public partial void SetValue(int index, CStringPointer value, bool readBeforeWrite = true, bool managed = true, bool suppressUpdates = false);
 
     /// <summary>
     /// Set a value at the specified index of the StringArray.
@@ -97,7 +97,7 @@ public unsafe partial struct StringArrayData {
     /// If <c>true</c>, it compares the stored pointer with the passed pointer (not the text it points to) before setting it.<br/>
     /// If <c>false</c>, the stored pointer will always be replaced with the passed pointer, but <see cref="UpdateState"/> will still only be set to <c>1</c> when it was different.<br/>
     /// </param>
-    [MemberFunction("E8 ?? ?? ?? ?? 8B 44 24 50 8B 54 24 68")]
+    [MemberFunction("48 89 5C 24 ?? 48 89 74 24 ?? 57 48 83 EC ?? 48 8B D9 48 63 FA 49 8B C8")]
     public partial void SetValueForcedUtf8(int index, Utf8String* value, bool readBeforeWrite = true);
 
     /// <summary>
@@ -119,10 +119,10 @@ public unsafe partial struct StringArrayData {
     /// Internally, the pointer to the allocated memory is (also) stored in ManagedStringArray to allow SetValue to reuse or reallocate the space as needed.
     /// </param>
     /// <remarks>
-    /// This calls <see cref="SetValue(int,byte*,bool,bool,bool)"/> internally with suppressUpdates set to <c>false</c>.
+    /// This calls <see cref="SetValue(int,CStringPointer,bool,bool,bool)"/> internally with suppressUpdates set to <c>false</c>.
     /// </remarks>
     [MemberFunction("E8 ?? ?? ?? ?? 8D 56 5C"), GenerateStringOverloads]
-    public partial void SetValueAndUpdate(int index, byte* value, bool readBeforeWrite = true, bool managed = true);
+    public partial void SetValueAndUpdate(int index, CStringPointer value, bool readBeforeWrite = true, bool managed = true);
 
     /// <summary>
     /// Set a value at the specified index of the StringArray.
@@ -140,8 +140,8 @@ public unsafe partial struct StringArrayData {
     /// Internally, the pointer to the allocated memory is (also) stored in ManagedStringArray to allow SetValue to reuse or reallocate the space as needed.
     /// </param>
     /// <remarks>
-    /// This calls <see cref="SetValue(int,byte*,bool,bool,bool)"/> internally with suppressUpdates set to <c>false</c>.
+    /// This calls <see cref="SetValue(int,CStringPointer,bool,bool,bool)"/> internally with suppressUpdates set to <c>false</c>.
     /// </remarks>
-    [MemberFunction("E8 ?? ?? ?? ?? 45 8B A5 ?? ?? ?? ??")]
+    [MemberFunction("E8 ?? ?? ?? ?? 8B 44 24 ?? 83 C5")]
     public partial void SetValueAndUpdateUtf8(int index, Utf8String* value, bool readBeforeWrite = false, bool managed = true);
 }

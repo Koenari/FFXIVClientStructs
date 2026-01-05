@@ -1,6 +1,9 @@
 using FFXIVClientStructs.FFXIV.Client.System.Input;
+using FFXIVClientStructs.FFXIV.Client.System.String;
 using FFXIVClientStructs.FFXIV.Client.UI;
 using FFXIVClientStructs.FFXIV.Client.UI.Misc;
+using FFXIVClientStructs.FFXIV.Common.Math;
+using FFXIVClientStructs.FFXIV.Component.Text;
 
 namespace FFXIVClientStructs.FFXIV.Component.GUI;
 
@@ -10,6 +13,9 @@ namespace FFXIVClientStructs.FFXIV.Component.GUI;
 [Inherits<AtkEventTarget>]
 [StructLayout(LayoutKind.Explicit, Size = 0x75E00)]
 public unsafe partial struct AtkStage {
+    [StaticAddress("48 8B 05 ?? ?? ?? ?? 4C 8B 40 18 45 8B 40 18", 3, isPointer: true)]
+    public static partial AtkStage* Instance();
+
     [FieldOffset(0x10)] public AtkFontManager* AtkFontManager;
     [FieldOffset(0x18)] public AtkTextureResourceManager* AtkTextureResourceManager;
     [FieldOffset(0x20)] public RaptureAtkUnitManager* RaptureAtkUnitManager;
@@ -27,17 +33,25 @@ public unsafe partial struct AtkStage {
     [FieldOffset(0x140)] public AtkGroupManager AtkGroupManager;
     [FieldOffset(0x168)] public AtkTooltipManager TooltipManager;
     [FieldOffset(0x2B8)] public DialogueStruct Dialogue;
-    [FieldOffset(0x2C0), Obsolete("Use Dialogue.AtkDialogue")] public AtkDialogue AtkDialogue;
     [FieldOffset(0x2F8)] public FilterStruct Filter;
     [FieldOffset(0x308)] public OperationGuideStruct OperationGuide;
     [FieldOffset(0x338)] public AtkCursor AtkCursor;
     [FieldOffset(0x358), FixedSizeArray] internal FixedSizeArray32<AtkEventDispatcher> _atkEventDispatcher;
     [FieldOffset(0x858)] public uint NextEventDispatcherIndex;
-    //[FieldOffset(0x85C)] public bool DispatchEvents;
-    [FieldOffset(0x878), FixedSizeArray] internal FixedSizeArray10000<AtkEvent> _registeredEvents;
-
-    [MemberFunction("E8 ?? ?? ?? ?? 45 33 C0 48 8B C8 4C 8B CB 41 8D 50 03")]
-    public static partial AtkStage* Instance();
+    [FieldOffset(0x85C)] public bool CanDispatchEvents;
+    [FieldOffset(0x860)] public Size ScreenSize;
+    [FieldOffset(0x868)] public float ScreenSizeScale;
+    [FieldOffset(0x86C)] public bool IsScreenSizeScaled;
+    [FieldOffset(0x870)] public AtkEventManager ViewportEventManager; // more like GlobalEventManager
+    [FieldOffset(0x878), FixedSizeArray] internal FixedSizeArray10000<AtkEvent> _atkEventPool;
+    [FieldOffset(0x75B78)] public AtkEvent* NextEvent;
+    [FieldOffset(0x75B80)] public StdDeque<TextParameter> FormatTextParameters;
+    [FieldOffset(0x75BA8)] public Utf8String FormatOutput;
+    [FieldOffset(0x75C10), FixedSizeArray(isString: true)] internal FixedSizeArray384<byte> _formatCStringBuffer;
+    [FieldOffset(0x75D90)] public AtkTimer ButtonClickTimer; // for example, used in NumericInput when clicking +/- buttons
+    [FieldOffset(0x75DC0)] public AtkTimer ButtonClickRepeatTimer; // for example, used in NumericInput when holding down +/- buttons
+    [FieldOffset(0x75DF0)] public AtkTimer* TimerArray; // only 1 right now
+    [FieldOffset(0x75DF8)] public int TimerCount;
 
     [MemberFunction("48 8B 51 ?? 48 0F BF 82")]
     public partial AtkResNode* GetFocus();
@@ -45,25 +59,22 @@ public unsafe partial struct AtkStage {
     [MemberFunction("48 8B 49 ?? 45 33 C9 45 33 C0 33 D2 E9")]
     public partial void ClearFocus();
 
-    [MemberFunction("48 8B 41 38 48 8B 40 18")]
+    [MemberFunction("81 62 ?? ?? ?? ?? ?? 45 33 C0")]
+    public partial void ReturnAtkEventToPool(AtkEvent* evt);
+
+    [MemberFunction("E8 ?? ?? ?? ?? 6B 94")]
     public partial NumberArrayData** GetNumberArrayData();
 
     public NumberArrayData* GetNumberArrayData(NumberArrayType type)
         => GetNumberArrayData()[(int)type];
 
-    // Top 5 Signatures out of 215 xrefs for 14062B5F0:
-    // XREF Signature #1 @ 14122E36C: E8 ?? ?? ?? ?? 41 6B CE
-    // XREF Signature #2 @ 1410EC295: E8 ?? ?? ?? ?? 42 8D 1C AD
-    // XREF Signature #3 @ 1410DDD25: E8 ?? ?? ?? ?? 43 8D 0C 3F
-    // XREF Signature #4 @ 1414A7A09: E8 ?? ?? ?? ?? 47 8D 34 3F
-    // XREF Signature #5 @ 1410AA69A: E8 ?? ?? ?? ?? 43 8D 0C FE
     [MemberFunction("E8 ?? ?? ?? ?? 42 8D 1C AD")]
     public partial StringArrayData** GetStringArrayData();
 
     public StringArrayData* GetStringArrayData(StringArrayType type)
         => GetStringArrayData()[(int)type];
 
-    [MemberFunction("48 8B 41 38 48 8B 40 48")]
+    [MemberFunction("E8 ?? ?? ?? ?? 48 8B 48 ?? 48 89 4D")]
     public partial ExtendArrayData** GetExtendArrayData();
 
     public ExtendArrayData* GetExtendArrayData(ExtendArrayType type)
@@ -87,10 +98,20 @@ public unsafe partial struct AtkStage {
     [StructLayout(LayoutKind.Explicit, Size = 0x30)]
     public unsafe struct OperationGuideStruct {
         [FieldOffset(0x00)] public AtkStage* AtkStage;
-        [FieldOffset(0x08)] private AtkUnitBase* UnkUnitBase1;
-        [FieldOffset(0x10)] private AtkUnitBase* UnkUnitBase2;
+        /// <summary>
+        /// The addon the Operations Guide is currently attached to.
+        /// </summary>
+        [FieldOffset(0x08)] public AtkUnitBase* AttachedToAddon;
+        /// <summary>
+        /// The addon the Operations Guide is currently attached to.
+        /// <br/>Appears to be the same as AttachedToAddon.
+        /// </summary>
+        [FieldOffset(0x10)] public AtkUnitBase* AttachedToAddon2;
         [FieldOffset(0x18)] private byte Unk18;
-        [FieldOffset(0x19)] private byte Unk19;
+        /// <summary>
+        /// True if the OperationsGuide should refresh.
+        /// </summary>
+        [FieldOffset(0x19)] public bool RequestRefresh;
         [FieldOffset(0x1A)] private byte Unk1A;
         [FieldOffset(0x1B)] private byte Unk1B;
         [FieldOffset(0x1C)] private short X;

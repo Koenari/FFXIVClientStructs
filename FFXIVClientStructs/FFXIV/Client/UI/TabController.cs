@@ -25,10 +25,10 @@ public unsafe partial struct TabController {
     [MemberFunction("48 83 EC 38 48 89 91 ?? ?? ?? ?? 4C 8B C9")]
     public partial void RegisterInputReceivedEvent(AtkUnitBase* addon);
 
-    [MemberFunction("E8 ?? ?? ?? ?? BB 72 00 00 00")]
+    [MemberFunction("E8 ?? ?? ?? ?? 8B FE 4C 8D B3")]
     public partial void RegisterCallback(delegate* unmanaged<int, AtkUnitBase*, void> callbackFunction, AtkUnitBase* addon);
 
-    [MemberFunction("E8 ?? ?? ?? ?? 0F B6 83 ?? ?? ?? ?? 84 C0 74 ?? 39 B3")]
+    [MemberFunction("E8 ?? ?? ?? ?? 4C 8B 47 ?? 41 8B 50")]
     public partial void SetTabCount(int tabCount);
 
     [MemberFunction("48 83 79 ?? ?? 74 ?? 3B 91")]
@@ -44,7 +44,7 @@ public unsafe partial struct TabController {
     public partial AtkComponentButton* GetLastButton();
 
     /// <remarks> Updates the enable status on all buttons. </remarks>
-    [MemberFunction("40 56 48 83 EC 30 48 8B F1 48 8B 49")]
+    [MemberFunction("E9 ?? ?? ?? ?? 32 C0 89 91")]
     public partial void UpdateButtons();
 
     /// <remarks> An internal function that's called on <see cref="AtkEventType.ButtonClick"/>. </remarks>
@@ -59,7 +59,7 @@ public unsafe partial struct TabController {
         [FieldOffset(0x50)] public AtkComponentButton* BackButton;
         [FieldOffset(0x58)] public AtkComponentButton* ForwardButton;
         [FieldOffset(0x60)] public AtkComponentButton* SearchButton;
-        [FieldOffset(0x68)] public int UnkTimelineId1;
-        [FieldOffset(0x6C)] public int UnkTimelineId2;
+        [FieldOffset(0x68)] private int UnkTimelineId1;
+        [FieldOffset(0x6C)] private int UnkTimelineId2;
     }
 }

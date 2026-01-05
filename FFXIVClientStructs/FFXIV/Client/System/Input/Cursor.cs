@@ -7,7 +7,8 @@ namespace FFXIVClientStructs.FFXIV.Client.System.Input;
 [GenerateInterop]
 [StructLayout(LayoutKind.Explicit, Size = 0x378)]
 public unsafe partial struct Cursor {
-    [FieldOffset(0x000)] public void* vtbl;
+    [StaticAddress("75 36 48 8B 15 ?? ?? ?? ??", 5, isPointer: true)]
+    public static partial Cursor* Instance();
 
     [FieldOffset(0x009)] public bool UseSoftwareCursor;
     [FieldOffset(0x00A)] public byte SoftwareCursorScale;
@@ -21,7 +22,7 @@ public unsafe partial struct Cursor {
     
     [FieldOffset(0x1B0), FixedSizeArray] internal FixedSizeArray16<ulong> _cursorHandles; //HCURSOR (winuser.h)
 
-    [FieldOffset(0x238), FixedSizeArray] internal FixedSizeArray16<Pointer<byte>> _cursorNames;
+    [FieldOffset(0x238), FixedSizeArray] internal FixedSizeArray16<CStringPointer> _cursorNames;
     [FieldOffset(0x2C0)] public int HardwareCursorSize;
     [FieldOffset(0x2C8)] public TextureResourceHandle* SoftwareCursorTexture;
 

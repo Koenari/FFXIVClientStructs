@@ -1,9 +1,13 @@
 namespace FFXIVClientStructs.FFXIV.Client.System.File;
+
 // Client::System::File::FileManager
 //   Client::System::Framework::Task
-// ctor "48 89 5C 24 ?? 48 89 6C 24 ?? 48 89 74 24 ?? 57 41 54 41 55 41 56 41 57 48 83 EC ?? 33 D2 48 8B F9"
-[StructLayout(LayoutKind.Explicit, Size = 0x141A8)]
+[GenerateInterop]
+[StructLayout(LayoutKind.Explicit, Size = 0x141a8)]
 public unsafe partial struct FileManager {
+    [StaticAddress("48 8B 3D ?? ?? ?? ?? 48 85 C0 48 8B CF", 3, isPointer: true)]
+    public static partial FileManager* Instance();
+    
     [FieldOffset(0x00038)] public FileThread* FileThread;
     [FieldOffset(0x00040)] public FileInterface* File;
     [FieldOffset(0x00048)] public Unk48Obj* Unk48;

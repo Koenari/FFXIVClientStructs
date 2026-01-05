@@ -30,7 +30,7 @@ public unsafe partial struct ILayoutInstance {
     public int NestingLevel => (Flags1 >> 4) & 7;
 
     [VirtualFunction(0)]
-    public partial void Dtor(byte freeFlags);
+    public partial ILayoutInstance* Dtor(byte freeFlags);
 
     [VirtualFunction(1)]
     public partial void Init(void* creator, byte* primaryPath);
@@ -48,7 +48,7 @@ public unsafe partial struct ILayoutInstance {
     public partial int GetSizeOf();
 
     [VirtualFunction(7)]
-    public partial byte* GetPrimaryPath();
+    public partial CStringPointer GetPrimaryPath();
 
     [VirtualFunction(14)]
     public partial Vector3* GetTranslation(Vector3* result);
@@ -91,7 +91,7 @@ public unsafe partial struct ILayoutInstance {
     public partial bool IsColliderLoaded();
 
     [VirtualFunction(31)]
-    public partial byte* GetSecondaryPath();
+    public partial CStringPointer GetSecondaryPath();
 
     [VirtualFunction(32)]
     public partial void CreateSecondary();
@@ -153,10 +153,10 @@ public unsafe partial struct ILayoutInstance {
     // [VirtualFunction(77)] ...
 }
 
-[StructLayout(LayoutKind.Explicit, Size = 0x2C)]
+[StructLayout(LayoutKind.Explicit, Size = 0x30)]
 public unsafe partial struct Transform {
     [FieldOffset(0x00)] public Vector3 Translation;
-    [FieldOffset(0x0C)] public int Type; // note: this is a padding field that in some contexts is used to store collider type
+    [FieldOffset(0x0C)] public int Type; // This is a padding field that in some contexts is used to store collider type
     [FieldOffset(0x10)] public Quaternion Rotation;
     [FieldOffset(0x20)] public Vector3 Scale;
 
@@ -210,6 +210,7 @@ public enum InstanceType : byte {
     EnvLocation = 47,
     EventRange = 49, // collider in layer 4
     QuestMarker = 51,
+    Timeline = 52,
     CollisionBox = 57, // generic collider
     DoorRange = 58,
     LineVfx = 59,

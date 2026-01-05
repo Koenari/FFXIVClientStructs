@@ -13,7 +13,7 @@ public unsafe partial struct ActionEffectHandler {
     public unsafe partial struct EffectEntry {
         [FieldOffset(0x00)] public uint GlobalSequence;
         [FieldOffset(0x08)] public byte TargetIndex;
-        [FieldOffset(0x09)] public ActionType ActionType;
+        [FieldOffset(0x09)] public byte ActionType;
         [FieldOffset(0x0C)] public uint ActionId;
         [FieldOffset(0x10)] public ushort SpellId;
         [FieldOffset(0x18)] public GameObjectId Source;
@@ -60,7 +60,7 @@ public unsafe partial struct ActionEffectHandler {
         [FieldOffset(0x1A)] public ushort RotationInt; // quantized rotation: 0 -> -pi, 65535 -> pi
         [FieldOffset(0x1C)] public ushort SpellId;
         [FieldOffset(0x1E)] public byte AnimationVariation;
-        [FieldOffset(0x1F)] public ActionType ActionType;
+        [FieldOffset(0x1F)] public byte ActionType;
         [FieldOffset(0x20)] public byte Flags;
         [FieldOffset(0x21)] public byte NumTargets;
 
@@ -77,6 +77,6 @@ public unsafe partial struct ActionEffectHandler {
     /// <param name="header">Details of the action.</param>
     /// <param name="effects">Per-target effect list array. Contains header->NumTargets elements.</param>
     /// <param name="targetEntityIds">Per-target effect id array. Contains header->NumTargets elements.</param>
-    [MemberFunction("40 55 56 57 41 54 41 55 41 56 48 8D AC 24")]
+    [MemberFunction("E8 ?? ?? ?? ?? 48 8B 8D ?? ?? ?? ?? 48 33 CC E8 ?? ?? ?? ?? 48 81 C4 00 05 00 00")]
     public static partial void Receive(uint casterEntityId, Character* casterPtr, Vector3* targetPos, Header* header, TargetEffects* effects, GameObjectId* targetEntityIds);
 }

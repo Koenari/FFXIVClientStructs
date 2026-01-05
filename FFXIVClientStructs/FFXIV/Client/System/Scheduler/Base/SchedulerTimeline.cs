@@ -5,15 +5,17 @@ namespace FFXIVClientStructs.FFXIV.Client.System.Scheduler.Base;
 // Client::System::Scheduler::Base::SchedulerTimeline
 //   Client::System::Scheduler::Base::TimelineController
 //     Client::System::Scheduler::Base::SchedulerState
+//   Client::System::Scheduler::Base::LinkedList<SchedulerTimeline>
 [GenerateInterop]
 [Inherits<TimelineController>]
 [StructLayout(LayoutKind.Explicit, Size = 0x280)]
 public unsafe partial struct SchedulerTimeline {
-    // [FieldOffset(0x90)] public TimelineGroup* TimelineGroup;
+    [FieldOffset(0x80)] public LinkedList<SchedulerTimeline> List;
+    [FieldOffset(0x90)] public TimelineGroup* OwningGroup;
     [FieldOffset(0x98)] public SchedulerResource* SchedulerResource;
 
-    [FieldOffset(0xA8)] public byte* ActionTimelineKey;
-    [FieldOffset(0xB0)] public byte* FaceLibraryPath;
+    [FieldOffset(0xA8)] public CStringPointer ActionTimelineKey;
+    [FieldOffset(0xB0)] public CStringPointer FaceLibraryPath;
 
     [FieldOffset(0x18C)] public uint OwningGameObjectIndex;
 
@@ -23,6 +25,6 @@ public unsafe partial struct SchedulerTimeline {
     [MemberFunction("E8 ?? ?? ?? ?? EB CA 48 8B 8C 24 ?? ?? ?? ??")]
     public partial void UpdateBanner(float delta, byte a3 = 0); // not sure on the naming, but this advances the animation forward
 
-    [VirtualFunction(28)]
+    [VirtualFunction(29)]
     public partial int GetOwningGameObjectIndex();
 }

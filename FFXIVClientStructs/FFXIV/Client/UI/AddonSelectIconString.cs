@@ -11,8 +11,8 @@ namespace FFXIVClientStructs.FFXIV.Client.UI;
 public partial struct AddonSelectIconString {
     [FieldOffset(0x250)] public PopupMenuDerive PopupMenu;
 
+    [GenerateInterop]
+    [Inherits<PopupMenu>]
     [StructLayout(LayoutKind.Explicit, Size = 0x68)]
-    public struct PopupMenuDerive {
-        [FieldOffset(0x0)] public PopupMenu PopupMenu;
-    }
+    public partial struct PopupMenuDerive;
 }

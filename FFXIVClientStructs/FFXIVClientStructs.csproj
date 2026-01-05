@@ -1,6 +1,6 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
+    <TargetFramework>net10.0</TargetFramework>
     <LangVersion>preview</LangVersion>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <ImplicitUsings>enable</ImplicitUsings>
@@ -42,18 +42,16 @@
 
   <ItemGroup>
     <CompilerVisibleProperty Include="InteropGenerator_InteropNamespace" />
-    <InternalsVisibleTo Include="CExporter"/>
+    <InternalsVisibleTo Include="CExporter" />
   </ItemGroup>
-  
+
   <ItemGroup>
-    <PackageReference Include="GitInfo" Version="3.3.5">
+    <PackageReference Include="GitInfo" Version="3.6.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="JetBrains.Annotations" Version="2021.2.0" />
     <ProjectReference Include="..\FFXIVClientStructs.Generators\FFXIVClientStructs.Generators.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
-    <ProjectReference Include="..\InteropGenerator\InteropGenerator.csproj"
-                      OutputItemType="Analyzer" ReferenceOutputAssembly="false"/>
+    <ProjectReference Include="..\InteropGenerator\InteropGenerator.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
     <ProjectReference Include="..\InteropGenerator.Runtime\InteropGenerator.Runtime.csproj" />
   </ItemGroup>
 </Project>

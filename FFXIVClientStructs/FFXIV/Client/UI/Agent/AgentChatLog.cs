@@ -1,14 +1,16 @@
 using FFXIVClientStructs.FFXIV.Client.Game;
 using FFXIVClientStructs.FFXIV.Client.System.String;
+using static FFXIVClientStructs.FFXIV.Common.Configuration.ConfigBase;
 
 namespace FFXIVClientStructs.FFXIV.Client.UI.Agent;
 
-// Client::UI::Agent::ChatLog
+// Client::UI::Agent::AgentChatLog
 //   Client::UI::Agent::AgentInterface
 //     Component::GUI::AtkModuleInterface::AtkEventInterface
+//   Common::Configuration::ConfigBase::ChangeEventInterface
 [Agent(AgentId.ChatLog)]
 [GenerateInterop]
-[Inherits<AgentInterface>]
+[Inherits<AgentInterface>, Inherits<ChangeEventInterface>]
 [StructLayout(LayoutKind.Explicit, Size = 0xB38)]
 public unsafe partial struct AgentChatLog {
 
@@ -21,14 +23,13 @@ public unsafe partial struct AgentChatLog {
     [FieldOffset(0x138), FixedSizeArray] internal FixedSizeArray8<Utf8String> _channelSelectorLSNames;
     [FieldOffset(0x478), FixedSizeArray] internal FixedSizeArray8<Utf8String> _channelSelectorCWLSNames;
 
-    [FieldOffset(0x8A0)] public InventoryItem LinkedItem;
-    [FieldOffset(0x8E8)] public byte LinkedItemQuality;
+    [FieldOffset(0x8A0)] public LinkedInventoryItem LinkedItem;
     [FieldOffset(0x8F0)] public Utf8String LinkedItemName;
 
     [FieldOffset(0x958)] public uint ContextItemId;
 
     [FieldOffset(0x968)] public ulong LinkedPartyFinderId;
-    // [FieldOffset(0x960)] public byte LinkedPartyFinderUnkByte;
+    // [FieldOffset(0x960)] private byte LinkedPartyFinderUnkByte;
     [FieldOffset(0x978)] public Utf8String LinkedPartyFinderLeaderName;
 
     [FieldOffset(0x9E0)] public uint LinkedQuestId;
@@ -45,14 +46,22 @@ public unsafe partial struct AgentChatLog {
     [MemberFunction("E8 ?? ?? ?? ?? E9 ?? ?? ?? ?? E8 ?? ?? ?? ?? 48 8B F0")]
     public partial bool InsertTextCommandParam(uint textParamId, bool unk);
 
-    [MemberFunction("E8 ?? ?? ?? ?? C6 43 08 01 EB 7D")]
+    [MemberFunction("E8 ?? ?? ?? ?? 40 B5 ?? E9 ?? ?? ?? ?? 8B B9")]
     public partial void LinkItem(uint itemId);
 
     [MemberFunction("E8 ?? ?? ?? ?? BA ?? ?? ?? ?? 48 8D 4D B0 48 8B F8 E8 ?? ?? ?? ?? 41 8B D6")]
-    public partial byte* ChangeChannelName();
+    public partial CStringPointer ChangeChannelName();
 
-    [MemberFunction("E8 ?? ?? ?? ?? 48 8B 8D ?? ?? ?? ?? 48 33 CC E8 ?? ?? ?? ?? 48 81 C4 ?? ?? ?? ?? 41 5F 41 5D 41 5C 5F")]
-    public partial void SetTabName(int tabIndex, Utf8String* tabName);
+    // got inlined
+    // [MemberFunction("")]
+    // public partial void SetTabName(int tabIndex, Utf8String* tabName);
+
+    [GenerateInterop]
+    [Inherits<InventoryItem>]
+    [StructLayout(LayoutKind.Explicit, Size = 0x50)]
+    public partial struct LinkedInventoryItem {
+        [FieldOffset(0x48)] public byte LinkedItemQuality;
+    }
 }
 
 // There are definitely more channels than just these, these were all the ones I could find quickly.

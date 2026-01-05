@@ -185,9 +185,9 @@ public unsafe partial struct AgentMJICraftSchedule {
 
     /// <summary>
     /// Activate specified cycle.
-    /// Note that game often reactivates same cycle to refresh data, e.g. after scheduling new craft.
+    /// Game often reactivates same cycle to refresh data, e.g. after scheduling new craft.
     /// </summary>
     /// <param name="cycle">0-13 range, this/next week in order.</param>
-    [MemberFunction("E8 ?? ?? ?? ?? 48 8B 45 28 48 8B 7C 24")]
+    [MemberFunction("E8 ?? ?? ?? ?? 48 8B 7C 24 ?? 48 8B 43 ?? F6 80")]
     public partial void SetDisplayedCycle(int cycle);
 }
