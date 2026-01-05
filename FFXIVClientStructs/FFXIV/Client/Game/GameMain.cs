@@ -20,8 +20,6 @@ public unsafe partial struct GameMain {
     [FieldOffset(0x0210)] public GameMainUnk210Obj Unk210;
 
     [FieldOffset(0x948)] public GameMainUnk948Obj Unk948;
-    
-    [FieldOffset(0xAD8)] public JobGaugeManager JobGaugeManager;
 
     [FieldOffset(0xB28)] public JobGaugeManager JobGaugeManager;
 
