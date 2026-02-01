@@ -1,5 +1,3 @@
-using FFXIVClientStructs.FFXIV.Client.System.String;
-
 namespace FFXIVClientStructs.FFXIV.Client.Game.UI;
 
 // Client::Game::UI::RecipeNote
@@ -32,14 +30,16 @@ public unsafe partial struct RecipeNote {
     [GenerateInterop]
     [StructLayout(LayoutKind.Explicit, Size = 0x470)]
     public partial struct RecipeData {
-        // E8 ?? ?? ?? ?? 48 8B 8E ?? ?? ?? ?? 33 FF 48 85 C9 74 0C E8 ?? ?? ?? ?? 48 89 BE ?? ?? ?? ?? 48 8B 86 ?? ?? ?? ?? 48 89 5C 24   (7.1)
+        // E8 ?? ?? ?? ?? 48 8B 8E ?? ?? ?? ?? 33 FF 48 85 C9 74 0C E8 ?? ?? ?? ?? 48 89 BE ?? ?? ?? ?? 48 8B 86 ?? ?? ?? ?? 48 89 5C 24 (7.1) (Client::Game::UI::RecipeNote.InitializeRecipeList)
         [FieldOffset(0x00)] public RecipeEntry* Recipes;
         [FieldOffset(0x08)] public int RecipeCount;
         [FieldOffset(0x28), FixedSizeArray] internal FixedSizeArray8<NoteBookDivisionIdsArray> _noteBookDivisionIds; // index is CraftType
         [FieldOffset(0x458)] public ushort SelectedIndex;
         [FieldOffset(0x45F), FixedSizeArray] internal FixedSizeArray8<byte> _numAvailableNoteBookDivisions; // index is CraftType
         [FieldOffset(0x467), FixedSizeArray] internal FixedSizeArray8<byte> _numAvailableSecretNoteBookDivisions; // index is CraftType
-        public RecipeEntry* SelectedRecipe => Recipes + SelectedIndex;
+
+        public Span<RecipeEntry> RecipesSpan => new(Recipes, RecipeCount);
+        public RecipeEntry* SelectedRecipe => SelectedIndex < RecipeCount ? Recipes + SelectedIndex : null;
     }
 
     [GenerateInterop]
