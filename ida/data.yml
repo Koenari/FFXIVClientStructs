@@ -1,6 +1,9 @@
 version: 2025.12.23.0000.0000
 
 globals:
+  0x142A008D0: g_ConfigFileData # Pointer (multiple)
+  0x142A00950: g_ConfigFileDataLength # Pointer (multiple)
+  0x142a009a0: g_ConfigFileStatus # Pointer (multiple)
   0x142047D58: g_FloatHalf # 0.5f
   0x142047DB8: g_FloatOne # 1f
   0x142050B10: g_FloatOneAndAHalf # 1.5f
@@ -97,6 +100,7 @@ globals:
   0x1429E9638: g_Client::Game::QuestManager::QuestRepeatFlagsReceived
   0x1429E9639: g_Client::Game::QuestManager::LeveQuestsReceived
   0x1429E963A: g_Client::Game::QuestManager::CompletedLeveQuestsReceived
+  0x1429E9DD0: g_Client::Sound::SomethingSound
   0x1427AF068: g_Component::SteamApi::InterfaceContext::ISteamFriends
   0x1427AF050: g_Component::SteamApi::InterfaceContext::ISteamUser
   0x1427AF098: g_Component::SteamApi::InterfaceContext::ISteamApps
@@ -122,6 +126,10 @@ globals:
 
 functions:
   0x14005DB70: WinMain
+  0x14045DE50: WriteFile
+  0x14045DB60: CreateFile
+  0x14045DF80: CloseFile
+  0x14045ECF0: CreateDirectory
 #fail   0x1400581B0: std::string::ctor_FromSubStr #(other, idx, len)
 #fail   0x1400582F0: std::string::ctor_FromCharArr #(arr, len)
   0x1401D84E0: std::_Throw_tree_length_error
@@ -133,6 +141,7 @@ functions:
   0x14005F1D0: vswprintf_s
   0x140093790: IsMacClient
   0x1400942A0: SpecialFreeMemory
+  0x1400CDBF0: lambdaTrue
   0x1400D3540: CheckOsTypeAndVersion
 #fail   0x1400683A0: GetMyDocumentsFolder #as UTF8String
   0x1400D4B60: GetPerformanceFrequency
@@ -1463,6 +1472,7 @@ classes:
       0x140E47D30: Create
       0x140E47C60: GetGroupWithCheck
       0x140E47C90: GetGroup
+      0x140e47dc0: Finalizer
   Client::Game::Group::GroupManager::Group:
     instances:
       - ea: 0x1427B60D0
@@ -3546,6 +3556,7 @@ classes:
       - ea: 0x14208CB90
         base: Client::System::Threading::Thread
     funcs:
+      
       0x1403FF1C0: GetEffectiveVolume
       0x1403FF5A0: ctor
       0x140401320: SetAlwaysOn
@@ -3569,6 +3580,7 @@ classes:
       0x140401B80: SetPerformAlways
       0x140401BD0: SetMicPosition
       0x140402950: SetVolume #(this, type, float: volume
+      0x140404f40: UnkShutdown
   Client::System::Framework::GameWindow:
     instances:
       - ea: 0x1427F5600
@@ -5092,6 +5104,10 @@ classes:
       - ea: 0x1427FBCB0
     vtbls:
       - ea: 0x142047C48
+  Client::System::Threading::WatchdogThread:
+    vtbls:
+      - ea: 0x1420520B0
+        base: Client::System::Threading::Thread
   Client::System::Threading::Thread:
     vtbls:
       - ea: 0x142068500
@@ -5150,6 +5166,7 @@ classes:
       0x1400D4370: Copy
       0x140095180: SetPathUtf8String
       0x140094950: Dtor
+      0x140094FF0: AppendWString
   Client::System::Resource::Handle::ResourceHandle:
     vtbls:
       - ea: 0x142078258
@@ -6301,6 +6318,8 @@ classes:
         base: Client::Graphics::Kernel::Device
     funcs:
       0x14020F220: ctor
+      0x14020F550: AddCallbackA10
+      0x14020F5D0: AddCallbackA18
   Client::Graphics::Kernel::DeviceDX11:
     instances:
       - ea: 0x1427F5A80
@@ -7313,6 +7332,7 @@ classes:
       0x14060DE60: Initialize
       0x140B52420: Update
       0x1417798E0: GetFlightAllowedStatus
+      0x14060def0: Finalizer
   Client::Game::Control::CameraManager:
     funcs:
       0x1417F45F0: ctor
@@ -10315,6 +10335,9 @@ classes:
       4: GetValidSlotCount
       5: UpdateValidSlotCount
       6: GetSlotCount
+  Client::System::Configuration::CharamakeAvatarSaveDataContainer:
+    funcs:
+      0x140807990: ctor
   Client::System::Configuration::CharamakeAvatarSaveDataContainer::FixedContainer:
     vtbls:
       - ea: 0x1420BBC00

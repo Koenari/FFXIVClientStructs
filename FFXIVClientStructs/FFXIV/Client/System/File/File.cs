@@ -1,7 +1,7 @@
 ﻿namespace FFXIVClientStructs.FFXIV.Client.System.File;
 
 // Client::System::File::FileInterface
-[StructLayout(LayoutKind.Explicit)]
+[StructLayout(LayoutKind.Explicit, Size = 0x28)]
 public unsafe struct FileInterface {
     
     [FieldOffset(0x10)] public nint FileHandle;

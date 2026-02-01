@@ -12,7 +12,7 @@ public unsafe partial struct ResourceManager {
 
     [FieldOffset(0x8)] public ResourceGraph* ResourceGraph;
     [FieldOffset(0x0028)] public ulong PerformanceCounterInMilliSeconds;
-
+    [FieldOffset(0x006C)] private bool Unk6C;
     [MemberFunction("E8 ?? ?? ?? ?? 48 8B D8 48 85 C0 0F 85 ?? ?? ?? ?? 48 8B 84 24")]
     public partial ResourceHandle* FindResourceHandle(ResourceCategory* category, uint* type, uint* hash);
 

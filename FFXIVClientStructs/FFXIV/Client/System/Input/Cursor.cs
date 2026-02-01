@@ -17,6 +17,7 @@ public unsafe partial struct Cursor {
     [FieldOffset(0x00D)] public bool IsCursorOutsideViewPort;
 
     [FieldOffset(0x010)] public uint ActiveCursorType; //Hand,Cursor, Cross, etc
+    [FieldOffset(0x018)] internal FixedSizeArray16<Unk18Obj> Unk018;
 
     //[FieldOffset(0x098)] public bool SystemMouseOperationTrajectory;
     
@@ -29,4 +30,9 @@ public unsafe partial struct Cursor {
     [FieldOffset(0x368)] public bool ShowSoftwareCursorTrajectory;
 
     [FieldOffset(0x370)] public bool UseOsHardwareCursor;
+    
+    [StructLayout(LayoutKind.Explicit, Size = 0x11)]
+    public struct Unk18Obj {
+        
+    }
 }

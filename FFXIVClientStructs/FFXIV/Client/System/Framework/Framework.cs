@@ -4,7 +4,6 @@ using FFXIVClientStructs.FFXIV.Client.Sound;
 using FFXIVClientStructs.FFXIV.Client.System.Configuration;
 using FFXIVClientStructs.FFXIV.Client.System.File;
 using FFXIVClientStructs.FFXIV.Client.System.Input;
-using FFXIVClientStructs.FFXIV.Client.System.String;
 using FFXIVClientStructs.FFXIV.Client.System.Task;
 using FFXIVClientStructs.FFXIV.Client.System.Threading;
 using FFXIVClientStructs.FFXIV.Client.System.Timer;
@@ -15,7 +14,6 @@ using FFXIVClientStructs.FFXIV.Common.Lua;
 using FFXIVClientStructs.FFXIV.Component.Excel;
 using FFXIVClientStructs.FFXIV.Component.Exd;
 using FFXIVClientStructs.FFXIV.Component.SteamApi;
-using Thread = FFXIVClientStructs.FFXIV.Client.System.Threading.Thread;
 
 namespace FFXIVClientStructs.FFXIV.Client.System.Framework;
 
@@ -124,11 +122,15 @@ public unsafe partial struct Framework {
     [FieldOffset(0x2CF8), FixedSizeArray] internal FixedSizeArray64<ExVersionString> _exVersions;
 
     [FieldOffset(0x3500)] public WatchDogThread* WatchDogThread;
-    [FieldOffset(0x3508)] public bool UseWatchDogThread;
-
+    [FieldOffset(0x3508)] public bool UseWatchDogThread; //Rename to WatchDogEnabled
+    [FieldOffset(0x350C)] private int DeviceA10Callback;
+    [FieldOffset(0x3510)] private int DeviceA18Callback;
+    [FieldOffset(0x3514)] private bool ShouldUseWatchDogThread;
     [FieldOffset(0x3518)] public int FramesUntilDebugCheck;
     
     [FieldOffset(0x3578)] public TimePoint Time3570;
+    [FieldOffset(0x3590)] private nint Unk3590; //Function Pointer
+    
     /// <summary>
     /// Set if <c>IsSteam</c> was set for this instance as part of <c>SetupSteamApi</c>. Set even if loading the Steam API
     /// fails for some reason.
@@ -198,44 +200,5 @@ public unsafe partial struct Framework {
     public partial struct ExVersionString {
         [FieldOffset(0), FixedSizeArray(isString: true)] internal FixedSizeArray32<byte> _version;
     }
-    // ctor "E8 ?? ?? ?? ?? 48 8B C8 48 89 83 ?? ?? ?? ?? E8 ?? ?? ?? ?? 45 33 C0"
-    [StructLayout(LayoutKind.Explicit, Size = 0x220)]
-    public struct Unk578Obj {
-        [FieldOffset(0x048)] public Utf8String Unk048;
-        [FieldOffset(0x0B0)] public Utf8String Unk0B0;
-        [FieldOffset(0x118)] public Utf8String Unk118;
-        [FieldOffset(0x180)] public Utf8String Unk180;
-    }
-
-    //ctor -Unsiggable-
-    [StructLayout(LayoutKind.Explicit, Size = 0x28)]
-    public struct Unk2B98Obj {
-
-    }
-
-    // ctor E8 ?? ?? ?? ?? 48 8D 8E ?? ?? ?? ?? 48 89 AE ?? ?? ?? ?? 66 C7 86 
-    [StructLayout(LayoutKind.Explicit, Size = 0xA8)]
-    public struct Unk15C8Obj {
-        //Some derived class 
-        [FieldOffset(0x00)] public Thread Thread;
-        [FieldOffset(0x38)] public Task Task;
-    }
-
-    // ctor C6 01 ?? 48 8D 81 
-    [StructLayout(LayoutKind.Explicit, Size = 0x494)]
-    public struct Unk2A8Obj {
-
-    }
-
-    //ctor 33 D2 C6 41 ?? ?? 48 89 51 ?? 8B C2 
-    [StructLayout(LayoutKind.Explicit, Size = 0x30)]
-    public struct Unk9F8Obj {
-        [FieldOffset(0x00)] public int CursorPosX;
-        [FieldOffset(0x04)] public int CursorPosY;
-    }
-
-    // ctor E8 ?? ?? ?? ?? 33 C0 45 89 BE 
-    [StructLayout(LayoutKind.Explicit, Size = 0x194)]
-    public struct Unk7B0Obj {
-    }
+    
 }

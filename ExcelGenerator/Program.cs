@@ -2,7 +2,7 @@ namespace ExcelGenerator;
 
 internal static class Program {
     private static void Main(string[] args) {
-        var gamePath = args.Length >= 1 ? args[0] : @"C:\Steam\steamapps\common\FINAL FANTASY XIV Online\";
+        var gamePath = args.Length >= 1 ? args[0] : @"C:\Games\SquareEnix\FINAL FANTASY XIV - A Realm Reborn\";
         var outputPath = args.Length >= 2 ? args[1] : @"..\..\..\FFXIVClientStructs\FFXIV\Component\Exd\Sheets\";
         var schemaPath = args.Length >= 3 ? args[2] : null;
 

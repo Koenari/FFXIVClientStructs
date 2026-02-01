@@ -2,7 +2,7 @@
 
 namespace FFXIVClientStructs.FFXIV.Client.Network;
 
-[StructLayout(LayoutKind.Explicit)]
+[StructLayout(LayoutKind.Explicit, Size = 0xA8)]
 public unsafe partial struct ChatConnection {
     [FieldOffset(0x00)] public Utf8String ServerIp;
     [FieldOffset(0x68)] public short ServerPort;

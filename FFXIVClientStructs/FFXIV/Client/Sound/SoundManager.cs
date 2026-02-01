@@ -36,6 +36,8 @@ public unsafe partial struct SoundManager {
 
     [FieldOffset(0x02C8)] public nint EventHandle2;
 
+    [FieldOffset(0x0320)] private nint CriticalSection2;
+
     /// <summary>
     /// Calculates effective volume
     /// </summary>

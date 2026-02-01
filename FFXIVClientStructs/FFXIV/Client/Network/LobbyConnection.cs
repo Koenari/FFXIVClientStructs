@@ -18,15 +18,14 @@ public unsafe struct LobbyConnection {
     [FieldOffset(0x0E0)] public short Unk0E0;
     [FieldOffset(0x0E8)] public Utf8String Unk0E8;
     [FieldOffset(0x150)] public Utf8String Unk150;
-    [FieldOffset(0x1B8)] public fixed byte Unk1B8[0x50]; //MemSet to 0x0
     [FieldOffset(0x208)] public byte Unk208;
     [FieldOffset(0x210)] public Unknown Unk210;
     [FieldOffset(0x218)] public Unknown Unk218;
     [FieldOffset(0x220)] public short Unk220;
     [FieldOffset(0x222)] public byte Unk222;
-    [FieldOffset(0x228)] public void* Unk228;
+    [FieldOffset(0x228)] public Unknown Unk228;
     [FieldOffset(0x230)] public Unknown Unk230;
-    [FieldOffset(0x238)] public void* Unk238; //Same as 228
+    [FieldOffset(0x238)] public Unknown Unk238; //Same as 228
     [FieldOffset(0x240)] public Unknown Unk240;
     [FieldOffset(0x248)] public Unknown Unk248;
     [FieldOffset(0x250)] public Unknown Unk250;

@@ -49,7 +49,6 @@ public unsafe partial struct ZoneConnection {
 
         [StructLayout(LayoutKind.Explicit, Size = 0x270)]
         public struct Unk010Obj {
-            [FieldOffset(0x000)] public void** vtbl;
             [FieldOffset(0x008)] public Unk008Obj2 Unk008;
             [FieldOffset(0x010)] public Unknown* Unk010; //Looks like a self referenceing empty vector
             [FieldOffset(0x030)] public uint PacketNumber1; //Counts up (packet #)?
@@ -76,7 +75,7 @@ public unsafe partial struct ZoneConnection {
 
             [StructLayout(LayoutKind.Explicit)]
             public struct Unk008Obj2 {
-                [FieldOffset(0x000)] public void** vtbl;
+                
             }
         }
     }

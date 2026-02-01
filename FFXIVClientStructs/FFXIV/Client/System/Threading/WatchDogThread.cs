@@ -1,8 +1,12 @@
 namespace FFXIVClientStructs.FFXIV.Client.System.Threading;
 
+// Client::System::Threading::WatchDogThread
+//   Client::System::Threading::Thread
+//     Client::System::Common::NonCopyable
+[GenerateInterop]
+[Inherits<Thread>]
 [StructLayout(LayoutKind.Explicit, Size = 0x48)]
-public unsafe struct WatchDogThread {
-    [FieldOffset(0x00)] public Thread Base;
+public unsafe partial struct WatchDogThread {
     [FieldOffset(0x28)] public Framework.Framework* Framework;
 
     [FieldOffset(0x34)] public int Unk34; //-1 init
